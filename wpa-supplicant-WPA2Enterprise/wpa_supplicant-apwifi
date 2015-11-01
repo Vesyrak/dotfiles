@@ -5,8 +5,8 @@ network={
 	proto=RSN
 	pairwise=CCMP
 	eap=PEAP
-	identity="s079636@ap.be"
-	password="v=1Pm6Da"
+	identity="*******"
+	password="*******"
 	key_mgmt=WPA-EAP
 
 }
