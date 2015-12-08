@@ -158,4 +158,4 @@ bar {
 new_window 1pixel
 gaps outer 0
 gaps inner 20
-exec xautolock -time 10 -locker "i3lock-wrapper" -lockaftersleep & ""
+exec xautolock -time 10 -locker "i3lock-wrapper" -detectsleep
