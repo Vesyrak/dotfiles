@@ -43,7 +43,7 @@
         Rxvt*foreground:   Foreground_Color
         Rxvt*background:   Background_Color
         Rxvt*cursorColor:  Cursor_Color
-
+        Rxvt*scrollBar: false
  XTerm*color0:      Ansi_0_Color
         XTerm*color1:      Ansi_1_Color
         XTerm*color2:      Ansi_2_Color

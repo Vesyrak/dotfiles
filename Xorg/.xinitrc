@@ -11,8 +11,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 /usr/bin/xset b off
-setxkbmap fi
-xrdb ­merge ~.config/xresources/Netron.Xresource
+
+xrdb ­merge ~/.config/xresources/Netron.Xresource
 
 feh --bg-scale --randomize ~/Wallpapers/*
 compton -c &
