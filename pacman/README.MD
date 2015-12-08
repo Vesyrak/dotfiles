@@ -14,3 +14,4 @@ Restoring (in / folder)
 ```
 tar -xjvf pacman_database.tar.bz2
 ```
+*NOTE: if after restoration it complains about duplicate database entries, simply remove the older folders/versions at /var/lib/pacman/local/*
