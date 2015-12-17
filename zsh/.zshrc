@@ -23,7 +23,7 @@ ZSH_THEME="random"
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
-
+#alias ls="echo '/ could not be mounted due to corrupt partition'"
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
 
@@ -54,7 +54,7 @@ plugins=(archlinux chucknorris vi-mode sudo tmux web-search)
 
 # User configuration
   export RUBYPATH="/home/reinout/.gem/ruby/2.2.0/bin"
-  export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+ # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
   export PATH=$RUBYPATH:$PATH
   # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -92,3 +92,5 @@ export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 #alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
 #alias ls="yes 'KERNEL PANIC'"
 source ~/.rvm/scripts/rvm
+PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+
