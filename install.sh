@@ -1,4 +1,10 @@
 #!/bin/bash
+if [ "$1" != "install" ]; then
+    $(install)
+elif [ "$1" != "" ]; then
+     ]
+function install
+{
 #Repository installation
 curl -O http://blackarch.org/strap.sh && sha1sum strap.sh
 chmod 777 strap.sh
@@ -6,7 +12,7 @@ sudo ./strap.sh
 rm strap.sh
 sudo pacman-key --init
 sudo dirmngr &
-sleep 3
+sleep 1
 last_pid=$!
 sudo kill -KILL $last_pid
 sudo pacman-key -r 962DDE58
@@ -28,4 +34,13 @@ ln -f zsh/.zlogin ~/.zlogin
 sudo ln -f pacman/pacman.conf /etc/pacman.conf
 sudo cp wpa-supplicant-WPA2Enterprise/wpa_supplicant-apwifi /etc/wpa_supplicant/wpa_supplicant-apwifi
 #Installation of your packages
-sudo pacman -Syu $(pacman/pgklist)
+sudo pacman -Syu $(cat pacman/pgklist)
+#installation of dmenu aliases and recents support
+ln dmenu/dmenu-recent-aliases /usr/bin/dmenu-recent-aliases
+chmod 777 /usr/bin/dmenu-recent-aliases
+}
+function update
+{
+
+
+}

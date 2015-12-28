@@ -11,7 +11,7 @@ alias vision='sudo updatedb && locate'
 alias summon='sudo mount --target /mnt --source'
 alias dispel='sudo umount /mnt'
 alias listspells='cat ~/.zsh_aliases'
-
+    alias alib='cd /home/reinout/Arduino/libraries'
 translate () {
 	if [ -f $1 ] ; then
 		case $1 in
