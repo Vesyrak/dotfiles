@@ -92,9 +92,9 @@ visualizer_sync_interval = 15
 #
 ## Available values: spectrum, wave.
 ##
-visualizer_type = wave
+visualizer_type = spectrum 
 #
-visualizer_look = "00"
+visualizer_look = "II"
 #
 ##### system encoding #####
 ##
