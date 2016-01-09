@@ -27,10 +27,9 @@ function checkUser()
         user=false
     fi
 }
-function main()
-{
+function mainpi(){
     sudo pacman -Syu
-    sudo pacman -S alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools dcfldd feh dmenu gimp gvim-python3 htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium dmenu gvim-python3 htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz
     tar -xvf package-query.tar.gz
     cd package-query
@@ -39,13 +38,37 @@ function main()
     cd ../
     rm package-query/ -r
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz
+    tar -xvf yaourt.tar.gz
     cd yaourt
     makepkg
     makepkg -sri
     cd ../
-    rm yaourt
+    rm yaourt -r
     yaourt -Syua
-    yaourt -S gtk-theme-arc-git i3-gaps-git i3lock-wrapper j4-dmenu-desktop
+    yaourt -S j4-dmenu-desktop
+    zsh
+    sudo updatedb
+}
+function main()
+{
+    sudo pacman -Syu
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools dcfldd feh dmenu gimp gvim-python3 htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz
+    tar -xvf package-query.tar.gz
+    cd package-query
+    makepkg
+    makepkg -sri
+    cd ../
+    rm package-query/ -r
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz
+    tar -xvf yaourt.tar.gz
+    cd yaourt
+    makepkg
+    makepkg -sri
+    cd ../
+    rm yaourt -r
+    yaourt -Syua
+    yaourt -S j4-dmenu-desktop gtk-theme-arc-git i3-gaps-git i3lock-wrapper
     zsh
     sudo updatedb
 }
@@ -153,6 +176,8 @@ for i in "$@"; do
             elif [[ $i == "zsh" ]]; then
                 zsh
 
+            elif [[ $i == "mainpy" ]]; then
+                mainpy
             elif [[ $i == "delugeserver" ]]; then
                 delugeserver
 

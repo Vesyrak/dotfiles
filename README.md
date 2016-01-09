@@ -11,3 +11,4 @@ pacman -Qii | awk '/^MODIFIED/ {print $2}'
   - Adding and seperating Graphical Drivers per device.
   - Updating user requirements for gaming (and probably others)
   - Testing
+  - Network configuration -> Porting everything to netctl 
