@@ -1,5 +1,6 @@
 ##########################################################
-## this is example bindings configuration file, copy it ## to ~/.ncmpcpp/bindings and set up your preferences ##
+## this is example bindings configuration file, copy it ## 
+## to ~/.ncmpcpp/bindings and set up your preferences   ##
 ##########################################################
 ##
 ##### General rules #####
@@ -114,17 +115,17 @@ def_key "k"
 def_key "j"
   scroll_down
 #
-#def_key "["
-#  scroll_up_album
+def_key "["
+  scroll_up_album
 #
-#def_key "]"
-#  scroll_down_album
+def_key "]"
+  scroll_down_album
 #
-#def_key "{"
-#  scroll_up_artist
+def_key "{"
+  scroll_up_artist
 #
-#def_key "}"
-#  scroll_down_artist
+def_key "}"
+  scroll_down_artist
 #
 #def_key "page_up"
 #  page_up
@@ -144,11 +145,7 @@ def_key "j"
 #def_key "enter"
 #  press_enter
 #
-#def_key "delete"
-#  delete_playlist_items
-#
 def_key "delete"
-
   delete_browser_items
 #
 #def_key "delete"
@@ -235,10 +232,10 @@ def_key "s"
 def_key "p"
   pause
 #
-def_key ">"
+def_key ","
   next
 #
-def_key "<"
+def_key "."
   previous
 #
 #def_key "ctrl_h"
@@ -320,21 +317,18 @@ def_key "u"
 #  apply_filter
 #
 def_key "/"
-  find
-#
-#def_key "/"
-#  find_item_forward
+  find_item_forward
 #
 #def_key "?"
 #  find
 #
-#def_key "?"
-#  find_item_backward
+def_key "?"
+  find_item_backward
 #
-#def_key "."
+#def_key "n"
 #  next_found_item
 #
-#def_key ","
+#def_key "N"
 #  previous_found_item
 #
 #def_key "w"
@@ -443,8 +437,8 @@ def_key "o"
 #def_key "U"
 #  toggle_playing_song_centering
 #
-#def_key "P"
-#  toggle_display_mode
+def_key "P"
+  jump_to_playing_song
 #
 #def_key "\\"
 #  toggle_interface

@@ -32,7 +32,7 @@ mpd_port = 6600
 #
 ## Needed for tag editor and file operations to work.
 ##
-mpd_music_dir = "/music/Music"
+mpd_music_dir = "/music/MusicOrganized"
 #
 #mpd_crossfade_time = 5
 #
@@ -177,7 +177,7 @@ visualizer_look = "II"
 ## Note: colors can be nested.
 ##
 #
-#song_list_format = {%a - }{%t}|{$8%f$9}$R{$3(%l)$9}
+song_list_format = {$1%a$9 - }{%t}|{$8%f$9}$R{$3(%l)$9}
 #
 #song_status_format = {{%a{ "%b"{ (%y)}} - }{%t}}|{%f}
 #
@@ -274,7 +274,7 @@ visualizer_look = "II"
 ##   not available.
 ##
 #
-#song_columns_list_format = (20)[]{a} (6f)[green]{NE} (50)[white]{t|f:Title} (20)[cyan]{b} (7f)[magenta]{l}
+song_columns_list_format = (20)[]{a} (43)[white]{t|f:Title} (10)[green]{g} (20)[cyan]{b} (7f)[magenta]{l}
 #
 ##### various settings #####
 #
@@ -296,13 +296,13 @@ visualizer_look = "II"
 ##
 ## Note: Possible display modes: classic, columns.
 ##
-#playlist_display_mode = columns
+playlist_display_mode = columns
 #
-#browser_display_mode = classic
+browser_display_mode = columns 
 #
-#search_engine_display_mode = classic
+search_engine_display_mode = columns 
 #
-#playlist_editor_display_mode = classic
+playlist_editor_display_mode = columns 
 #
 #discard_colors_if_item_is_selected = yes
 #
@@ -433,7 +433,7 @@ visualizer_look = "II"
 ## "The" word while sorting items in browser, tags in
 ## media library, etc.
 ##
-#ignore_leading_the = no
+ignore_leading_the = yes 
 #
 #block_search_constraints_change_if_items_found = yes
 #
@@ -465,7 +465,7 @@ visualizer_look = "II"
 #
 #search_engine_default_search_mode = 1
 #
-#external_editor = nano
+external_editor = vim 
 #
 ## Note: set to yes if external editor is a console application.
 ##
