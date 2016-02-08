@@ -86,11 +86,6 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.zsh_aliases
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
- [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" ]]
- export GEM_HOME=$(ruby -e 'print Gem.user_dir')
 #alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
 #alias ls="yes 'KERNEL PANIC'"
-source ~/.rvm/scripts/rvm
-PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
 
