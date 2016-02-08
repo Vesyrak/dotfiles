@@ -141,6 +141,7 @@ function audioclient()
 {
     sudo pacman -Syu
     sudo pacman -S ncmpcpp
+    mkdir .ncmpcpp
     ln -fs ncmpcpp/config /home/reinout/.ncmpcpp/config
     ln -fs ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
 }
@@ -152,7 +153,7 @@ function audioserver()
     sudo chown -R reinout /var/lib/mpd
 
     # music linkin'
-    ln -fs mpd /etc/mpd.conf
+    ln -fs mpd/mpd.conf /etc/mpd.conf
     # mpd bootin'
     mpd --create-db
     sleep 1
