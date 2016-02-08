@@ -26,3 +26,5 @@ pacman -Qii | awk '/^MODIFIED/ {print $2}'
   - Network configuration -> Porting everything to netctl (Or other
     alternative) 
   - Move away from Systemd
+  - Harden System
+  - Find best vim version & plugins
