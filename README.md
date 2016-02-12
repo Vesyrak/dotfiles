@@ -23,7 +23,7 @@ pacman -Qii | awk '/^MODIFIED/ {print $2}'
 ##Todo:
   - Adding and seperating Graphical Drivers per device.
   - Updating user requirements for gaming (and probably others)
-  - Network configuration -> Porting everything to netctl (Or other
+  - Network configuration -> Porting everything to connman (Or other
     alternative) 
   - Move away from Systemd
   - Harden System
