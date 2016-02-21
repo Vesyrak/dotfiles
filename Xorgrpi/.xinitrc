@@ -13,8 +13,7 @@ fi
 /usr/bin/xset b off
 
 xrdb merge ~/.config/xresources/Netron.Xresource
-
-feh --bg-scale --randomize ~/Wallpapers/*
-compton -c &
+unclutter &
 exec i3
+
 

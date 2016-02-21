@@ -57,11 +57,25 @@ function mainpi(){
     sudo updatedb
     echo "File Locations Updated"
 }
+function i3rpi()
+{
+    echo "Installing i3 for Raspberry Pi"
+    sudo pacman -S xorg-xrdb xorg-xinit unclutter
+    yaourt -S j4-dmenu-desktop i3-gaps-git
+    echo "Installation Complete"
+    echo "Configuring..."
+    echo "Installing Xinitrc"
+    ln -sf $PWD/Xorgrpi/.xinitrc ~/.xinitrc
+    echo "Installing i3Config"
+    mkdir -p ~/.config/i3/
+    ln -sf $PWD/i3rpi/config ~/.config/i3/config
+    echo "i3 Installation Completed"
+}
 function main()
 {
     echo "Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools dcfldd feh dmenu gimp gvim-python3 htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools feh dmenu gimp htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux
     echo "System Update Finished"
     echo "Installing AUR"
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz
@@ -81,7 +95,7 @@ function main()
     echo "AUR Installation Finisshed"
     echo "Starting AUR Update"
     yaourt -Syua
-    yaourt -S j4-dmenu-desktop gtk-theme-arc-git i3-gaps-git i3lock-wrapper
+    yaourt -S gtk-theme-arc-git
     echo "AUR Update Finished"
     zsh
     echo "Updating File Locations"
@@ -109,18 +123,26 @@ function delugeserver()
     sudo systemctl start deluged
     echo "Deluge Server Finished"
 }
-
+function i3()
+{
+    echo "Installing i3"
+    sudo pacman -S xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    yaourt -S j4-dmenu-desktop i3-gaps-git i3lock-wrapper
+    echo "Installation Finished"
+    echo "Configuring..."
+    echo "Installing Xinitrc"
+    ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
+    echo "Installing i3Config"
+    mkdir -p ~/.config/i3/
+    ln -sf $PWD/i3/config ~/.config/i3/config
+    echo "i3 Installation completed"
+}
 function config()
 {
     echo "Installing Config Files"
     echo "Installing XResources"
     mkdir -p ~/.config/xresources/
     ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
-    echo "Installing Xinitrc"
-    ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
-    echo "Installing i3Config"
-    mkdir -p ~/.config/i3/
-    ln -sf $PWD/i3/config ~/.config/i3/config
     echo "Installing Vim"
     ln -sf $PWD/vim/.vimrc ~/.vimrc
     ln -sf $PWD/vim/.vimrc.plugins ~/.vimrc.plugins
@@ -225,6 +247,10 @@ for i in "$@"; do
 
             elif [[ $i == "audioserver" ]]; then
                 audioserver
+            elif [[ $i == "i3" ]]; then
+                i3
+            elif [[ $i == "i3rpi" ]]; then
+                i3rpi
             else
                 echo "Unknown Command"
             fi
