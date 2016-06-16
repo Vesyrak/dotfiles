@@ -1,6 +1,5 @@
-#alias cd="echo 'Gelukkige Verjaardag'"
 # Path to your oh-my-zsh installation.
-  export ZSH=/home/reinout/.oh-my-zsh
+export ZSH=/home/reinout/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -23,7 +22,6 @@ ZSH_THEME="blinks"
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
-#alias ls="echo '/ could not be mounted due to corrupt partition'"
 # Uncomment the following line to disable auto-setting terminal title.
 # DISABLE_AUTO_TITLE="true"
 
@@ -50,7 +48,7 @@ ZSH_THEME="blinks"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(archlinux vi-mode sudo tmux web-search)
+plugins=(archlinux vi-mode sudo web-search)
 
 # User configuration
   export RUBYPATH="/home/reinout/.gem/ruby/2.2.0/bin"
@@ -87,5 +85,3 @@ source $ZSH/oh-my-zsh.sh
 source ~/.zsh_aliases
 
 #alias msfconsole="msfconsole --quiet -x \"db_connect ${USER}@msf\""
-#alias ls="yes 'KERNEL PANIC'"
-

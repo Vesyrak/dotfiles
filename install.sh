@@ -30,29 +30,28 @@ function checkUser()
 function mainpi(){
     echo "Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium dmenu gvim-python3 htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server
+xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
     echo "System Update Finished"
     echo "Installing AUR"
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz
-    tar -xvf package-query.tar.gz
-    cd package-query
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
+    tar -xvf cower.tar.gz
+    cd cower
     makepkg
     makepkg -sri
     cd ../
-    rm package-query/ -r
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz
-    tar -xvf yaourt.tar.gz
-    cd yaourt
+    rm cower/ -r
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
+    tar -xvf pacaur.tar.gz
+    cd pacaur
     makepkg
     makepkg -sri
     cd ../
-    rm yaourt -r
+    rm pacaur -r
     echo "AUR Installation Finished"
     echo "Starting AUR Update"
-    yaourt -Syua
-    yaourt -S j4-dmenu-desktop
+    pacaur -Syu
     echo "AUR Update Finished"
-    zsh
     echo "Updating File Locations"
     sudo updatedb
     echo "File Locations Updated"
@@ -61,27 +60,30 @@ function main()
 {
     echo "Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools dcfldd feh dmenu gimp gvim-python3 htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme
+libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio pavucontrol
     echo "System Update Finished"
+    echo "Enabling lightdm"
+    sudo systemctl enable lightdm
     echo "Installing AUR"
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz
-    tar -xvf package-query.tar.gz
-    cd package-query
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
+    tar -xvf cower.tar.gz
+    cd cower
     makepkg
     makepkg -sri
     cd ../
-    rm package-query/ -r
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz
-    tar -xvf yaourt.tar.gz
-    cd yaourt
+    rm cower/ -r
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
+    tar -xvf pacaur.tar.gz
+    cd pacaur
     makepkg
     makepkg -sri
     cd ../
-    rm yaourt -r
+    rm pacaur -r
     echo "AUR Installation Finisshed"
     echo "Starting AUR Update"
-    yaourt -Syua
-    yaourt -S j4-dmenu-desktop gtk-theme-arc-git i3-gaps-git i3lock-wrapper
+    pacaur -Syu
+    pacaur -S gtk-theme-arc-git lain-git pulsemixer
     echo "AUR Update Finished"
     zsh
     echo "Updating File Locations"
@@ -93,11 +95,31 @@ function zsh()
     echo "Installing ZSH"
     sudo pacman -Syu
     sudo pacman -S zsh zsh-completions
-    yaourt -S oh-my-zsh-git
+    pacaur -S oh-my-zsh-git
     echo "ZSH Installation Finished. Changing Shell..."
     chsh -s /bin/zsh
-    /bin/zsh
-    echo "Shell is now ZSH"
+    echo "Default Shell is now ZSH"
+    echo "Reload Shell to see effects"
+    echo "Installing ZSH config"
+    ln -sf $PWD/zsh/.zshrc ~/.zshrc
+    ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
+    ln -sf $PWD/zsh/.zlogin ~/.zlogin
+}
+function xonsh()
+{
+    echo "Installing XONSH"
+    pacaur -Syu
+    pacaur -S xonsh
+    echo "XONSH Installation Finished. Changing Shell.."
+    chsh -s /bin/xonsh
+    echo "Default Shell is now XONSH"
+    echo "Reload Shell to see effects"
+    echo "Installin XONSH $ ZSH config used by XONSH"
+    ln -sf $PWD/zsh/.zshrc ~/.zshrc
+    ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
+    ln -sf $PWD/zsh/.zlogin ~/.zlogin
+    mkdir -p ~/.config/xonsh
+    ln -sf $PWD/xonsh/config.json ~/.config/xonsh/config.json
 }
 
 function delugeserver()
@@ -108,6 +130,12 @@ function delugeserver()
     sudo systemctl enable deluged
     sudo systemctl start deluged
     echo "Deluge Server Finished"
+    echo "WebServer is probably not configured yet"
+    read -p "What is the server's IP address?" ip
+    echo "Host torrent" >> ~/.ssh/config
+    echo "    HostName $IP " >> ~/.ssh/config
+    echo "    Port 22" >> ~/.ssh/config
+    echo "Updated ssh config file for easy server access under 'torrent'"
 }
 
 function config()
@@ -118,23 +146,13 @@ function config()
     ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
     echo "Installing Xinitrc"
     ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
-    echo "Installing i3Config"
-    mkdir -p ~/.config/i3/
-    ln -sf $PWD/i3/config ~/.config/i3/config
+    echo "Installing awesome"
+    ln -sf $PWD/awesome ~/.config/awesome
     echo "Installing Vim"
     ln -sf $PWD/vim/.vimrc ~/.vimrc
     ln -sf $PWD/vim/.vimrc.plugins ~/.vimrc.plugins
-    echo "Installing zsh config"
-    ln -sf $PWD/zsh/.zshrc ~/.zshrc
-    ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
-    ln -sf $PWD/zsh/.zlogin ~/.zlogin
-    echo "Installing Pacman Config files"
-    sudo ln -sf $PWD/pacman/pacman.conf /etc/pacman.conf
     echo "Installing WPA-Enterprise Config Files"
     sudo cp wpa-supplicant-WPA2Enterprise/wpa_supplicant-apwifi /etc/wpa_supplicant/wpa_supplicant-apwifi
-    echo "Installing Dmenu Recent Aliases"
-    sudo ln -sf $PWD/dmenu/dmenu-recent-aliases /usr/bin/dmenu-recent-aliases
-    chmod 777 /usr/bin/dmenu-recent-aliases
     echo "Finished Installing Config Files"
 }
 function blackarch()
@@ -151,8 +169,8 @@ function blackarch()
     sudo kill -KILL $last_pid
     sudo pacman-key -r 962DDE58
     sudo pacman-key --lsign-key 962DDE58
-    echo "[blackarch]" >> pacman.conf
-    echo "Server = http://www.mirrorservice.org/sites/blackarch.org/blackarch//$repo/os/$arch "
+    sudo echo "[blackarch]" >> /etc/pacman.conf
+    sudo echo "Server = http://www.mirrorservice.org/sites/blackarch.org/blackarch//$repo/os/$arch " >> /etc/pacman.conf
     echo "Finished Installing Blackarch Repo"
 }
 
@@ -160,21 +178,29 @@ function gaming()
 {
 # TODO: update user requirements.
     sudo pacman -Syu
-    sudo pacman -S playonlinux wine steam
-    yaourt -S steam-fonts
+    sudo pacman -S steam
+    pacaur -S steam-fonts
 }
 
 function audioclient()
 {
-    echo "Installing Audio Client"
-    sudo pacman -Syu
-    sudo pacman -S ncmpcpp
-    mkdir .ncmpcpp
-    ln -sf $PWD/ncmpcpp/config /home/reinout/.ncmpcpp/config
-    ln -sf $PWD/ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
-    echo "Finished Installing Audio Client"
+    echo "NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
+    echo "This purely sets the IP address for easy connection"
+    read -p "What is the server's IP address?" ip
+    echo "Host mpd" >> ~/.ssh/config
+    echo "    HostName $IP " >> ~/.ssh/config
+    echo "    Port 22" >> ~/.ssh/config
+    echo "Updated ssh config file for easy server access under 'mpd'"
 }
-
+function pihole()
+{
+    echo "WARNING: THIS HAS NOT BEEN IMPLEMENTED YET"
+    read -p "What is the server's IP address?" ip
+    echo "Host pihole" >> ~/.ssh/config
+    echo "    HostName $IP " >> ~/.ssh/config
+    echo "    Port 22" >> ~/.ssh/config
+    echo "Updated ssh config file for easy server access under 'pihole'"
+}
 function audioserver()
 {
     sudo pacman -Syu
@@ -193,6 +219,13 @@ function audioserver()
     # Makes sure the wifi-dongle doesn't power off causing connection issues
     sudo ln -sf $PWD/music/WLanPOFix /etc/modprobe.d/8192cu.conf
     echo "Be sure to mount your drive on /music/Music, and becoming owner of it!"
+    echo "Installing Audio Client"
+    sudo pacman -Syu
+    sudo pacman -S ncmpcpp
+    mkdir .ncmpcpp
+    ln -sf $PWD/ncmpcpp/config /home/reinout/.ncmpcpp/config
+    ln -sf $PWD/ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
+    echo "Finished Installing Audio Client"
 }
 checkUser
 for i in "$@"; do
@@ -226,7 +259,7 @@ for i in "$@"; do
             elif [[ $i == "audioserver" ]]; then
                 audioserver
             else
-                echo "Unknown Command"
+                echo "Unknown Command $i"
             fi
     fi
 done

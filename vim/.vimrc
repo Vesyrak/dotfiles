@@ -1,6 +1,7 @@
 "-----------------------------------------"
 " Source: http://github.com/timss/vimconf "
 "-----------------------------------------"
+let g:syntastic_python_python_exec = '/usr/bin/python2.7'
 
 """ vimconf is not vi-compatible {{{
     set nocompatible
