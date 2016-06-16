@@ -232,10 +232,10 @@ def_key "s"
 def_key "p"
   pause
 #
-def_key ","
+def_key "."
   next
 #
-def_key "."
+def_key ","
   previous
 #
 #def_key "ctrl_h"
@@ -324,13 +324,13 @@ def_key "/"
 #
 def_key "?"
   find_item_backward
-
+#
 def_key "n"
   next_found_item
-
+#
 def_key "N"
   previous_found_item
-
+#
 #def_key "w"
 #  toggle_find_mode
 #
@@ -400,11 +400,7 @@ def_key "N"
 #def_key "m"
 #  set_visualizer_sample_multiplier
 #
-#def_key "n"
-#  move_sort_order_down
 #
-#def_key "n"
-#  move_selected_items_down
 #
 #def_key "M"
 #  move_selected_items_to

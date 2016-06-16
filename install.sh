@@ -56,12 +56,30 @@ xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
     sudo updatedb
     echo "File Locations Updated"
 }
+function i3rpi()
+{
+    echo "Installing i3 for Raspberry Pi"
+    sudo pacman -S xorg-xrdb xorg-xinit unclutter
+    yaourt -S j4-dmenu-desktop i3-gaps-git
+    echo "Installation Complete"
+    echo "Configuring..."
+    echo "Installing Xinitrc"
+    ln -sf $PWD/Xorgrpi/.xinitrc ~/.xinitrc
+    echo "Installing i3Config"
+    mkdir -p ~/.config/i3/
+    ln -sf $PWD/i3rpi/config ~/.config/i3/config
+    echo "i3 Installation Completed"
+}
 function main()
 {
     echo "Starting System Update"
     sudo pacman -Syu
+<<<<<<< HEAD
     sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme
 libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio pavucontrol
+=======
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix deluge dosfstools feh dmenu gimp htop gtk-chtheme libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux
+>>>>>>> 79fa7df8d5d52e76f71f953d94796c1d8a0fd6af
     echo "System Update Finished"
     echo "Enabling lightdm"
     sudo systemctl enable lightdm
@@ -82,8 +100,13 @@ libreoffice-fresh mlocate ntfs-3g openssh pacgraph rxvt-unicode scrot sudo tmux 
     rm pacaur -r
     echo "AUR Installation Finisshed"
     echo "Starting AUR Update"
+<<<<<<< HEAD
     pacaur -Syu
     pacaur -S gtk-theme-arc-git lain-git pulsemixer
+=======
+    yaourt -Syua
+    yaourt -S gtk-theme-arc-git
+>>>>>>> 79fa7df8d5d52e76f71f953d94796c1d8a0fd6af
     echo "AUR Update Finished"
     zsh
     echo "Updating File Locations"
@@ -137,17 +160,31 @@ function delugeserver()
     echo "    Port 22" >> ~/.ssh/config
     echo "Updated ssh config file for easy server access under 'torrent'"
 }
-
+function i3()
+{
+    echo "Installing i3"
+    sudo pacman -S xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    yaourt -S j4-dmenu-desktop i3-gaps-git i3lock-wrapper
+    echo "Installation Finished"
+    echo "Configuring..."
+    echo "Installing Xinitrc"
+    ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
+<<<<<<< HEAD
+    echo "Installing awesome"
+    ln -sf $PWD/awesome ~/.config/awesome
+=======
+    echo "Installing i3Config"
+    mkdir -p ~/.config/i3/
+    ln -sf $PWD/i3/config ~/.config/i3/config
+    echo "i3 Installation completed"
+}
 function config()
 {
     echo "Installing Config Files"
     echo "Installing XResources"
     mkdir -p ~/.config/xresources/
     ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
-    echo "Installing Xinitrc"
-    ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
-    echo "Installing awesome"
-    ln -sf $PWD/awesome ~/.config/awesome
+>>>>>>> 79fa7df8d5d52e76f71f953d94796c1d8a0fd6af
     echo "Installing Vim"
     ln -sf $PWD/vim/.vimrc ~/.vimrc
     ln -sf $PWD/vim/.vimrc.plugins ~/.vimrc.plugins
@@ -258,6 +295,10 @@ for i in "$@"; do
 
             elif [[ $i == "audioserver" ]]; then
                 audioserver
+            elif [[ $i == "i3" ]]; then
+                i3
+            elif [[ $i == "i3rpi" ]]; then
+                i3rpi
             else
                 echo "Unknown Command $i"
             fi
