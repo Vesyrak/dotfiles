@@ -23,6 +23,10 @@ pacman -Qii | awk '/^MODIFIED/ {print $2}'
 ##Todo:
   - Adding and seperating Graphical Drivers per device.
   - Updating user requirements for gaming (and probably others)
+  -- NOTE: If steam doesn't work, it is because of the outdated libraries it
+  ships with. Check
+  https://wiki.archlinux.org/index.php/Steam/Game-specific_troubleshooting
+  and https://bbs.archlinux.org/viewtopic.php?id=193802 for solutions.
   - Network configuration -> Porting everything to connman (Or other
     alternative) 
   - Move away from Systemd
