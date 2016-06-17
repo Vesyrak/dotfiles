@@ -1,29 +1,31 @@
 #!/bin/bash
 user=false
-function createUser()
+function createuser()
 {
-    if [ "$(id -u)" != "0" ]; then
-        echo ":: This script must be run as root" 1>&2
+    read -p ":: Do you want to create a new user? [Y/N] " -n 1 -r
+    if [[ $REPLY =~ ^[Nn]$ ]]
+    then
         exit 1
     fi
-    if id -u "reinout" >/dev/null 2>&1; then
+    echo
+    read -p ":: Please enter the user name: " NAME
+    if id -u $NAME >/dev/null 2>&1; then
         echo ":: User already exists!"
         exit 1
     fi
-    useradd reinout -m -G audio
-    sudo 'echo "reinout ALL=(ALL) ALL" >> /etc/sudoers'
+    sudo useradd $NAME -m -G audio
+    echo "$USER ALL=(ALL) ALL" | sudo tee --append /etc/sudoers > /dev/null
     echo ":: Please enter preferred user passwd"
-    sudo passwd reinout
-    su reinout
+    sudo passwd $NAME
 }
-function checkUser()
+function checkuser()
 {
-
-    if id -u "reinout" >/dev/null 2>&1; then
-        echo ":: Standard user exists. Continuing."
+    #TODO: Doesn't work as substitute user
+    if [ "$USER"  != "root" ]; then
+        echo ":: Executing as regular user. Continuing."
         user=true
     else
-        echo ":: Warning: Standard user doesn't exist. Please create it by executing /bin/bash install.sh createUser or change into it by using su"
+        echo ":: Warning: running as root. Please create a new user by running createuser or su into it to continue using this script."
         user=false
     fi
 }
@@ -90,6 +92,8 @@ libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot su
     sudo systemctl start sshd
     echo ":: Enabling lightdm"
     sudo systemctl enable lightdm
+    echo ":: Installing lightdm config"
+    sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
     echo ":: Installing AUR"
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
     tar -xvf cower.tar.gz
@@ -260,10 +264,10 @@ function audioserver()
     ln -sf $PWD/ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
     echo ":: Finished Installing Audio Client"
 }
-checkUser
+checkuser
 for i in "$@"; do
-    if [[ $i == "createUser" ]]; then
-        createUser
+    if [[ $i == "createuser" ]]; then
+        createuser
 
      elif $user; then
             if [[ $i == "main" ]]; then
