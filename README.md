@@ -2,7 +2,7 @@
 
 Use install.sh to install the files you would like to install. Install as user, not as root. 
 There is a built-in command to add a new user if preferred. 
-```
+
 ##Usage:
 ./install.sh
 
@@ -24,6 +24,7 @@ There is a built-in command to add a new user if preferred.
   - piholeclient: Sets up dns for a pi-hole client. Currently manipulates connman dns settings.
 
 ##Todo:
+  - Create --help section
   - Adding and seperating Graphical Drivers per device.
   - Updating user requirements for gaming (and probably others)
     - NOTE: If steam doesn't work, it is because of the outdated libraries it
