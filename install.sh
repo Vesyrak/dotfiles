@@ -32,28 +32,12 @@ function checkuser()
 function mainpi(){
     echo ":: Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server
-xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
     echo ":: System Update Finished"
     echo ":: Enabling sshd"
     sudo systemctl enable sshd
     sudo systemctl start sshd
-    echo ":: Installing AUR"
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
-    tar -xvf cower.tar.gz
-    cd cower
-    makepkg --skippgpcheck
-    makepkg -sri
-    cd ../
-    rm cower/ -r
-    wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
-    tar -xvf pacaur.tar.gz
-    cd pacaur
-    makepkg
-    makepkg -sri
-    cd ../
-    rm pacaur -r
-    echo ":: AUR Installation Finished"
+    aur
     echo ":: Starting AUR Update"
     pacaur -Syu
     echo ":: AUR Update Finished"
@@ -80,13 +64,12 @@ function main()
 {
     echo ":: Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme
-libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
+    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh
+    sudo pacman -S mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
     echo ":: System Update Finished"
     echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
-    echo ":: Enabling connman"
-    sudo systemctl enable connman
-    sudo systemctl start connman
+    echo ":: Enabling NetworkManager"
+    sudo systemctl start NetworkManager
     echo ":: Enabling sshd"
     sudo systemctl enable sshd
     sudo systemctl start sshd
@@ -94,6 +77,17 @@ libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot su
     sudo systemctl enable lightdm
     echo ":: Installing lightdm config"
     sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    aur
+    echo ":: Starting AUR Update"
+    pacaur -Syu
+    pacaur -S gtk-theme-arc-git lain-git pulsemixer
+    echo ":: AUR Update Finished"
+    echo ":: Updating File Locations"
+    sudo updatedb
+    echo ":: File Locations Updated"
+}
+function aur()
+{
     echo ":: Installing AUR"
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
     tar -xvf cower.tar.gz
@@ -110,13 +104,6 @@ libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot su
     cd ../
     rm pacaur -r
     echo ":: AUR Installation Finished"
-    echo ":: Starting AUR Update"
-    pacaur -Syu
-    pacaur -S gtk-theme-arc-git lain-git pulsemixer cmst
-    echo ":: AUR Update Finished"
-    echo ":: Updating File Locations"
-    sudo updatedb
-    echo ":: File Locations Updated"
 }
 function zsh()
 {
@@ -218,6 +205,8 @@ function audioclient()
 {
     echo ":: NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
     echo ":: This purely sets the IP address for easy connection"
+    mkdir ~/.ssh
+    touch ~/.ssh/config
     read -p ":: What is the server's IP address? " IP
     echo "Host mpd" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config
@@ -226,6 +215,8 @@ function audioclient()
 }
 function piholeclient()
 {
+    mkdir ~/.ssh
+    touch ~/.ssh/config
     read -p ":: What is the server's IP address? " IP
     echo "Host pihole" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config

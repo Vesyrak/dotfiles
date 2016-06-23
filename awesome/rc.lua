@@ -42,7 +42,7 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/default/theme.lua")
 
-terminal = "xterm"
+terminal = "urxvt"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -140,7 +140,7 @@ fsusage=lain.widgets.fs({
     end
 })
 mpdwidget = lain.widgets.mpd({
-    host="37.191.145.30",
+    host="192.168.0.158",
     settings= function()
         widget:set_markup("Now playing: " .. mpd_now.title .. " by " .. mpd_now.artist)
     end
