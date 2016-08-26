@@ -29,36 +29,14 @@ function checkuser()
         user=false
     fi
 }
-function mainpi(){
+function mainmin(){
     echo ":: Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium htop mlocate openssh pacgraph rxvt-unicode sudo tmux xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb
+    sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant htop mlocate openssh rxvt-unicode sudo
     echo ":: System Update Finished"
     echo ":: Enabling sshd"
     sudo systemctl enable sshd
     sudo systemctl start sshd
-    aur
-    echo ":: Starting AUR Update"
-    pacaur -Syu
-    echo ":: AUR Update Finished"
-    echo ":: Updating File Locations"
-    sudo updatedb
-    echo ":: File Locations Updated"
-}
-function i3rpi()
-{
-    #TODO: Is this still necessary?
-    echo ":: Installing i3 for Raspberry Pi"
-    sudo pacman -S xorg-xrdb xorg-xinit unclutter
-    yaourt -S j4-dmenu-desktop i3-gaps-git
-    echo ":: Installation Complete"
-    echo ":: Configuring..."
-    echo ":: Installing Xinitrc"
-    ln -sf $PWD/Xorgrpi/.xinitrc ~/.xinitrc
-    echo ":: Installing i3Config"
-    mkdir -p ~/.config/i3/
-    ln -sf $PWD/i3rpi/config ~/.config/i3/config
-    echo ":: i3 Installation Completed"
 }
 function main()
 {
@@ -77,8 +55,7 @@ function main()
     sudo systemctl enable lightdm
     echo ":: Installing lightdm config"
     sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
-    aur
-    echo ":: Starting AUR Update"
+    echo ":: Starting AUR Installs"
     pacaur -Syu
     pacaur -S gtk-theme-arc-git lain-git pulsemixer
     echo ":: AUR Update Finished"
@@ -145,7 +122,18 @@ function delugeserver()
     sudo systemctl enable deluged
     sudo systemctl start deluged
     echo ":: Deluge Server Finished"
-    echo ":: WebServer is probably not configured yet"
+    echo ":: Setting up Deluge WebServer"
+    sudo pacman -S python2-service-identity python2-mako
+    ln -sf $PWD/deluge/web.conf ~/.config/deluge/
+    ln -sf $PWD/deluge/core.conf ~/.config/deluge/
+    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
+    read -p "You will have to edit the following config file to change the user from deluge to reinout"
+    sudo vim /etc/systemd/system/deluged.service
+    echo ":: Creating deluge auth file"
+    read -p ":: Please enter the desired username: " name
+    read -p ":: Please enter the desired password: " passwd
+    echo "$name : $passwd :10" >> ~/.config/deluge/auth
+    sudo systemctl enable deluge-web
 }
 function awesome()
 {
@@ -192,7 +180,10 @@ function blackarch()
     sudo echo "Server = http://www.mirrorservice.org/sites/blackarch.org/blackarch//$repo/os/$arch " >> /etc/pacman.conf
     echo ":: Finished Installing Blackarch Repo"
 }
-
+function odroidC2audiofix(){
+    sudo cp $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
+    sudo chmod ugo+rwx /dev/am*
+}
 function gaming()
 {
 # TODO: update user requirements. enable multilib
@@ -211,6 +202,9 @@ function audioclient()
     echo "Host mpd" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config
     echo "    Port 22" >> ~/.ssh/config
+    echo "    ControlMaster auto" >> ~/.ssh/config
+    echo "    ControlPersist yes" >> ~/.ssh/config
+    echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
     echo ":: Updated ssh config file for easy server access under 'mpd'"
 }
 function piholeclient()
@@ -221,6 +215,9 @@ function piholeclient()
     echo "Host pihole" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config
     echo "    Port 22" >> ~/.ssh/config
+    echo "    ControlMaster auto" >> ~/.ssh/config
+    echo "    ControlPersist yes" >> ~/.ssh/config
+    echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
     echo ":: Updated ssh config file for easy server access under 'pihole'"
     echo ":: If you want to use the dns server, disable resolv.conf changing by your network manager."
     echo ":: You can do this in e.g. connman by editing connman.service and adding --nodnsproxy to execstart"
@@ -247,6 +244,14 @@ function audioserver()
     # Makes sure the wifi-dongle doesn't power off causing connection issues
     sudo ln -sf $PWD/music/WLanPOFix /etc/modprobe.d/8192cu.conf
     echo ":: Be sure to mount your drive on /music/Music, and becoming owner of it!"
+    echo ":: Installing Beets audio manager"
+    sudo pacman -S beets
+    mkdir ~/.config/beets
+    ln -sf $PWD/beets/config.yaml ~./config/beets/
+    echo ":: Installing Beets extension dependencies"
+    pacaur -S python2-discogs-client
+    sudo pacman -S python2-flask
+    echo ":: Beets installed"
     echo ":: Installing Audio Client"
     sudo pacman -Syu
     sudo pacman -S ncmpcpp
@@ -261,44 +266,72 @@ for i in "$@"; do
         createuser
 
      elif $user; then
-            if [[ $i == "main" ]]; then
-                main
-
-            elif [[ $i == "zsh" ]]; then
-                zsh
-
-            elif [[ $i == "mainpy" ]]; then
-                mainpy
-            elif [[ $i == "delugeserver" ]]; then
-                delugeserver
-
-            elif [[ $i == "config" ]]; then
-                config
-
-            elif [[ $i == "blackarch" ]]; then
-                blackarch
-
-            elif [[ $i == "gaming" ]]; then
-                gaming
-
-            elif [[ $i == "audioclient" ]]; then
-                audioclient
-
-            elif [[ $i == "audioserver" ]]; then
-                audioserver
-            elif [[ $i == "piholeclient" ]]; then
-                piholeclient
-            elif [[ $i == "i3" ]]; then
-                i3
-            elif [[ $i == "i3rpi" ]]; then
-                i3rpi
-            elif [[ $i == "xonsh" ]]; then
-                xonsh
-            elif [[ $i == "awesome" ]]; then
-                awesome
+            read -p ":: Do you want to install a minimal package list? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+            then
+                mainmin
             else
-                echo ":: Unknown Command $i"
+                read -p ":: Do you want to install a complete package list? [Y/N]" -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]
+                    main
+                fi
             fi
+            echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
+            read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                aur
+            fi
+            read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                delugeserver
+            fi
+            read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                config
+            fi
+            read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                blackarch
+            fi
+            read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                gaming
+            fi
+            read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                audioserver
+            else
+                read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]
+                    audioclient
+                fi
+            fi
+            read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                piholeclient
+            fi
+            read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                aweseome
+            else
+                read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]
+                    i3
+                fi
+            fi
+            read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                zsh
+            else
+                echo ":: WARNING: THE FOLLOWING IS STILL VERY EXPERIMENTAL"
+                read -p ":: Do you want to install xonsh as shell instead? [Y/N]" -n 1 -r
+                if [[ $REPLY =~ ^[Yy]$ ]]
+                    xonsh
+                fi
+            fi
+            read -p ":: Is this an odroid C2 without working audio? [Y/N]"
+            if [[ $REPLY =~ ^[Yy]$ ]]
+                odroidC2audiofix
     fi
 done
-echo ":: Nothing left to be done"
+echo ":: Install script terminating"

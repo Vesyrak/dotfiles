@@ -8,4 +8,6 @@
 nm-applet --sm-disable &
 
 xrdb -merge ~/.config/xresources/Netron.Xresource
+export STEAM_RUNTIME=0
+
 
