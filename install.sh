@@ -20,8 +20,7 @@ function createuser()
 }
 function checkuser()
 {
-	#TODO: Doesn't work as substitute user
-	if [ "$USER"  != "root" ]; then
+    if [ "$(id -un)"  != "root" ]; then
 		echo ":: Executing as regular user. Continuing."
 		user=true
 	else
