@@ -33,7 +33,7 @@ function checkuser()
 function mainmin(){
 	echo ":: Starting System Update"
 	sudo pacman -Syu
-	sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant htop mlocate openssh xorg-xauth xorg-xhost rxvt-unicode sudo
+	sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant htop mlocate openssh xorg-xauth xorg-xhost rxvt-unicode sudo wget vim
 	echo ":: System Update Finished"
 	ssh
 }
@@ -132,6 +132,7 @@ function delugeserver()
 	echo ":: Deluge Server Finished"
 	echo ":: Setting up Deluge WebServer"
 	sudo pacman -S python2-service-identity python2-mako
+	mkdir ~/.config/deluge/
 	ln -sf $PWD/deluge/web.conf ~/.config/deluge/
 	ln -sf $PWD/deluge/core.conf ~/.config/deluge/
 	sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
@@ -189,8 +190,11 @@ function blackarch()
 	echo ":: Finished Installing Blackarch Repo"
 }
 function odroidC2audiofix(){
+	echo ":: Installing odroid audio fix"
 	sudo cp $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
-	sudo chmod ugo+rwx /dev/am*
+	sudo chmod 666 /dev/am*
+    sudo gpasswd --add $USER audio
+    echo ":: Reboot to gain audio functionality"
 }
 function gaming()
 {
@@ -241,9 +245,9 @@ function audioserver()
 	sudo chown -R reinout /var/lib/mpd
 
 	# music linkin'
-	ln -sf $PWD/mpd/mpd.conf /etc/mpd.conf
+	sudo ln -sf $PWD/mpd/mpd.conf /etc/mpd.conf
 	# mpd bootin'
-	mpd --create-db
+	mpd
 	sleep 1
 	sudo systemctl stop mpd
 	sudo systemctl enable mpd
@@ -255,7 +259,7 @@ function audioserver()
 	echo ":: Installing Beets audio manager"
 	sudo pacman -S beets
 	mkdir ~/.config/beets
-	ln -sf $PWD/beets/config.yaml ~./config/beets/
+	ln -sf $PWD/beets/config.yaml ~/.config/beets/
 	echo ":: Installing Beets extension dependencies"
 	pacaur -S python2-discogs-client
 	sudo pacman -S python2-flask
@@ -263,7 +267,7 @@ function audioserver()
 	echo ":: Installing Audio Client"
 	sudo pacman -Syu
 	sudo pacman -S ncmpcpp
-	mkdir .ncmpcpp
+	mkdir ~/.ncmpcpp
 	ln -sf $PWD/ncmpcpp/config /home/reinout/.ncmpcpp/config
 	ln -sf $PWD/ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
 	echo ":: Finished Installing Audio Client"
@@ -272,74 +276,73 @@ checkuser
 for i in "$@"; do
 	if [[ $i == "createuser" ]]; then
 		createuser
-
-	elif $user; then
+fi
+done
 		read -p ":: Do you want to install a minimal package list? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
-		then
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			mainmin
 		else
 			read -p ":: Do you want to install a complete package list? [Y/N]" -n 1 -r
-			if [[ $REPLY =~ ^[Yy]$ ]]
+			if [[ $REPLY =~ ^[Yy]$ ]];then
 				main
 			fi
 		fi
 		echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
 		read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			aur
 		fi
 		read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			delugeserver
 		fi
 		read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			config
 		fi
 		read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			blackarch
 		fi
 		read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			gaming
 		fi
 		read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			audioserver
 		else
 			read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
-			if [[ $REPLY =~ ^[Yy]$ ]]
+			if [[ $REPLY =~ ^[Yy]$ ]];then
 				audioclient
 			fi
 		fi
 		read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			piholeclient
 		fi
 		read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			aweseome
 		else
 			read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
-			if [[ $REPLY =~ ^[Yy]$ ]]
+			if [[ $REPLY =~ ^[Yy]$ ]];then
 				i3
 			fi
 		fi
 		read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			zsh
 		else
 			echo ":: WARNING: THE FOLLOWING IS STILL VERY EXPERIMENTAL"
 			read -p ":: Do you want to install xonsh as shell instead? [Y/N]" -n 1 -r
-			if [[ $REPLY =~ ^[Yy]$ ]]
+			if [[ $REPLY =~ ^[Yy]$ ]];then
 				xonsh
 			fi
 		fi
 		read -p ":: Is this an odroid C2 without working audio? [Y/N]"
-		if [[ $REPLY =~ ^[Yy]$ ]]
+		if [[ $REPLY =~ ^[Yy]$ ]];then
 			odroidC2audiofix
 		fi
-	done
-	echo ":: Install script terminating"
+echo ":: Install script terminating"
+
