@@ -21,49 +21,57 @@
 #define Foreground_Color #e6e8ef
 #define Selected_Text_Color #7d8fa4
 #define Selection_Color #2f363e
-  Rxvt*color0:       Ansi_0_Color
-        Rxvt*color1:       Ansi_1_Color
-        Rxvt*color2:       Ansi_2_Color
-        Rxvt*color3:       Ansi_3_Color
-        Rxvt*color4:       Ansi_4_Color
-        Rxvt*color5:       Ansi_5_Color
-        Rxvt*color6:       Ansi_6_Color
-        Rxvt*color7:       Ansi_7_Color
-        Rxvt*color8:       Ansi_8_Color
-        Rxvt*color9:       Ansi_9_Color
-        Rxvt*color10:      Ansi_10_Color
-        Rxvt*color11:      Ansi_11_Color
-        Rxvt*color12:      Ansi_12_Color
-        Rxvt*color13:      Ansi_13_Color
-        Rxvt*color14:      Ansi_14_Color
-        Rxvt*color15:      Ansi_15_Color
-        Rxvt*colorBD:      Bold_Color
-        Rxvt*colorIT:      Italic_Color
-        Rxvt*colorUL:      Underline_Color
-        Rxvt*foreground:   Foreground_Color
-        Rxvt*background:   Background_Color
-        Rxvt*cursorColor:  Cursor_Color
-        Rxvt*scrollBar: false
+URxvt.font: xft:Droid Sans Mono Slashed for Powerline:size=10
+URxvt*autohint: 0
+URxvt*hintstyle: hintslight
+URxvt*lcdfilter: lcddefault
+URxvt*rgba: rgb
+URxvt*antialias: 1
+URxvt*letterSpace: -1
+URxvt*locale: true
+URxvt*color0:       Ansi_0_Color
+URxvt*color1:       Ansi_1_Color
+URxvt*color2:       Ansi_2_Color
+URxvt*color3:       Ansi_3_Color
+URxvt*color4:       Ansi_4_Color
+URxvt*color5:       Ansi_5_Color
+URxvt*color6:       Ansi_6_Color
+URxvt*color7:       Ansi_7_Color
+URxvt*color8:       Ansi_8_Color
+URxvt*color9:       Ansi_9_Color
+URxvt*color10:      Ansi_10_Color
+URxvt*color11:      Ansi_11_Color
+URxvt*color12:      Ansi_12_Color
+URxvt*color13:      Ansi_13_Color
+URxvt*color14:      Ansi_14_Color
+URxvt*color15:      Ansi_15_Color
+URxvt*colorBD:      Bold_Color
+URxvt*colorIT:      Italic_Color
+URxvt*colorUL:      Underline_Color
+URxvt*foreground:   Foreground_Color
+URxvt*background:   Background_Color
+URxvt*cursorColor:  Cursor_Color
+URxvt*scrollBar: false
 
- XTerm*color0:      Ansi_0_Color
-        XTerm*color1:      Ansi_1_Color
-        XTerm*color2:      Ansi_2_Color
-        XTerm*color3:      Ansi_3_Color
-        XTerm*color4:      Ansi_4_Color
-        XTerm*color5:      Ansi_5_Color
-        XTerm*color6:      Ansi_6_Color
-        XTerm*color7:      Ansi_7_Color
-        XTerm*color8:      Ansi_8_Color
-        XTerm*color9:      Ansi_9_Color
-        XTerm*color10:     Ansi_10_Color
-        XTerm*color11:     Ansi_11_Color
-        XTerm*color12:     Ansi_12_Color
-        XTerm*color13:     Ansi_13_Color
-        XTerm*color14:     Ansi_14_Color
-        XTerm*color15:     Ansi_15_Color
-        XTerm*colorBD:     Bold_Color
-        XTerm*colorIT:     Italic_Color
-        XTerm*colorUL:     Underline_Color
-        XTerm*foreground:  Foreground_Color
-        XTerm*background:  Background_Color
-        XTerm*cursorColor: Cursor_Color
+XTerm*color0:      Ansi_0_Color
+XTerm*color1:      Ansi_1_Color
+XTerm*color2:      Ansi_2_Color
+XTerm*color3:      Ansi_3_Color
+XTerm*color4:      Ansi_4_Color
+XTerm*color5:      Ansi_5_Color
+XTerm*color6:      Ansi_6_Color
+XTerm*color7:      Ansi_7_Color
+XTerm*color8:      Ansi_8_Color
+XTerm*color9:      Ansi_9_Color
+XTerm*color10:     Ansi_10_Color
+XTerm*color11:     Ansi_11_Color
+XTerm*color12:     Ansi_12_Color
+XTerm*color13:     Ansi_13_Color
+XTerm*color14:     Ansi_14_Color
+XTerm*color15:     Ansi_15_Color
+XTerm*colorBD:     Bold_Color
+XTerm*colorIT:     Italic_Color
+XTerm*colorUL:     Underline_Color
+XTerm*foreground:  Foreground_Color
+XTerm*background:  Background_Color
+XTerm*cursorColor: Cursor_Color

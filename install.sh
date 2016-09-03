@@ -105,64 +105,65 @@ function zsh()
 	ln -sf $PWD/zsh/.zlogin ~/.zlogin
 }
 function xonsh()
-{
-	echo ":: Installing XONSH"
-	pacaur -Syu
-	pacaur -S xonsh
-	echo ":: XONSH Installation Finished. Changing Shell.."
-	chsh -s /usr/bin/xonsh
-	echo ":: Default Shell is now XONSH"
-	echo ":: Reload Shell to see effects"
-	echo ":: Installin XONSH $ ZSH config used by XONSH"
-	ln -sf $PWD/zsh/.zshrc ~/.zshrc
-	ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
-	ln -sf $PWD/zsh/.zlogin ~/.zlogin
-	mkdir -p ~/.config/xonsh
-	ln -sf $PWD/xonsh/config.json ~/.config/xonsh/config.json
-}
+    {
+        echo ":: Installing XONSH"
+        pacaur -Syu
+        pacaur -S xonsh
+        echo ":: XONSH Installation Finished. Changing Shell.."
+        chsh -s /usr/bin/xonsh
+        echo ":: Default Shell is now XONSH"
+        echo ":: Reload Shell to see effects"
+        echo ":: Installin XONSH $ ZSH config used by XONSH"
+        ln -sf $PWD/zsh/.zshrc ~/.zshrc
+        ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
+        ln -sf $PWD/zsh/.zlogin ~/.zlogin
+        mkdir -p ~/.config/xonsh
+        ln -sf $PWD/xonsh/config.json ~/.config/xonsh/config.json
+    }
 
-function delugeserver()
-{
-	echo ":: Setting up Deluge Server"
-	sudo pacman -Syu
-	sudo pacman -S deluge
-	sudo systemctl enable deluged
-	sudo systemctl start deluged
-	echo ":: Deluge Server Finished"
-	echo ":: Setting up Deluge WebServer"
-	sudo pacman -S python2-service-identity python2-mako
-	mkdir ~/.config/deluge/
-	ln -sf $PWD/deluge/web.conf ~/.config/deluge/
-	ln -sf $PWD/deluge/core.conf ~/.config/deluge/
-	sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
-	read -p "You will have to edit the following config file to change the user from deluge to reinout"
-	sudo vim /etc/systemd/system/deluged.service
-	echo ":: Creating deluge auth file"
-	read -p ":: Please enter the desired username: " name
-	read -p ":: Please enter the desired password: " passwd
-	echo "$name : $passwd :10" >> ~/.config/deluge/auth
-	sudo systemctl enable deluge-web
-}
-function awesome()
-{
-	echo ":: Installing awesome"
-	sudo pacman -S awesome
-	echo ":: Installation Finished"
-	echo ":: Configuring..."
-	echo ":: Installing XProfile"
-	ln -sf $PWD/Xorg/.xprofile ~/.xprofile
-	echo ":: Installing Xinitrc"
-	ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
-	echo ":: Installing awesome"
-	ln -sf $PWD/awesome ~/.config/awesome
-	echo ":: Awesome Installation completed"
-}
-function config()
-{
-	echo ":: Installing Config Files"
-	echo ":: Installing XResources"
-	mkdir -p ~/.config/xresources/
-	ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
+    function delugeserver()
+    {
+        echo ":: Setting up Deluge Server"
+        sudo pacman -Syu
+        sudo pacman -S deluge
+        sudo systemctl enable deluged
+        sudo systemctl start deluged
+        echo ":: Deluge Server Finished"
+        echo ":: Setting up Deluge WebServer"
+        sudo pacman -S python2-service-identity python2-mako
+        mkdir ~/.config/deluge/
+        ln -sf $PWD/deluge/web.conf ~/.config/deluge/
+        ln -sf $PWD/deluge/core.conf ~/.config/deluge/
+        sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
+        read -p "You will have to edit the following config file to change the user from deluge to reinout"
+        sudo vim /etc/systemd/system/deluged.service
+        echo ":: Creating deluge auth file"
+        read -p ":: Please enter the desired username: " name
+        read -p ":: Please enter the desired password: " passwd
+        echo "$name : $passwd :10" >> ~/.config/deluge/auth
+        sudo systemctl enable deluge-web
+    }
+    function awesome()
+    {
+        echo ":: Installing awesome"
+        sudo pacman -S awesome
+        echo ":: Installation Finished"
+        echo ":: Configuring..."
+        echo ":: Installing XProfile"
+        ln -sf $PWD/Xorg/.xprofile ~/.xprofile
+        echo ":: Installing Xinitrc"
+        ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
+        echo ":: Installing awesome"
+        ln -sf $PWD/awesome ~/.config/awesome
+        echo ":: Awesome Installation completed"
+    }
+    function config()
+    {
+        echo ":: Installing Config Files"
+        echo ":: Installing XResources"
+        mkdir -p ~/.config/xresources/
+        pacaur -S ttf-Droid-Sans-Mono-Slashed-Powerline-git
+        ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
 	echo ":: Installing Vim"
 	ln -sf $PWD/vim/.vimrc ~/.vimrc
 	ln -sf $PWD/vim/.vimrc.plugins ~/.vimrc.plugins
