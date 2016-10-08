@@ -242,6 +242,25 @@ function piholeclient()
     sudo touch /etc/resolv.conf
     echo "nameserver $IP" | sudo tee --append /etc/resolv.conf > /dev/null
 }
+function tt-rss()
+{
+    sudo pacman -S tt-rss mysql apache php php-apache
+    sudo systemctl start httpd
+    sudo systemctl enable httpd
+    sudo ln -sf $PWD/tt-rss/httpd/httpd.conf /etc/httpd/conf/httpd.conf
+    sudo ln -sf /usr/share/webapps/tt-rss /srv/http/tt-rss
+    sudo mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+    sudo systemctl enable mariadb
+    sudo systemctl start mariadb
+    sudo mysql_secure_installation
+    echo "CREATE USER 'ttrss'@'localhost' IDENTIFIED BY 'somepassword';"
+    echo "CREATE DATABASE ttrss;"
+    echo "GRANT ALL PRIVILEGES ON ttrss.* TO "ttrss"@"localhost" IDENTIFIED BY 'somepassword';"
+    mysql -p -u root
+    sudo ln -sf $PWD/tt-rss/php.ini
+    sudo rm /etc/webapps/tt-rss/config.php
+    echo "Install using webscript"
+}
 function audioserver()
 {
     sudo pacman -Syu
@@ -300,6 +319,10 @@ fi
 read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then
     delugeserver
+fi
+read -p ":: Do you want to use this machine as a tt-rss server? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    tt-rss
 fi
 read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then
