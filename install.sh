@@ -51,7 +51,8 @@ function main()
     echo ":: Enabling lightdm"
     sudo systemctl enable lightdm
     echo ":: Installing lightdm config"
-    sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    sudo cp $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    sudo cp $PWD/lightdm/wallpaper.png /etc/lightdm/wallpaper.png
     echo ":: Starting AUR Installs"
     pacaur -Syu
     pacaur -S gtk-theme-arc-git lain-git pulsemixer
