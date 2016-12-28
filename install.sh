@@ -145,6 +145,18 @@ function createuser()
         echo "$name : $passwd :10" >> ~/.config/deluge/auth
         sudo systemctl enable deluge-web
     }
+    function syncthingserver()
+    {
+        sudo pacman -Syu syncthing
+        sudo systemctl enable syncthing@$USER
+        sudo systemctl start syncthing@$USER
+    }
+    function syncthingclient()
+    {
+        sudo pacman -Syu syncthing
+        sudo systemctl --user enable syncthing
+        sudo systemctl --user start syncthing
+    }
     function awesome()
     {
         echo ":: Installing awesome"
