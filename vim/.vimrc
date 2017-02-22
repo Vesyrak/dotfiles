@@ -2,6 +2,7 @@
 " Source: http://github.com/timss/vimconf "
 "-----------------------------------------"
 let g:syntastic_python_python_exec = '/usr/bin/python2.7'
+set encoding=utf-8
 
 """ vimconf is not vi-compatible {{{
     set nocompatible
