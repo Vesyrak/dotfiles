@@ -56,7 +56,7 @@ plugins=(archlinux catimg dirhistory vi-mode sudo git web-search)
 
 
 # You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -81,3 +81,5 @@ plugins=(archlinux catimg dirhistory vi-mode sudo git web-search)
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.zsh_aliases
 source $ZSH/oh-my-zsh.sh
+source /usr/share/doc/pkgfile/command-not-found.bash
+export LC_CTYPE=en_US.UTF-8

@@ -41,12 +41,12 @@ function main()
 {
     echo ":: Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh
-    sudo pacman -S mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
+    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
     echo ":: System Update Finished"
     echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
     echo ":: Enabling NetworkManager"
     sudo systemctl start NetworkManager
+    sudo systemctl enable NetworkManager
     ssh
     echo ":: Enabling lightdm"
     sudo systemctl enable lightdm
@@ -83,7 +83,7 @@ function aur()
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
     tar -xvf pacaur.tar.gz
     cd pacaur
-    makepkg
+    makepkg --skippgpcheck
     makepkg -sri
     cd ../
     rm pacaur -r
@@ -333,7 +333,7 @@ if [[ $REPLY =~ ^[Yy]$ ]];then
 fi
 read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then
-    aweseome
+    awesome
 else
     read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
