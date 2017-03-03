@@ -32,7 +32,7 @@ function createuser()
     function mainmin(){
         echo ":: Starting System Update"
         sudo pacman -Syu
-        sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant htop mlocate openssh xorg-xauth xorg-xhost rxvt-unicode sudo wget vim
+        sudo pacman -S base-devel alsa-utils dhcpcd dialog iw wpa_supplicant htop mlocate openssh xorg-xauth xorg-xhost rxvt-unicode sudo wget gvim
         echo ":: System Update Finished"
         ssh
     }
@@ -42,7 +42,7 @@ function createuser()
         echo ":: Starting System Update"
         sudo pacman -Syu
         sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh
-        sudo pacman -S mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
+        sudo pacman -S mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio gvim
         echo ":: System Update Finished"
         echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
         echo ":: Enabling NetworkManager"
@@ -53,6 +53,7 @@ function createuser()
         echo ":: Installing lightdm config"
         sudo cp $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
         sudo cp $PWD/lightdm/wallpaper.png /etc/lightdm/wallpaper.png
+	aur
         echo ":: Starting AUR Installs"
         pacaur -Syu
         pacaur -S gtk-theme-arc-git lain-git pulsemixer
@@ -74,6 +75,7 @@ function createuser()
     function aur()
     {
         echo ":: Installing AUR"
+        sudo pacman -S expac yajl
         wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
         tar -xvf cower.tar.gz
         cd cower
@@ -81,7 +83,6 @@ function createuser()
         makepkg -sri
         cd ../
         rm cower/ -r
-        sudo pacman -S expac
         wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
         tar -xvf pacaur.tar.gz
         cd pacaur
@@ -235,7 +236,7 @@ function createuser()
     function automountServer()
     {
         echo ":: Putting media drive in automount. If you ever change harddrive, change the UUID"
-        echo "UUID=4f7a9f5a-2bf7-46e2-9560-29f0326293e4 /music ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" >> /etc/fstab
+        sudo echo "UUID=4f7a9f5a-2bf7-46e2-9560-29f0326293e4 /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" >> /etc/fstab
     }
     function piholeclient()
     {
@@ -281,19 +282,20 @@ function createuser()
         sudo pacman -S mpd mlocate screenfetch alsa-utils
         # music linkin'
         sudo ln -sf $PWD/mpd/mpd.conf /etc/mpd.conf
-        setfacl -m "u:mpd:rwx" /music
+        setfacl -m "u:mpd:rwx" /media
+        setfacl -m "u:mpd:rwx" /home/reinout
         # mpd bootin'
         mpd
         sleep 1
         sudo systemctl stop mpd
         sudo systemctl enable mpd
-        read -p ":: Put 'RequiresMountsFor=/music/' under [Unit]"
+        read -p ":: Put 'RequiresMountsFor=/media/' under [Unit]"
         sudo vim /etc/systemd/system/default.target.wants/mpd.service
         sudo systemctl start mpd
 
         # Makes sure the wifi-dongle doesn't power off causing connection issues
         sudo ln -sf $PWD/music/WLanPOFix /etc/modprobe.d/8192cu.conf
-        echo ":: Be sure to mount your drive on /music/Music, and becoming owner of it!"
+        echo ":: Be sure to mount your drive on /media/Music, and becoming owner of it!"
         echo ":: Installing Beets audio manager"
         sudo pacman -S beets
         mkdir ~/.config/beets
