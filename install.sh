@@ -203,12 +203,26 @@ function createuser()
         sudo echo "Server = http://www.mirrorservice.org/sites/blackarch.org/blackarch//$repo/os/$arch " >> /etc/pacman.conf
         echo ":: Finished Installing Blackarch Repo"
     }
+    function fixlocale(){
+        echo ":: Setting locale settings"
+        echo "en_US ISO-8859-1" | sudo tee --append /etc/locale.gen > /dev/null
+        echo "en_US.UTF-8 UTF-8" | sudo tee --append /etc/locale.gen > /dev/null
+        sudo locale-gen
+        sudo touch /etc/locale.conf
+        echo "LANG=en_US.UTF-8" | sudo tee --append /etc/locale.conf > /dev/null
+
+    }
     function odroidC2audiofix(){
+        fixlocale
         echo ":: Installing odroid audio fix"
         sudo cp $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
         sudo chmod 666 /dev/am*
         sudo gpasswd --add $USER audio
+        echo ":: Fixing USB sound card error logs"
+        sudo touch /etc/modprobe.d/alsa-base.conf
+        echo "options snd-usb-audio nrpacks=1" | sudo tee --append /etc/modprobe.d/alsa-base.conf > /dev/null
         echo ":: Reboot to gain audio functionality"
+
     }
     function gaming()
     {
@@ -236,7 +250,7 @@ function createuser()
     function automountServer()
     {
         echo ":: Putting media drive in automount. If you ever change harddrive, change the UUID"
-        sudo echo "UUID=4f7a9f5a-2bf7-46e2-9560-29f0326293e4 /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" >> /etc/fstab
+        echo "UUID=4f7a9f5a-2bf7-46e2-9560-29f0326293e4 /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" | sudo tee -append /etc/fstab > /dev/null
     }
     function piholeclient()
     {
