@@ -8,6 +8,8 @@
 nm-applet --sm-disable &
 
 xrdb -merge ~/.config/xresources/Netron.Xresource
+feh --bg-scale ~/Wallpapers/red.png --bg-scale ~/Wallpapers/blu.png
+
 export STEAM_RUNTIME=0
 
 

@@ -92,9 +92,9 @@ visualizer_sync_interval = 15
 #
 ## Available values: spectrum, wave.
 ##
-visualizer_type = spectrum 
+visualizer_type = spectrum
 #
-visualizer_look = "II"
+visualizer_look = "░░"
 #
 ##### system encoding #####
 ##
@@ -111,7 +111,7 @@ visualizer_look = "II"
 ## is different.
 ##
 #
-#system_encoding = ""
+system_encoding = "UTF-8"
 #
 ##### delays #####
 #
@@ -274,7 +274,7 @@ song_list_format = {$1%a$9 - }{%t}|{$8%f$9}$R{$3(%l)$9}
 ##   not available.
 ##
 #
-song_columns_list_format = (20)[]{a} (43)[white]{t|f:Title} (10)[green]{g} (20)[cyan]{b} (7f)[magenta]{l}
+song_columns_list_format = (20)[cyan]{ar} (45)[white]{t|f:Title} (35)[cyan]{brE}
 #
 ##### various settings #####
 #
@@ -298,11 +298,11 @@ song_columns_list_format = (20)[]{a} (43)[white]{t|f:Title} (10)[green]{g} (20)[
 ##
 playlist_display_mode = columns
 #
-browser_display_mode = columns 
+browser_display_mode = columns
 #
-search_engine_display_mode = columns 
+search_engine_display_mode = columns
 #
-playlist_editor_display_mode = columns 
+playlist_editor_display_mode = columns
 #
 #discard_colors_if_item_is_selected = yes
 #
@@ -320,9 +320,9 @@ autocenter_mode = yes
 ## Note: You can specify third character which will
 ## be used to build 'empty' part of progressbar.
 ##
-#progressbar_look = =>
+progressbar_look =─┉
 #
-#progressbar_boldness = yes
+progressbar_boldness = no
 #
 ## Available values: database, playlist.
 ##
@@ -330,7 +330,7 @@ autocenter_mode = yes
 #
 ## Available values: classic, alternative.
 ##
-#user_interface = classic
+user_interface = classic
 #
 #data_fetching_delay = yes
 #
@@ -348,11 +348,11 @@ autocenter_mode = yes
 #
 #default_tag_editor_pattern = %n - %t
 #
-#header_visibility = yes
+header_visibility = yes
 #
-#statusbar_visibility = yes
+statusbar_visibility = yes
 #
-#titles_visibility = yes
+titles_visibility = no
 #
 #header_text_scrolling = yes
 #
@@ -360,9 +360,9 @@ autocenter_mode = yes
 #
 #lines_scrolled = 2
 #
-follow_now_playing_lyrics = yes 
+follow_now_playing_lyrics = yes
 #
-#fetch_lyrics_for_current_song_in_background = no
+fetch_lyrics_for_current_song_in_background = yes
 #
 #store_lyrics_in_song_dir = no
 #
@@ -433,7 +433,7 @@ follow_now_playing_lyrics = yes
 ## "The" word while sorting items in browser, tags in
 ## media library, etc.
 ##
-ignore_leading_the = yes 
+ignore_leading_the = yes
 #
 #block_search_constraints_change_if_items_found = yes
 #
@@ -465,7 +465,7 @@ ignore_leading_the = yes
 #
 #search_engine_default_search_mode = 1
 #
-external_editor = vim 
+external_editor = vim
 #
 ## Note: set to yes if external editor is a console application.
 ##
@@ -473,9 +473,9 @@ use_console_editor = yes
 #
 ##### colors definitions #####
 #
-#colors_enabled = yes
+colors_enabled = yes
 #
-#empty_tag_color = cyan
+empty_tag_color = green
 #
 #header_window_color = default
 #
@@ -485,7 +485,7 @@ use_console_editor = yes
 #
 #state_flags_color = default
 #
-#main_window_color = yellow
+main_window_color = cyan
 #
 #color1 = white
 #
@@ -495,7 +495,7 @@ use_console_editor = yes
 #
 #progressbar_color = black
 #
-#progressbar_elapsed_color = green
+progressbar_elapsed_color = green
 #
 #statusbar_color = default
 #

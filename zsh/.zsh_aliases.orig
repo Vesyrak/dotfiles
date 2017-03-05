@@ -1,4 +1,7 @@
-alias ncmpcpp='ssh -t mpd "source /etc/profile; ncmpcpp"'
+<<<<<<< HEAD
+#alias ncmpcpp='ssh -t mpd "source /etc/profile; ncmpcpp"'
+=======
+>>>>>>> bce40b47167a78c354f864c0d7fd20b1048c8322
 alias filterwpjpg='feh --action1 "rm %f" --action2 "mv %f ../Wallpapers/."'
 alias ethrpi='sudo ip link set up enp0s25 && sudo ip addr add 169.254.0.110/24 dev enp0s25'
 alias grep='grep --color=auto'

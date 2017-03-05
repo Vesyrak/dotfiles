@@ -54,7 +54,7 @@ function main()
     sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
     echo ":: Starting AUR Installs"
     pacaur -Syu
-    pacaur -S gtk-theme-arc-git lain-git pulsemixer
+    pacaur -S gtk-theme-arc-git pulsemixer
     echo ":: AUR Update Finished"
     echo ":: Updating File Locations"
     sudo updatedb
@@ -135,7 +135,7 @@ function delugeserver()
     ln -sf $PWD/deluge/web.conf ~/.config/deluge/
     ln -sf $PWD/deluge/core.conf ~/.config/deluge/
     sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
-    read -p "You will have to edit the following config file to change the user from deluge to reinout"
+    read -p "You will have to edit the following config file to change the user from deluge to $USER"
     sudo vim /etc/systemd/system/deluged.service
     echo ":: Creating deluge auth file"
     read -p ":: Please enter the desired username: " name
@@ -147,15 +147,33 @@ function awesome()
 {
     echo ":: Installing awesome"
     sudo pacman -S awesome
+    pacaur -S lain-git
     echo ":: Installation Finished"
     echo ":: Configuring..."
     echo ":: Installing XProfile"
     ln -sf $PWD/Xorg/.xprofile ~/.xprofile
     echo ":: Installing Xinitrc"
-    ln -sf $PWD/Xorg/.xinitrc ~/.xinitrc
+    ln -sf $PWD/Xorg/.xinitrc.awesome ~/.xinitrc #TODO redundant?
     echo ":: Installing awesome"
     ln -sf $PWD/awesome ~/.config/awesome
-    echo ":: Awesome Installation completed"
+    echo ":: Finished Installing AwesomeWM"
+}
+function i3()
+{
+    echo ":: Installing i3"
+    pacaur -S i3status i3lock-blur i3-gaps rofi compton py3status python-mpd2 
+    mkdir -p ~/.config/i3/
+    mkdir -p ~/.config/i3status/ 
+    echo ":: Installing xprofile"
+    ln -sf $PWD/Xorg/.xprofile.i3 ~/.xprofile
+    ln -sf $PWD/i3/i3status.conf ~/.config/i3status/config
+    ln -sf $PWD/i3/i3status.conf ~/.config/i3status/config
+    echo ":: Finished Installing i3WM"
+    echo ":: Installing Compton"
+    sudo pacman -S compton
+    ln -sf $PWD/compton/compton.conf ~/.config/compton.conf
+    echo ":: Finished Installing Compton"
+
 }
 function config()
 {
@@ -190,17 +208,10 @@ function blackarch()
 }
 function odroidC2audiofix(){
     echo ":: Installing odroid audio fix"
-    sudo cp $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
+    sudo ln -sf $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
     sudo chmod 666 /dev/am*
     sudo gpasswd --add $USER audio
     echo ":: Reboot to gain audio functionality"
-}
-function gaming()
-{
-    # TODO: update user requirements. enable multilib
-    sudo pacman -Syu
-    sudo pacman -S steam
-    pacaur -S steam-fonts
 }
 
 function audioclient()
@@ -232,8 +243,8 @@ function piholeclient()
     echo "    HostName $IP " >> ~/.ssh/config
     echo "    Port 22" >> ~/.ssh/config
     echo "    ControlMaster auto" >> ~/.ssh/config
-    echo "    ControlPersist yes" >> ~/.ssh/config
-    echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
+    #echo "    ControlPersist yes" >> ~/.ssh/config TODO
+    #echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
     echo ":: Updated ssh config file for easy server access under 'pihole'"
     echo ":: If you want to use the dns server, disable resolv.conf changing by your network manager."
     echo ":: You can do this in e.g. connman by editing connman.service and adding --nodnsproxy to execstart"
@@ -308,10 +319,6 @@ fi
 read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then
     blackarch
-fi
-read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    gaming
 fi
 read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then

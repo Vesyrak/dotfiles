@@ -5,7 +5,9 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-font pango:monospace 8
+#font pango:monospace 8
+font pango:Droid Sans Mono Slashed for Powerline 11
+
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -20,7 +22,9 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec j4-dmenu-desktop --dmenu="dmenu-recent-aliases -i -p 'Serious Love'" --term="rxvt-unicode"
+bindsym $mod+d exec "rofi -lines 5 -font \\"Droid Sans Mono Slashed for Powerline 12\\" -color-enabled -color-normal \\"#222222,#aaaaaa,#222222,#535d6c,#ffffff\\" -color-active \\"#333333,#aaaaaa,#333333,#535d6c,#ffffff\\" -color-window \\"#222222,#222222\\" -line-margin 0 -separator-style none -location 0 -m -5 -modi run,window,ssh -terminal urxvt -show"
+#bindsym $mod+d exec rofi -lines 5 -font "Droid Sans Mono Slashed for Powerline 12" -color-enabled -color-normal "#222222,#aaaaaa,#222222,#535d6c,#ffffff" -show
+
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -56,8 +60,17 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
-# focus the child container
-#bindsym $mod+d focus child
+#Workspace locations
+workspace 1 output HDMI-1
+workspace 3 output HDMI-1
+workspace 5 output HDMI-1
+workspace 7 output HDMI-1
+workspace 9 output HDMI-1
+workspace 2 output HDMI-2
+workspace 4 output HDMI-2
+workspace 6 output HDMI-2
+workspace 8 output HDMI-2
+workspace 10 output HDMI-2
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -90,6 +103,14 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+#Move window to other screen
+bindsym $mod+o move container to output right
+
+#Move workspace to other screen TODO if workspace setting doesnt work
+bindsym $mod+i move workspace to output right
+
+
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
     # These bindings trigger as soon as you enter the resize mode
@@ -99,13 +120,13 @@ mode "resize" {
     # Pressing up will shrink the window’s height.
     # Pressing down will grow the window’s height.
     bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-        #g back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+    #g back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
 
 bindsym $mod+r mode "resize"
@@ -113,14 +134,44 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-       status_command i3status
-        mode hide
-        hidden_state hide
-        #tray_output none
+ #   status_command SCRIPT_DIR=$HOME/.config/i3/i3blocks-contrib/ i3blocks
+    status_command py3status
+    mode hide
+    hidden_state hide
+    font pango:Droid Sans Mono Slashed for Powerline 10
+    separator_symbol "|"
+    strip_workspace_numbers yes
+    colors{
+        background $bg
+        statusline $fg
+        separator $fg
+        focused_workspace $bg $fg $bg
+        active_workspace $bg $blue $fg
+        inactive_workspace $bg $black $fg
+    }
 }
+
+#Windows
 new_window pixel 1
 gaps outer 0
 gaps inner 20
-bindsym $mod+b exec xautolock -locker "i3lock-wrapper" -locknow
+
+#i3lock
+bindsym $mod+b exec i3lock -u -f -r 20 -s 10
 exec xautolock -time 10 -locker "i3lock-wrapper"
-exec --no-startup-id xrandr --output HDMI1 --auto --above LVDS1
+
+#Colors
+set_from_resource $fg URxvt.foreground #b21020
+set_from_resource $bg URxvt.background #b21020
+set_from_resource $black URxvt.color0 #000000
+set_from_resource $red URxvt.color1 #bb0000
+set_from_resource $green URxvt.color2 #00bb00
+set_from_resource $yellow URxvt.color3 #ffff00
+set_from_resource $blue URxvt.color4 #0000bb
+set_from_resource $magenta URxvt.color5 #bb00bb
+set_from_resource $cyan URxvt.color6 #00bbbb
+set_from_resource $white URxvt.color7 #bbbbbb
+client.focused $fg $bg $fg $blue $fg 
+client.focused_inactive $bg $bg $fg $bg $bg
+client.unfocused $bg $bg $fg $bg $bg
+
