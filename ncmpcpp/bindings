@@ -163,17 +163,17 @@ def_key "l"
 #def_key "+"
 #  volume_up
 #
-def_key "h"
+def_key "+"
   previous_column
 #
-def_key "h"
+def_key "+"
   master_screen
 #
 def_key "h"
   volume_down
 #
-def_key "-"
-  volume_down
+#def_key "-"
+#  volume_down
 #
 #def_key ":"
 #  execute_command

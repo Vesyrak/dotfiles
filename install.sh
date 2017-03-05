@@ -293,63 +293,61 @@ for i in "$@"; do
     if [[ $i == "createuser" ]]; then
         createuser
     fi
-done
-read -p ":: Do you want to install a minimal package list? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    mainmin
-else
-    read -p ":: Do you want to install a complete package list? [Y/N]" -n 1 -r
+    echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
+    read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        main
+        aur
     fi
-fi
-echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
-read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    aur
-fi
-read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    delugeserver
-fi
-read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    config
-fi
-read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    blackarch
-fi
-read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    audioserver
-    read -p ":: I assume you also want the drive auto-mounted? [Y/N]" -n 1 -r
+    read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        delugeserver
+    fi
+    read -p ":: Do you want to use this machine as a tt-rss server? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        tt-rss
+    fi
+    read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        config
+    fi
+    read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        blackarch
+    fi
+    read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        gaming
+    fi
+    read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        audioserver
+        read -p ":: I assume you also want the drive auto-mounted? [Y/N]" -n 1 -r
 
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        automountServer
+        if [[ $REPLY =~ ^[Yy]$ ]];then
+            automountServer
+        fi
+    else
+        read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]];then
+            audioclient
+        fi
     fi
-else
-    read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
+    read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        audioclient
+        piholeclient
     fi
-fi
-read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    piholeclient
-fi
-read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    awesome
-else
-    read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
+    read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        i3
+        awesome
+    else
+        read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
+        if [[ $REPLY =~ ^[Yy]$ ]];then
+            i3
+        fi
     fi
-fi
-read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]];then
-    zsh
+    read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        zsh
 else
     echo ":: WARNING: THE FOLLOWING IS STILL VERY EXPERIMENTAL"
     read -p ":: Do you want to install xonsh as shell instead? [Y/N]" -n 1 -r
