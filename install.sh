@@ -161,12 +161,12 @@ function awesome()
 function i3()
 {
     echo ":: Installing i3"
-    pacaur -S i3status i3lock-blur i3-gaps rofi compton py3status python-mpd2 
+    pacaur -S i3status i3lock-blur i3-gaps rofi compton py3status python-mpd2 python-requests
     mkdir -p ~/.config/i3/
-    mkdir -p ~/.config/i3status/ 
+    mkdir -p ~/.config/i3status/
     echo ":: Installing xprofile"
     ln -sf $PWD/Xorg/.xprofile.i3 ~/.xprofile
-    ln -sf $PWD/i3/i3status.conf ~/.config/i3status/config
+    ln -sf $PWD/i3/config ~/.config/i3/config
     ln -sf $PWD/i3/i3status.conf ~/.config/i3status/config
     echo ":: Finished Installing i3WM"
     echo ":: Installing Compton"
