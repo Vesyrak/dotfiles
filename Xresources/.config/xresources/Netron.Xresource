@@ -27,7 +27,6 @@ URxvt*hintstyle: hintslight
 URxvt*lcdfilter: lcddefault
 URxvt*rgba: rgb
 URxvt*antialias: 1
-#URxvt*letterSpace: -1
 URxvt*locale: true
 URxvt*color0:       Ansi_0_Color
 URxvt*color1:       Ansi_1_Color

@@ -47,11 +47,15 @@ function main()
     echo ":: Enabling NetworkManager"
     sudo systemctl start NetworkManager
     sudo systemctl enable NetworkManager
-    ssh
     echo ":: Enabling lightdm"
     sudo systemctl enable lightdm
-    echo ":: Installing lightdm config"
-    sudo ln -sf $PWD/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf
+    echo ":: Stowing lightdm config"
+    sudo stow -t / lightdm
+    echo ":: Granting lightdm access to config file"
+    setfacl -m u:lightdm:rx ~/
+    setfacl -m u:lightdm:rx ~/repos
+    setfacl -m u:lightdm:rx $PWD
+    setfacl -R -m u:lightdm:rx repos/GNU-Linux-Config-Files/lightdm/
     echo ":: Starting AUR Installs"
     pacaur -Syu
     pacaur -S gtk-theme-arc-git pulsemixer
@@ -66,7 +70,7 @@ function ssh()
     echo  ":: Enabling sshd"
     sudo systemctl enable sshd
     sudo systemctl start sshd
-    sudo ln -sf $PWD/ssh/sshd_config /etc/ssh
+    sudo stow -t / ssh
     sudo systemctl restart sshd
 }
 
@@ -100,9 +104,7 @@ function zsh()
     echo ":: Default Shell is now ZSH"
     echo ":: Reload Shell to see effects"
     echo ":: Installing ZSH config"
-    ln -sf $PWD/zsh/.zshrc ~/.zshrc
-    ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
-    ln -sf $PWD/zsh/.zlogin ~/.zlogin
+    stow -t ~/ zsh
 }
 function xonsh()
 {
@@ -114,11 +116,8 @@ function xonsh()
     echo ":: Default Shell is now XONSH"
     echo ":: Reload Shell to see effects"
     echo ":: Installin XONSH $ ZSH config used by XONSH"
-    ln -sf $PWD/zsh/.zshrc ~/.zshrc
-    ln -sf $PWD/zsh/.zsh_aliases ~/.zsh_aliases
-    ln -sf $PWD/zsh/.zlogin ~/.zlogin
-    mkdir -p ~/.config/xonsh
-    ln -sf $PWD/xonsh/config.json ~/.config/xonsh/config.json
+    stow -t ~/ zsh
+    stow -t ~/ xonsh
 }
 
 function delugeserver()
@@ -131,10 +130,8 @@ function delugeserver()
     echo ":: Deluge Server Finished"
     echo ":: Setting up Deluge WebServer"
     sudo pacman -S python2-service-identity python2-mako
-    mkdir ~/.config/deluge/
-    ln -sf $PWD/deluge/web.conf ~/.config/deluge/
-    ln -sf $PWD/deluge/core.conf ~/.config/deluge/
-    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
+    stow -t ~/ deluge
+    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service #TODO Check if symlink works
     read -p "You will have to edit the following config file to change the user from deluge to $USER"
     sudo vim /etc/systemd/system/deluged.service
     echo ":: Creating deluge auth file"
@@ -150,28 +147,18 @@ function awesome()
     pacaur -S lain-git
     echo ":: Installation Finished"
     echo ":: Configuring..."
-    echo ":: Installing XProfile"
-    ln -sf $PWD/Xorg/.xprofile ~/.xprofile
-    echo ":: Installing Xinitrc"
-    ln -sf $PWD/Xorg/.xinitrc.awesome ~/.xinitrc #TODO redundant?
-    echo ":: Installing awesome"
-    ln -sf $PWD/awesome ~/.config/awesome
+    stow -t ~/ awesome
     echo ":: Finished Installing AwesomeWM"
 }
 function i3()
 {
     echo ":: Installing i3"
     pacaur -S i3status i3lock-blur i3-gaps rofi compton py3status python-mpd2 python-requests
-    mkdir -p ~/.config/i3/
-    mkdir -p ~/.config/i3status/
-    echo ":: Installing xprofile"
-    ln -sf $PWD/Xorg/.xprofile.i3 ~/.xprofile
-    ln -sf $PWD/i3/config ~/.config/i3/config
-    ln -sf $PWD/i3/i3status.conf ~/.config/i3status/config
+    stow -t ~/ i3
     echo ":: Finished Installing i3WM"
     echo ":: Installing Compton"
     sudo pacman -S compton
-    ln -sf $PWD/compton/compton.conf ~/.config/compton.conf
+    stow -t ~/ compton
     echo ":: Finished Installing Compton"
 
 }
@@ -180,12 +167,9 @@ function config()
     echo ":: Installing Config Files"
     echo ":: Installing XResources"
     mkdir -p ~/.config/xresources/
-    ln -sf $PWD/Xorg/xresources/Netron.Xresource ~/.config/xresources/Netron.Xresource
+    stow -t ~/ Xresources
     echo ":: Installing Vim"
-    ln -sf $PWD/vim/.vimrc ~/.vimrc
-    ln -sf $PWD/vim/.vimrc.plugins ~/.vimrc.plugins
-    echo ":: Installing WPA-Enterprise Config Files"
-    sudo cp wpa-supplicant-WPA2Enterprise/wpa_supplicant-apwifi /etc/wpa_supplicant/wpa_supplicant-apwifi
+    stow -t ~/ vim
     echo ":: Finished Installing Config Files"
 }
 function blackarch()
@@ -208,7 +192,7 @@ function blackarch()
 }
 function odroidC2audiofix(){
     echo ":: Installing odroid audio fix"
-    sudo ln -sf $PWD/odroidC2audiofix/asound.conf /etc/asound.conf
+    sudo stow -t / OdroidC2AudioFix
     sudo chmod 666 /dev/am*
     sudo gpasswd --add $USER audio
     echo ":: Reboot to gain audio functionality"
@@ -258,7 +242,7 @@ function audioserver()
     sudo pacman -Syu
     sudo pacman -S mpd mlocate screenfetch alsa-utils
     # music linkin'
-    sudo ln -sf $PWD/mpd/mpd.conf /etc/mpd.conf
+    sudo stow -t / mpd
     setfacl -m "u:mpd:rwx" /music
     # mpd bootin'
     mpd
@@ -270,12 +254,11 @@ function audioserver()
     sudo systemctl start mpd
 
     # Makes sure the wifi-dongle doesn't power off causing connection issues
-    sudo ln -sf $PWD/music/WLanPOFix /etc/modprobe.d/8192cu.conf
+    sudo stow -t / WLanPOFix
     echo ":: Be sure to mount your drive on /music/Music, and becoming owner of it!"
     echo ":: Installing Beets audio manager"
     sudo pacman -S beets
-    mkdir ~/.config/beets
-    ln -sf $PWD/beets/config.yaml ~/.config/beets/
+    stow -t ~/ beets
     echo ":: Installing Beets extension dependencies"
     pacaur -S python2-discogs-client
     sudo pacman -S python2-flask
@@ -283,9 +266,7 @@ function audioserver()
     echo ":: Installing Audio Client"
     sudo pacman -Syu
     sudo pacman -S ncmpcpp
-    mkdir ~/.ncmpcpp
-    ln -sf $PWD/ncmpcpp/config /home/reinout/.ncmpcpp/config
-    ln -sf $PWD/ncmpcpp/bindings /home/reinout/.ncmpcpp/bindings
+    stow -t ~/ ncmpcpp
     echo ":: Finished Installing Audio Client"
 }
 checkuser
