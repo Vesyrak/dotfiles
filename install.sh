@@ -21,12 +21,12 @@ function createuser()
 function checkuser()
 {
     if [ "$(id -un)"  != "root" ]; then
-		echo ":: Executing as regular user. Continuing."
-		user=true
-	else
-		echo ":: Warning: running as root. Please create a new user by running createuser or su into it to continue using this script."
-		user=false
-	fi
+        echo ":: Executing as regular user. Continuing."
+        user=true
+    else
+        echo ":: Warning: running as root. Please create a new user by running createuser or su into it to continue using this script."
+        user=false
+    fi
 }
 
 function mainmin(){
@@ -144,6 +144,14 @@ function delugeserver()
     read -p ":: Please enter the desired password: " passwd
     echo "$name : $passwd :10" >> ~/.config/deluge/auth
     sudo systemctl enable deluge-web
+}
+function bluetooth()
+{
+    echo ":: Installing Bluetooth"
+    sudo pacman -S blueman
+    sudo systemctl start bluetooth
+    sudo systemctl enable bluetooth
+    echo ":: Finished Installing Bluetooth"
 }
 function awesome()
 {
@@ -283,61 +291,75 @@ for i in "$@"; do
     if [[ $i == "createuser" ]]; then
         createuser
     fi
-    echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
-    read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
+done
+read -p ":: Do you want to install a minimal package list? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    mainmin
+else
+    read -p ":: Do you want to install a complete package list? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        aur
+        main
     fi
-    read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        delugeserver
-    fi
-    read -p ":: Do you want to use this machine as a tt-rss server? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        tt-rss
-    fi
-    read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        config
-    fi
-    read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        blackarch
-    fi
-    read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        gaming
-    fi
-    read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]];then
-        audioserver
-        read -p ":: I assume you also want the drive auto-mounted? [Y/N]" -n 1 -r
+fi
+echo ":: Warning, the following should be run after a main or minimal install, for it depends on the base-devel group"
+read -p ":: Do you want to install an AUR helper? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    aur
+fi
+read -p ":: Do you want to use this machine as a Deluge Server? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    delugeserver
+fi
+read -p ":: Do you want to use this machine as a tt-rss server? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    tt-rss
+fi
+read -p ":: Do you want to install/update your configuration files? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    config
+fi
+read -p ":: Do you want to install the BlackArch repositories? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    blackarch
+fi
+read -p ":: Do you want to use this machine for gaming? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    gaming
+fi
+read -p ":: Do you want to use this machine as an Audio Server? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    audioserver
+    read -p ":: I assume you also want the drive auto-mounted? [Y/N]" -n 1 -r
 
-        if [[ $REPLY =~ ^[Yy]$ ]];then
-            automountServer
-        fi
-    else
-        read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
-        if [[ $REPLY =~ ^[Yy]$ ]];then
-            audioclient
-        fi
-    fi
-    read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        piholeclient
+        automountServer
     fi
-    read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
+else
+    read -p ":: Do you want to use this machine as an Audio Client instead? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        awesome
-    else
-        read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
-        if [[ $REPLY =~ ^[Yy]$ ]];then
-            i3
-        fi
+        audioclient
     fi
-    read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
+fi
+read -p ":: Do you want Bluetooth? [Y/N]"
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    bluetooth
+fi
+read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    piholeclient
+fi
+read -p ":: Will this machine use awesome as WM? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    awesome
+else
+    read -p ":: Will this machine use i3 instead? [Y/N]" -n 1 -r
     if [[ $REPLY =~ ^[Yy]$ ]];then
-        zsh
+        i3
+    fi
+fi
+read -p ":: Do you want to install zsh as shell? [Y/N]" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    zsh
 else
     echo ":: WARNING: THE FOLLOWING IS STILL VERY EXPERIMENTAL"
     read -p ":: Do you want to install xonsh as shell instead? [Y/N]" -n 1 -r
