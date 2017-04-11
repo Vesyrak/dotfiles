@@ -41,7 +41,7 @@ function main()
 {
     echo ":: Starting System Update"
     sudo pacman -Syu
-    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio
+    sudo pacman -S  awesome base-devel alsa-utils dhcpcd dialog iw wpa_supplicant chromium cmatrix dosfstools feh gimp wget htop gtk-chtheme networkmanager network-manager-applet mpv libreoffice-fresh mlocate ntfs-3g openssh pacgraph lxrandr rxvt-unicode scrot sudo tmux xorg-xhost xorg-server xorg-xauth xorg-server-utils xorg-xinit xorg-xrdb lightdm-gtk-greeter pulseaudio an2linux
     echo ":: System Update Finished"
     echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
     echo ":: Enabling NetworkManager"
@@ -59,6 +59,11 @@ function main()
     echo ":: Starting AUR Installs"
     pacaur -Syu
     pacaur -S gtk-theme-arc-git pulsemixer
+    pacaur -S an2linuxserver-git
+    echo ":: Enabling An2Linux server"
+    an2linuxserver.py
+    systemctl --user enable an2linuxserver.service
+    echo ":: Don't forget to manually pair your device first, by running an2linuxserver.py"
     echo ":: AUR Update Finished"
     echo ":: Updating File Locations"
     sudo updatedb
@@ -160,6 +165,10 @@ function i3()
     sudo pacman -S compton
     stow -t ~/ compton
     echo ":: Finished Installing Compton"
+    echo":: Installing dunst"
+    sudo pacman -S dunst
+    stow -t ~/ dunst
+    echo ":: Finished Installing dunst"
 
 }
 function config()
