@@ -32,6 +32,7 @@
 
 # Ciphers and keying
 #RekeyLimit default none
+Ciphers arcfour,blowfish-cbc
 
 # Logging
 #SyslogFacility AUTH
@@ -108,7 +109,7 @@ TCPKeepAlive yes
 #UseLogin no
 #UsePrivilegeSeparation sandbox
 #PermitUserEnvironment no
-#Compression delayed
+Compression yes
 #ClientAliveInterval 0
 #ClientAliveCountMax 3
 #UseDNS no
