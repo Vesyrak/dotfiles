@@ -260,7 +260,7 @@ function audioserver()
     sudo pacman -S mpd mlocate screenfetch alsa-utils
     # music linkin'
     sudo stow -t / mpd
-    setfacl -m "u:mpd:rwx" /music
+    setfacl -m "u:mpd:rwx" /media
     # mpd bootin'
     mpd
     sleep 1
