@@ -265,11 +265,16 @@ function audioserver()
     mpd
     sleep 1
     sudo systemctl stop mpd
-    sudo systemctl enable mpd
-    read -p ":: Put 'RequiresMountsFor=/music/' under [Unit]"
-    sudo vim /etc/systemd/system/default.target.wants/mpd.service
-    sudo systemctl start mpd
-
+    read -p ":: Put 'RequiresMountsFor=/media/' under [Unit]"
+    sudo vim /usr/lib/systemd/user/mpd.service
+    systemctl --user enable mpd
+    systemctl --user start mpd
+    loginctl enable-linger $USER
+    echo ":: This uses PulseAudio. Installing..."
+    sudo pacman -S pulseaudio
+    sudo stow -t / pulseService
+    sudo systemctl enable pulseaudio
+    sudo systemctl start pulseaudio
     # Makes sure the wifi-dongle doesn't power off causing connection issues
     sudo stow -t / WLanPOFix
     echo ":: Be sure to mount your drive on /music/Music, and becoming owner of it!"
@@ -285,6 +290,25 @@ function audioserver()
     sudo pacman -S ncmpcpp
     stow -t ~/ ncmpcpp
     echo ":: Finished Installing Audio Client"
+
+}
+function pulsetransceiver()
+{
+    sudo pacman -S pulseaudio-zeroconf avahi paprefs pavucontrol pulseaudio-bluetooth
+    sudo systemctl start avahi-daemon
+    sudo systemctl enable avahi-daemon
+    sudo stow -t / pulsetransceiver
+    read -p ":: Do you want Bluetooth on this device? [Y/N]" -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]];then
+        pulsebluetooth
+    fi
+
+}
+function pulsebluetooth()
+{
+    sudo pacman -S pulseaudio-alsa pulseaudio-bluetooth bluez bluez-libs bluez-utils bluez-firmware
+    sudo stow -t / pulseBluetooth
+    echo ":: You still need to manually pair and trust the device fam"
 }
 checkuser
 for i in "$@"; do
@@ -343,6 +367,10 @@ fi
 read -p ":: Do you want Bluetooth? [Y/N]"
 if [[ $REPLY =~ ^[Yy]$ ]];then
     bluetooth
+fi
+read -p ":: Should this device be able to stream audio to/from other devices?"
+if [[ $REPLY =~ ^[Yy]$ ]];then
+    pulsetransceiver
 fi
 read -p ":: Will this machine be connected to a pi-hole? [Y/N]" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]];then
