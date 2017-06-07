@@ -311,7 +311,7 @@ function pulsebluetooth()
     echo ":: You still need to manually pair and trust the device fam"
 }
 function windowspassthrough(){
-    sudo pacman -S virt-manager qemu libvirt ovmf
+    sudo pacman -S virt-manager qemu libvirt ovmf bridge-utils
     sudo systemctl enable --now libvirtd
     sudo systemctl enable virtlogd.socket
     echo ":: Read the README in ./vm for instructions how to do the passthrough"
