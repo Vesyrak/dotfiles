@@ -310,6 +310,12 @@ function pulsebluetooth()
     sudo stow -t / pulseBluetooth
     echo ":: You still need to manually pair and trust the device fam"
 }
+function windowspassthrough(){
+    sudo pacman -S virt-manager qemu libvirt ovmf
+    sudo systemctl enable --now libvirtd
+    sudo systemctl enable virtlogd.socket
+    echo ":: Read the README in ./vm for instructions how to do the passthrough"
+}
 checkuser
 for i in "$@"; do
     if [[ $i == "createuser" ]]; then
