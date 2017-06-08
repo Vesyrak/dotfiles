@@ -102,7 +102,8 @@ function zsh()
 {
     echo ":: Installing ZSH"
     sudo pacman -Syu
-    sudo pacman -S zsh zsh-completions
+    sudo pacman -S zsh zsh-completions pkgfile
+    sudo pkgfile --update
     pacaur -S oh-my-zsh-git
     echo ":: ZSH Installation Finished. Changing Shell..."
     chsh -s /bin/zsh
@@ -259,7 +260,7 @@ function audioserver()
     sudo pacman -Syu
     sudo pacman -S mpd mlocate screenfetch alsa-utils
     # music linkin'
-    sudo stow -t / mpd
+    stow -t ~/ mpd
     setfacl -m "u:mpd:rwx" /media
     # mpd bootin'
     mpd
