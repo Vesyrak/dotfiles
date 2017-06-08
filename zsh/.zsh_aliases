@@ -1,4 +1,4 @@
-alias ncmpcpp='ssh -t mpd "source /etc/profile; ncmpcpp"'
+alias ncmpcpp='urxvt -e ssh -t mpd "source /etc/profile; ncmpcpp " &'
 alias filterwpjpg='feh --action1 "rm %f" --action2 "mv %f ../Wallpapers/."'
 alias grep='grep --color=auto'
 alias woodo='sh ~/.woodo.sh'

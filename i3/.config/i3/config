@@ -22,7 +22,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec "rofi -lines 5 -font \\"Droid Sans Mono Slashed for Powerline 12\\" -color-enabled -color-normal \\"#222222,#aaaaaa,#222222,#535d6c,#ffffff\\" -color-active \\"#333333,#aaaaaa,#333333,#535d6c,#ffffff\\" -color-window \\"#222222,#222222\\" -line-margin 0 -separator-style none -location 0 -m -5 -modi run,window,ssh -terminal urxvt -show"
+bindsym $mod+d exec "rofi -run-list-command 'zsh -i ~/.config/i3/alias.sh' -run-command \\"/bin/zsh -i -c '{cmd}'\\" -lines 5 -font \\"Droid Sans Mono Slashed for Powerline 12\\" -color-enabled -color-normal \\"#222222,#aaaaaa,#222222,#535d6c,#ffffff\\" -color-active \\"#333333,#aaaaaa,#333333,#535d6c,#ffffff\\" -color-window \\"#222222,#222222\\" -line-margin 0 -separator-style none -location 0 -m -5 -modi run,window,ssh -terminal urxvt -show"
 #bindsym $mod+d exec rofi -lines 5 -font "Droid Sans Mono Slashed for Powerline 12" -color-enabled -color-normal "#222222,#aaaaaa,#222222,#535d6c,#ffffff" -show
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
@@ -171,7 +171,7 @@ set_from_resource $blue URxvt.color4 #0000bb
 set_from_resource $magenta URxvt.color5 #bb00bb
 set_from_resource $cyan URxvt.color6 #00bbbb
 set_from_resource $white URxvt.color7 #bbbbbb
-client.focused $fg $bg $fg $blue $fg 
+client.focused $fg $bg $fg $blue $fg
 client.focused_inactive $bg $bg $fg $bg $bg
 client.unfocused $bg $bg $fg $bg $bg
 
