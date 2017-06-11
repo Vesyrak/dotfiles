@@ -11,6 +11,10 @@ function checkconf(){
 }
 
 function confenable(){
+    if !([ -f $CONFIG_FILE ]); then
+        mkdir -p $HOME/.config/sysconf/
+        touch $CONFIG_FILE
+    fi
     if !(grep -q "$1 *= " $CONFIG_FILE); then
         echo "$1 $2" >> $CONFIG_FILE
     fi
@@ -127,6 +131,7 @@ function aur()
 {
     echo ":: Installing AUR"
     sudo pacman -S cower expac
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
     tar -xvf pacaur.tar.gz
     cd pacaur
     makepkg --skippgpcheck
