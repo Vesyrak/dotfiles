@@ -1,0 +1,16 @@
+alsa-utils 
+base-devel
+dhcpcd
+dialog
+iw
+htop
+mlocate
+openssh
+rxvt-unicode
+stow
+tmux
+vim
+wget
+wpa_supplicant
+xorg-xauth 
+xorg-xhost     
