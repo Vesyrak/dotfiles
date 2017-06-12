@@ -1,4 +1,11 @@
-alias ncmpcpp='urxvt -e ssh -t mpd "source /etc/profile; ncmpcpp " &'
+alias fuck='sudo $(history -p \!\!)'
+ncmpcpp(){
+    if (which ncmpcpp > /dev/null); then
+        /bin/ncmpcpp
+    else
+        urxvt -e ssh -t mpd "source /etc/profile; ncmpcpp " &
+    fi
+}
 alias filterwpjpg='feh --action1 "rm %f" --action2 "mv %f ../Wallpapers/."'
 alias grep='grep --color=auto'
 alias woodo='sh ~/.woodo.sh'

@@ -15,6 +15,5 @@ pulseaudio
 scrot
 tigervnc
 xorg-server 
-xorg-server-utils 
 xorg-xinit 
 xorg-xrdb
