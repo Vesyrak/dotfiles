@@ -108,6 +108,15 @@ function configure(){
     echo ":: Configuring Finished"
 }
 
+function addsshclients()
+{
+    read -p ':: Add additional ssh connections? [Y/n]' -r
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+        sshclient
+        addsshclients
+    fi
+}
+
 function lightdm()
 {
     echo ":: Configuring Lightdm"
@@ -187,7 +196,7 @@ function delugeserver()
     sudo sed -i "s/\(User*=*\).*/\1$USER/" /etc/systemd/system/deluged.service
     echo ":: Configuring Deluge WebServer"
     stow -t ~/ deluge
-    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service #TODO Check if symlink works
+    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
     echo ":: Creating deluge auth file"
     read -p ":: Please enter the desired username: " name
     read -p ":: Please enter the desired password: " passwd
@@ -256,21 +265,11 @@ function odroidC2audiofix()
     confenable OdroidC2AudioFix 2
 }
 
-#TODO merge with add ssh
 function audioclient()
 {
     echo ":: NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
     echo ":: This purely sets the IP address for easy connection"
-    mkdir ~/.ssh
-    touch ~/.ssh/config
-    read -p ":: What is the server's IP address? " IP
-    echo "Host mpd" >> ~/.ssh/config
-    echo "    HostName $IP " >> ~/.ssh/config
-    echo "    Port 22" >> ~/.ssh/config
-    echo "    ControlMaster auto" >> ~/.ssh/config
-    echo "    ControlPersist yes" >> ~/.ssh/config
-    echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
-    echo ":: Updated ssh config file for easy server access under 'mpd'"
+    sshclient
 }
 
 function installvpn()
@@ -299,19 +298,27 @@ function installvpn()
 
 }
 
-#TODO Review
-function piholeclient()
+function sshclient()
 {
-    mkdir ~/.ssh
+    mkdir ~/.ssh/sockets/ -p
     touch ~/.ssh/config
     read -p ":: What is the server's IP address? " IP
-    echo "Host pihole" >> ~/.ssh/config
+    read -p ":: And how do you want to call the server? " NAME
+    echo "Host $NAME" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config
     echo "    Port 22" >> ~/.ssh/config
     echo "    ControlMaster auto" >> ~/.ssh/config
-    #echo "    ControlPersist yes" >> ~/.ssh/config TODO
-    #echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
-    echo ":: Updated ssh config file for easy server access under 'pihole'"
+    echo "    ControlPersist yes" >> ~/.ssh/config
+    echo "    ControlPath ~/.ssh/sockets/socket-%r@%h:%p" >> ~/.ssh/config
+    echo "    AddressFamily inet" >> ~/.ssh/config
+    echo ":: Updated ssh config file for easy server access under '$NAME'"
+
+}
+
+#TODO review
+function piholeclient()
+{
+    sshclient
     echo ":: If you want to use the dns server, disable resolv.conf changing by your network manager."
     echo ":: You can do this in e.g. connman by editing connman.service and adding --nodnsproxy to execstart"
     echo ":: Setting the resolv.conf to the server"
@@ -398,8 +405,9 @@ function restow(){
                 sudo stow -R -t / $config
                 ;;
             "2")
-                DIR=find $config -type d -links 2 | sed 's/^[^\/]*//g' #TODO Change to find every folder containing files, followed by for
-                sudo ln $config/$DIR/* $DIR/
+                for DIR in $(find . -type f -name '*f*' | sed -r 's|/[^/]+$||' | sort -u); do
+                    sudo ln $config/$DIR/* $DIR/
+                done
                 ;;
             *)
                 echo ":: WARNING: ERROR FOUND IN CONFIGURATION FILE"
@@ -419,12 +427,14 @@ for i in "$@"; do
             ;;
         "restow")
             restow
+            exit 0
             ;;
     esac
 done
 read -p ':: Do you want to install a minimal package list? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+=$(cat minpkglist)
+    CONFIG_QUEUE+="ssh "
 else
     read -p ':: Do you want to install a complete package list? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
@@ -432,7 +442,7 @@ else
         INSTALL_QUEUE+=$(cat majpkglist)
         INSTALL_QUEUE+=" "
         INSTALL_QUEUE+="an2linuxserver-git lightdm lightdm-gtk-greeter gtk-theme-arc-git "
-        CONFIG_QUEUE+="main "
+        CONFIG_QUEUE+="main ssh "
     fi
 fi
 read -p ':: Do you want to use this machine as a Deluge Server? [Y/n]' -r
@@ -520,5 +530,6 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 fi
 install
 configure
+addsshclients
 echo ':: Install script terminating'
 
