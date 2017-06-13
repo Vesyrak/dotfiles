@@ -124,6 +124,14 @@ function lightdm()
     echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
 }
 
+function syncthing()
+{
+    echo ":: Configuring Syncthing"
+    sudo systemctl enable syncthing@$USER
+    sudo systemctl start syncthing@$USER
+    echo ":: Further configurations can be done by the webui"
+}
+
 function ssh()
 {
     echo  ":: Enabling sshd"
@@ -227,23 +235,14 @@ function config()
     confenable vim 0
 }
 
-#TODO Review
 function blackarch()
 {
     echo ":: Installing Blackarch Repo"
-    curl -O http://blackarch.org/strap.sh && sha1sum strap.sh
+    curl -O https://blackarch.org/strap.sh && sha1sum strap.sh
     chmod 777 strap.sh
     sudo ./strap.sh
     rm strap.sh
-    sudo pacman-key --init
-    sudo dirmngr &
-    sleep 1
-    last_pid=$!
-    sudo kill -KILL $last_pid
-    sudo pacman-key -r 962DDE58
-    sudo pacman-key --lsign-key 962DDE58
-    sudo echo "[blackarch]" >> /etc/pacman.conf
-    sudo echo "Server = http://www.mirrorservice.org/sites/blackarch.org/blackarch//$repo/os/$arch " >> /etc/pacman.conf
+    sudo pacman -Syyu
     echo ":: Finished Installing Blackarch Repo"
 }
 
@@ -257,6 +256,7 @@ function odroidC2audiofix()
     confenable OdroidC2AudioFix 2
 }
 
+#TODO merge with add ssh
 function audioclient()
 {
     echo ":: NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
@@ -275,7 +275,7 @@ function audioclient()
 
 function installvpn()
 {
-   #https://github.com/Angristan/OpenVPN-install
+    #https://github.com/Angristan/OpenVPN-install
     echo ":: Installing openvpn through git script"
     mkdir $PWD/tmp
     cd tmp
@@ -298,6 +298,7 @@ function installvpn()
     systemctl start openvpn-server@server
 
 }
+
 #TODO Review
 function piholeclient()
 {
@@ -397,7 +398,7 @@ function restow(){
                 sudo stow -R -t / $config
                 ;;
             "2")
-                DIR=find $config -type d -links 2 | sed 's/^[^\/]*//g' #Change to find every folder containing files, followed by for
+                DIR=find $config -type d -links 2 | sed 's/^[^\/]*//g' #TODO Change to find every folder containing files, followed by for
                 sudo ln $config/$DIR/* $DIR/
                 ;;
             *)
@@ -439,10 +440,10 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="python2-service-identity python2-mako deluge "
     CONFIG_QUEUE+="delugeserver "
 fi
-read -p ':: Do you want to use this machine as a tt-rss server? [Y/n]' -r
+read -p ':: Do you want to use this machine as a Syncthing server? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    #Ayy lmao#TODO
-    CONFIG_QUEUE+="tt-rss "
+    INSTALL_QUEUE+="syncthing "
+    CONFIG_QUEUE+="syncthing "
 fi
 read -p ':: Do you want to install/update your configuration files? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
