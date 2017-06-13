@@ -293,8 +293,8 @@ function installvpn()
     sudo mv /etc/openvpn/crl.pem /etc/openvpn/server/
     sudo mv /etc/openvpn/tls-auth.key /etc/openvpn/server/
     sudo openssl dhparam -out /etc/openvpn/server/dh.pem 2048
-    systemctl enable openvpn-server@server
-    systemctl start openvpn-server@server
+    sudo systemctl enable openvpn-server@server
+    sudo systemctl start openvpn-server@server
 
 }
 
@@ -343,7 +343,7 @@ function audioserver()
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
             echo ":: Putting $REPLY drive in automount."
             UUID=$(sudo blkid /dev/sda1)
-            echo "UUID=$UUID /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" >> /etc/fstab
+            echo "UUID=$UUID /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" | sudo tee --append /etc/fstab > /dev/null
         fi
     fi
     echo ":: Configuring mpd"
@@ -353,11 +353,11 @@ function audioserver()
     sudo sed  '/\[Unit\]/a RequiresMountsFor=/media/' /usr/lib/systemd/user/mpd.service
     systemctl --user enable mpd
     systemctl --user start mpd
-    loginctl enable-linger $USER
+    sudo loginctl enable-linger $USER
     echo ":: Installing PulseAudio Service."
     sudo stow -t / pulseService
-    sudo systemctl --user enable pulseaudio #todo unsynced with transceiver
-    sudo systemctl --user start pulseaudio
+    systemctl --user enable pulseaudio #todo unsynced with transceiver
+    systemctl --user start pulseaudio
     confenable pulseService 1
     # Makes sure the wifi-dongle doesn't power off causing connection issues
     echo ":: Making sure the Wi-Fi connection doesn't sleep"
@@ -379,7 +379,7 @@ function pulsetransceiver()
     sudo systemctl start avahi-daemon
     sudo systemctl enable avahi-daemon
     systemctl --user enable pulseaudio
-    loginctl enable-linger $USER
+    sudo loginctl enable-linger $USER
 }
 
 function pulsebluetooth()
