@@ -269,7 +269,7 @@ function audioclient()
 {
     echo ":: NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
     echo ":: This purely sets the IP address for easy connection"
-    sshclient
+    sshclient mpd
 }
 
 function installvpn()
@@ -303,7 +303,11 @@ function sshclient()
     mkdir ~/.ssh/sockets/ -p
     touch ~/.ssh/config
     read -p ":: What is the server's IP address? " IP
-    read -p ":: And how do you want to call the server? " NAME
+    if [ -z "$1" ]
+        read -p ":: And how do you want to call the server? " NAME
+    else
+        NAME="$1"
+    fi
     echo "Host $NAME" >> ~/.ssh/config
     echo "    HostName $IP " >> ~/.ssh/config
     echo "    Port 22" >> ~/.ssh/config
