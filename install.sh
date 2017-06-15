@@ -155,6 +155,8 @@ function aur()
 {
     echo ":: Installing AUR"
     sudo pacman -Syu
+    echo ":: First installing development packages"
+    sudo pacman -S base-devel cower expac wget
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
     tar -xvf pacaur.tar.gz
     cd pacaur
@@ -303,7 +305,7 @@ function sshclient()
     mkdir ~/.ssh/sockets/ -p
     touch ~/.ssh/config
     read -p ":: What is the server's IP address? " IP
-    if [ -z "$1" ]
+    if [ -z "$1" ]; then
         read -p ":: And how do you want to call the server? " NAME
     else
         NAME="$1"
@@ -374,6 +376,7 @@ function audioserver()
 function pulsetransceiver()
 {
     echo ":: Configuring PulseAudio for streaming"
+    mkdir ~/.config/pulse #Required, may not be symlink
     stow -t ~/ pulsetransceiver
     confenable pulsetransceiver 0
     sudo systemctl start avahi-daemon
