@@ -61,13 +61,12 @@ load-module module-jackdbus-detect channels=2
 .ifexists module-bluetooth-policy.so
 load-module module-bluetooth-policy
 .endif
+load-module module-switch-on-connect
+
 
 .ifexists module-bluetooth-discover.so
 load-module module-bluetooth-discover
 .endif
-
-# automatically switch to newly-connected devices
-load-module module-switch-on-connect
 
 ### Load several protocols
 .ifexists module-esound-protocol-unix.so
@@ -77,10 +76,9 @@ load-module module-native-protocol-unix
 
 ### Network access (may be configured with paprefs, so leave this commented
 ### here if you plan to use paprefs)
-#load-module module-esound-protocol-tcp
+load-module module-esound-protocol-tcp
 load-module module-native-protocol-tcp
 load-module module-zeroconf-publish
-#load-module module-zeroconf-discover
 
 ### Load the RTP receiver module (also configured via paprefs, see above)
 #load-module module-rtp-recv

@@ -382,6 +382,7 @@ function pulsetransceiver()
     sudo systemctl start avahi-daemon
     sudo systemctl enable avahi-daemon
     systemctl --user enable pulseaudio
+    systemctl --user start pulseaudio
     sudo loginctl enable-linger $USER
 }
 
@@ -390,6 +391,7 @@ function pulsebluetooth()
     echo ":: Configuring PulseAudio for Bluetooth"
     sudo ln -sf $PWD/pulseBluetooth/etc/bluetooth/* /etc/bluetooth/
     echo ":: You still need to manually pair and trust the device fam"
+    echo ":: Oh, and reboot before you do that. It sometimes gives issues."
     confenable pulseBluetooth 2
 }
 
@@ -527,10 +529,10 @@ else
         CONFIG_QUEUE+="xonsh "
     fi
 fi
-read -p ':: Is this an odroid C2 without working audio? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    CONFIG_QUEUE+="OdroidC2AudioFix "
-fi
+#read -p ':: Is this an odroid C2 without working audio? [Y/n]' -r
+#if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+#    CONFIG_QUEUE+="OdroidC2AudioFix "
+#fi
 read -p ':: Set up as VPN point? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="installvpn "
