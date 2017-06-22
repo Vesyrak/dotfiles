@@ -21,7 +21,26 @@
 #define Foreground_Color #e6e8ef
 #define Selected_Text_Color #7d8fa4
 #define Selection_Color #2f363e
-URxvt.font: xft:Droid Sans Mono Slashed for Powerline:size=10
+*background: Background_Color
+*foreground: Foreground_Color
+*color0:       Ansi_0_Color
+*color1:       Ansi_1_Color
+*color2:       Ansi_2_Color
+*color3:       Ansi_3_Color
+*color4:       Ansi_4_Color
+*color5:       Ansi_5_Color
+*color6:       Ansi_6_Color
+*color7:       Ansi_7_Color
+*color8:       Ansi_8_Color
+*color9:       Ansi_9_Color
+*color10:      Ansi_10_Color
+*color11:      Ansi_11_Color
+*color12:      Ansi_12_Color
+*color13:      Ansi_13_Color
+*color14:      Ansi_14_Color
+*color15:      Ansi_15_Color
+
+URxvt.font: xft:DroidSansMonoForPowerline Nerd Font:size=10
 URxvt*autohint: 0
 URxvt*hintstyle: hintslight
 URxvt*lcdfilter: lcddefault

@@ -1,9 +1,9 @@
 alias fuck='sudo $(history -p \!\!)'
 ncmpcpp(){
-    if (which ncmpcpp > /dev/null); then
+    if (whence -p ncmpcpp > /dev/null); then
         /bin/ncmpcpp
     else
-        urxvt -e ssh -t mpd "source /etc/profile; ncmpcpp " &
+        urxvt -e ssh -t mpd "source ~/.zshrc; ncmpcpp " &
     fi
 }
 alias filterwpjpg='feh --action1 "rm %f" --action2 "mv %f ../Wallpapers/."'

@@ -156,7 +156,17 @@ function aur()
     echo ":: Installing AUR"
     sudo pacman -Syu
     echo ":: First installing development packages"
-    sudo pacman -S base-devel cower expac wget
+    sudo pacman -S --needed base-devel cower yajl  expac wget
+    #If cower can't be installed via pacman (aka if the AUR repo isn't present)
+    if !(which cower > /dev/null); then
+        wget https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz
+        tar -xvf cower.tar.gz
+        cd cower
+        makepkg --skippgpcheck
+        makepkg -sri
+        cd ../
+        rm cower/ -r
+    fi
     wget https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz
     tar -xvf pacaur.tar.gz
     cd pacaur
@@ -226,6 +236,10 @@ function i3()
     echo ":: Configuring i3"
     stow -t ~/ i3
     confenable i3 0
+    echo ":: Installing Polybar"
+    stow -t ~/ polybar
+    chmod +x polybar/.config/polybar/*
+    confenable polybar 0
     echo ":: Installing Compton"
     stow -t ~/ compton
     confenable compton 0
@@ -297,7 +311,11 @@ function installvpn()
     sudo openssl dhparam -out /etc/openvpn/server/dh.pem 2048
     sudo systemctl enable openvpn-server@server
     sudo systemctl start openvpn-server@server
-
+    read -p ":: What is this machine's local IP address? " SNATIP
+    sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to $SNATIP
+    sudo iptables-save | sudo tee --append /etc/iptables/iptables.rules > /dev/null
+    sudo systemctl enable iptables
+    sudo systemctl start iptables
 }
 
 function sshclient()
@@ -320,7 +338,26 @@ function sshclient()
     echo ":: Updated ssh config file for easy server access under '$NAME'"
 
 }
+function pihole(){
+    #vpn
+    pacaur -S pi-hole-server
+    sudo cp /etc/dnsmasq.conf /etc/dnsmasq.orig
+    sudo cp /etc/pihole/configs/dnsmasq.main /etc/dnsmasq.conf
+    sudo cp /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.orig
+    sudo cp /etc/pihole/configs/lighttpd.conf /etc/lighttpd/lighttpd.conf
+    sudo systemctl reenable dnsmasq.service
+    sudo systemctl restart dnsmasq.service
+    sudo systemctl reenable lighttpd.service
+    sudo systemctl restart lighttpd.service
+    echo "extension=sockets.so" | sudo tee --append /etc/php/php.ini > /dev/null
+    echo "interface=tun0" | sudo tee --append /etc/dnsmasq.d/01-pihole.conf > /dev/null
+    echo "PIHOLE_INTERFACE=tun0" | sudo tee --append /etc/pihole/setupVars.conf > /dev/null
+    #todo domain hostname resolution
 
+}
+function hostname(){
+#todo
+}
 #TODO review
 function piholeclient()
 {
@@ -494,7 +531,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 fi
 read -p ':: Should this device be able to stream audio to/from other devices? [Y/n]'  -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="pulseaudio-zeroconf avahi paprefs pavucontrol ttf-droid "
+    INSTALL_QUEUE+="pulseaudio-zeroconf avahi paprefs pavucontrol "
     CONFIG_QUEUE+="pulsetransceiver "
     read -p ":: Do you also want Bluetooth streaming on this device? [Y/n]" -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
@@ -513,7 +550,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 else
     read -p ':: Will this machine use i3 instead? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="i3lock-blur i3-gaps rofi compton py3status python-mpd2 python-requests compton dunst "
+        INSTALL_QUEUE+="i3lock-blur i3-gaps rofi compton polybar libmpdclient mpc python-mpd2 python-requests compton dunst "
         CONFIG_QUEUE+="i3 "
     fi
 fi
@@ -529,6 +566,7 @@ else
         CONFIG_QUEUE+="xonsh "
     fi
 fi
+#TODO remove, deprecated since pulse.
 #read -p ':: Is this an odroid C2 without working audio? [Y/n]' -r
 #if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 #    CONFIG_QUEUE+="OdroidC2AudioFix "
