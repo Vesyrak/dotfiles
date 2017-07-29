@@ -8,7 +8,7 @@
 ;=====================================================
 
 #TODO
-#Requirement: libmpdclient mpc
+#Requirement: libmpdclient mpc redshift
 [colors]
 background = ${xrdb:background:#fff}
 foreground = ${xrdb:foreground:#000}
@@ -23,7 +23,7 @@ wtf = ${xrdb:color4:#000}
 ; Use the following command to list available outputs:
 ; If unspecified, the application will pick the first one it finds.
 ; $ xrandr -q | grep " connected" | cut -d ' ' -f1
-monitor =
+monitor = ${env:MONITOR}
 
 ; Use the specified monitor as a fallback if the main one is not found.
 monitor-fallback =
@@ -97,7 +97,7 @@ font-0 = Droid Sans Fallback:size=11
 font-1 = Noto Emoji:size=11
 font-2 = DroidSansMonoForPowerline Nerd Font:size=14;1
 
-modules-left = i3 battery weather volume
+modules-left = i3 battery weather volume compton
 modules-center =  mpd 
 modules-right = redshift wired-network wireless-network filesystem date
 
@@ -452,7 +452,7 @@ label-packetloss-underline = ${colors.mediocre}
 
 [module/weather]
 type = custom/script
-interval = 10
+interval = 60
 format = <label>
 format-underline = ${colors.sky}
 format-prefix = " "
@@ -463,7 +463,24 @@ type = custom/script
 interval = 5
 
 exec = ~/.config/polybar/redshift.sh
+click-left = ~/.config/polybar/redshift-toggle.sh
 
+format = <label>
+label = %output%
+format-underline = ${colors.shit}
+format-padding-left = 5
+format-padding-right = 5
+[module/compton]
+type = custom/script
+
+exec = ~/.config/polybar/compton.sh
+click-left = ~/.config/polybar/compton-toggle.sh
+interval = 5
+format = <label>
+label = %output%
+format-underline = ${colors.sky}
+format-padding-left = 5
+format-padding-right = 5
 [settings]
 
 screenchange-reload = true

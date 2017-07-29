@@ -243,7 +243,7 @@ function i3()
     echo ":: Installing Compton"
     stow -t ~/ compton
     confenable compton 0
-    echo":: Installing dunst"
+    echo ":: Installing dunst"
     stow -t ~/ dunst
     confenable dunst 0
 }
@@ -300,15 +300,18 @@ function installvpn()
     sudo ./openvpn-install.sh
     cd ../../
     rm tmp -r
-    echo ":: Due to current bugs in the script for the Arch distribution, several files still have to be moved/generated."
-    echo ":: Please check once in a while if this is still necessary."
-    sudo mv /etc/openvpn/server.conf /etc/openvpn/server/
-    sudo mv /etc/openvpn/ca.crt /etc/openvpn/server/
-    sudo mv /etc/openvpn/server.key /etc/openvpn/server/
-    sudo mv /etc/openvpn/server.crt /etc/openvpn/server/
-    sudo mv /etc/openvpn/crl.pem /etc/openvpn/server/
-    sudo mv /etc/openvpn/tls-auth.key /etc/openvpn/server/
-    sudo openssl dhparam -out /etc/openvpn/server/dh.pem 2048
+    read -p ':: Is this an Arch-based machine? [Y/n]'  -r
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+        echo ":: Due to current bugs in the script for the Arch distribution, several files still have to be moved/generated."
+        echo ":: Please check once in a while if this is still necessary."
+        sudo mv /etc/openvpn/server.conf /etc/openvpn/server/
+        sudo mv /etc/openvpn/ca.crt /etc/openvpn/server/
+        sudo mv /etc/openvpn/server.key /etc/openvpn/server/
+        sudo mv /etc/openvpn/server.crt /etc/openvpn/server/
+        sudo mv /etc/openvpn/crl.pem /etc/openvpn/server/
+        sudo mv /etc/openvpn/tls-auth.key /etc/openvpn/server/
+        sudo openssl dhparam -out /etc/openvpn/server/dh.pem 2048
+    fi
     sudo systemctl enable openvpn-server@server
     sudo systemctl start openvpn-server@server
     read -p ":: What is this machine's local IP address? " SNATIP
@@ -351,12 +354,14 @@ function pihole(){
     sudo systemctl restart lighttpd.service
     echo "extension=sockets.so" | sudo tee --append /etc/php/php.ini > /dev/null
     echo "interface=tun0" | sudo tee --append /etc/dnsmasq.d/01-pihole.conf > /dev/null
+    echo "localise-queries" | sudo tee --append /etc/dnsmasq.d/01-pihole.conf > /dev/null
     echo "PIHOLE_INTERFACE=tun0" | sudo tee --append /etc/pihole/setupVars.conf > /dev/null
     #todo domain hostname resolution
 
 }
 function hostname(){
 #todo
+    echo "Todo"
 }
 #TODO review
 function piholeclient()
@@ -442,7 +447,6 @@ function windowspassthrough(){
 function restow(){
     checkconf
     while read config sudo; do
-        echo $config
         case "$sudo" in
             "0")
                 stow -R -t ~/ $config
@@ -516,7 +520,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 fi
 read -p ':: Do you want to use this machine as an Audio Server? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="mpd mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python2-flask ncmpcpp "
+    INSTALL_QUEUE+="mpd mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp "
     CONFIG_QUEUE+="audioserver "
 else
     read -p ':: Do you want to use this machine as an Audio Client instead? [Y/n]'  -r
@@ -550,7 +554,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 else
     read -p ':: Will this machine use i3 instead? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="i3lock-blur i3-gaps rofi compton polybar libmpdclient mpc python-mpd2 python-requests compton dunst "
+        INSTALL_QUEUE+="i3lock-blur i3-gaps rofi compton polybar libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
         CONFIG_QUEUE+="i3 "
     fi
 fi
