@@ -6,6 +6,7 @@ export ZSH=/usr/share/oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="blinks"
+#ZSH_THEME="powerlevel9k/powerlevel9k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -43,7 +44,7 @@ ZSH_CACHE_DIR="/tmp/zsh_cache"
  HIST_STAMPS="dd.mm.yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+#ZSH_CUSTOM=/home/reinout/.config/omzsh
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -84,3 +85,6 @@ source ~/.zsh_aliases
 source $ZSH/oh-my-zsh.sh
 source /usr/share/doc/pkgfile/command-not-found.zsh
 export LC_CTYPE=en_US.UTF-8
+export WINEARCH=win32 
+export WINEPREFIX=~/.wine
+

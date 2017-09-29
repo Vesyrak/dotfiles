@@ -491,7 +491,7 @@ else
         INSTALL_QUEUE+=$(cat minpkglist)
         INSTALL_QUEUE+=$(cat majpkglist)
         INSTALL_QUEUE+=" "
-        INSTALL_QUEUE+="an2linuxserver-git lightdm lightdm-gtk-greeter gtk-theme-arc-git "
+        INSTALL_QUEUE+="an2linuxserver-git lightdm light-locker lightdm-gtk-greeter gtk-theme-arc-git "
         CONFIG_QUEUE+="main ssh "
     fi
 fi
