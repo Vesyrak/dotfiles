@@ -254,7 +254,9 @@ function config()
     echo ":: Installing XResources"
     mkdir -p ~/.config/xresources/
     stow -t ~/ Xresources
+    stow -t ~/ xprofile
     confenable Xresources 0
+    confenable xprofile 0
     echo ":: Installing Vim"
     stow -t ~/ vim
     confenable vim 0

@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+# ~/.xinitrc
+#
+# Executed by startx (run your window manager from here)
+
+/usr/bin/xset b off
+nm-applet --sm-disable &
+
+xrdb -merge ~/.config/xresources/Netron.Xresource
+feh --bg-scale ~/Wallpapers/red.png --bg-scale ~/Wallpapers/blu.png
+compton -b
+redshift -l 51.291:4.492 &> /dev/null &
+light-locker --lock-on-suspend &
+export STEAM_RUNTIME=0
