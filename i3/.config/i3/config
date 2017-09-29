@@ -133,26 +133,26 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-#bar {
- ##   status_command SCRIPT_DIR=$HOME/.config/i3/i3blocks-contrib/ i3blocks
+bar {
+    status_command i3blocks
     ##status_command py3status
     #i3bar_command $HOME/.config/polybar/launch.sh
 
-    #mode hide
-    #hidden_state hide
-    ##font pango:Droid Sans Mono Slashed for Powerline 10
+    mode hide
+    hidden_state hide
+    font pango:Droid Sans Mono Slashed for Powerline 10
     #font pango:Noto Emoji size 10
-    #separator_symbol "|"
-    #strip_workspace_numbers yes
-    #colors{
-        #background $bg
-        #statusline $fg
-        #separator $fg
-        #focused_workspace $bg $fg $bg
-        #active_workspace $bg $blue $fg
-        #inactive_workspace $bg $black $fg
-    #}
-#}
+    separator_symbol "|"
+    strip_workspace_numbers yes
+    colors{
+        background $bg
+        statusline $fg
+        separator $fg
+        focused_workspace $bg $fg $bg
+        active_workspace $bg $blue $fg
+        inactive_workspace $bg $black $fg
+    }
+}
 
 #Windows
 new_window pixel 1
@@ -164,7 +164,7 @@ bindsym $mod+b exec i3lock -u -f -r 20 -s 10
 exec xautolock -time 10 -locker "i3lock-wrapper"
 
 #polybar
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+#exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 
 #Colors
 set_from_resource $fg URxvt.foreground #b21020
