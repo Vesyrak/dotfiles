@@ -443,6 +443,7 @@ function windowspassthrough(){
     echo ":: Enabling libvirt for passthrough"
     sudo systemctl enable --now libvirtd
     sudo systemctl enable virtlogd.socket
+    sudo gpasswd -a $USER libvirt
     echo ":: Read the README in ./vm for instructions how to do the passthrough"
 }
 

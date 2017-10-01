@@ -64,8 +64,9 @@ This guide mainly follows the Arch Linux Wiki, use that for reference.
 		"/usr/share/ovmf/ovmf_code_x64.bin:/usr/share/ovmf/ovmf_vars_x64.bin"
 	]
 	```
+1. Change the *user* to root and the *group* to kvm in */etc/libvirt/qemu.conf*
 
-1. enable & start/restart libvirtd service (script enables it for you, just
+1. Enable & start/restart libvirtd service (script enables it for you, just
    restart)
 1. Create/Import virtual machine with virt-manager
     1. If creating, make sure you customize before install
@@ -73,7 +74,18 @@ This guide mainly follows the Arch Linux Wiki, use that for reference.
        restart the libvirtd service)
     1. Change CPU model to *host-passthrough*
 1. Add isolated PCI device via virt-manager
-
+1. Add yourself to the group 'kvm'
+1. If the GPU throws an error (43) in the vm, add the following using *sudo virsh edit < vmname >*
+```
+<features>
+    <hyperv>
+        <vendor_id state='on' value='whatever'/>
+    </hyperv>
+    <kvm>
+        <hidden state='on'/>
+    </kvm>
+</features>
+```
 
 ## For allowing input switching:
 Make sure the evdev's are correct, if changed/removed you need to re-edit,
@@ -81,6 +93,9 @@ otherwise VM won't boot.
 This allows you to change OS by pressing both CTRL buttons.
 
 **Do the editing via "sudo virsh edit < vmname >"**
+
+**My keyboard and mouse are entered here, check your corresponding keyboard and
+mouse event with *ls -l /dev/input/by-id/**
 
 Enter before < /domain >:
 ```
@@ -91,4 +106,13 @@ Enter before < /domain >:
   <qemu:arg value='input-linux,id=mouse,evdev=/dev/input/by-id/usb-Logitech_USB_Optical_Mouse-event-mouse'/>
 </qemu:commandline>
 ```
+
+Add the following to *cgroup_device_acl*:
+```
+ "/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd",
+ "/dev/input/by-id/usb-Logitech_USB_Optical_Mouse-event-mouse"
+```
+
+
+
 
