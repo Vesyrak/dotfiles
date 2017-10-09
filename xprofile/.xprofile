@@ -8,7 +8,7 @@
 nm-applet --sm-disable &
 
 xrdb -merge ~/.config/xresources/Netron.Xresource
-feh --bg-scale ~/Wallpapers/red.png --bg-scale ~/Wallpapers/blu.png
+feh --bg-scale ~/Wallpapers/wallpaper.png
 compton -b
 redshift -l 51.291:4.492 &> /dev/null &
 light-locker --lock-on-suspend &

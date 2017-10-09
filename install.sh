@@ -254,9 +254,9 @@ function config()
     echo ":: Installing XResources"
     mkdir -p ~/.config/xresources/
     stow -t ~/ Xresources
-    stow -t ~/ xprofile
+  #  stow -t ~/ xprofile
     confenable Xresources 0
-    confenable xprofile 0
+  #  confenable xprofile 0
     echo ":: Installing Vim"
     stow -t ~/ vim
     confenable vim 0
@@ -446,6 +446,11 @@ function windowspassthrough(){
     echo ":: Read the README in ./vm for instructions how to do the passthrough"
 }
 
+function ssd(){
+    echo ":: Enabling ssd trimming timer"
+    sudo systemctl start fstrim.timer
+    sudo systemctl enable fstrim.timer
+}
 function restow(){
     checkconf
     while read config sudo; do
@@ -556,7 +561,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
 else
     read -p ':: Will this machine use i3 instead? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="i3lock-blur i3-gaps rofi compton polybar libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
+        INSTALL_QUEUE+="i3blocks i3-gaps rofi compton polybar libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
         CONFIG_QUEUE+="i3 "
     fi
 fi
@@ -580,6 +585,11 @@ fi
 read -p ':: Set up as VPN point? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="installvpn "
+fi
+read -p ':: Using an SSD? [Y/n]' -r
+if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+    INSTALL_QUEUE+="util-linux "
+    CONFIG_QUEUE+="ssd "
 fi
 install
 configure

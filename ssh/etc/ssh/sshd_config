@@ -32,7 +32,7 @@
 
 # Ciphers and keying
 #RekeyLimit default none
-Ciphers arcfour,blowfish-cbc
+Ciphers aes128-ctr,aes192-ctr,aes256-ctr
 
 # Logging
 #SyslogFacility AUTH

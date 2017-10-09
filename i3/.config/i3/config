@@ -159,9 +159,8 @@ new_window pixel 1
 gaps outer 0
 gaps inner 20
 
-#i3lock
-bindsym $mod+b exec i3lock -u -f -r 20 -s 10
-exec xautolock -time 10 -locker "i3lock-wrapper"
+#light-locker
+bindsym $mod+b exec light-locker-command -l
 
 #polybar
 #exec_always --no-startup-id $HOME/.config/polybar/launch.sh
