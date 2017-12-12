@@ -11,6 +11,7 @@ networkmanager
 network-manager-applet
 ntfs-3g
 pacgraph
+parsec
 pulseaudio
 scrot
 tigervnc

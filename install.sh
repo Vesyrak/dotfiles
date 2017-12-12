@@ -1,9 +1,10 @@
 #!/bin/bash
 
-user=false
 CONFIG_FILE="$HOME/.config/sysconf/dotfiles.cfg"
 INSTALL_QUEUE=""
 CONFIG_QUEUE=""
+TODO=""
+BLUETOOTH=false
 
 function checkconf()
 {
@@ -29,7 +30,7 @@ function checksudo()
     if !(which sudo > /dev/null); then
         echo ":: Warning: sudo has to be installed before running this script."
         echo ":: Exiting"
-        exit 0
+        exit 1
     fi
 }
 
@@ -56,10 +57,9 @@ function checkuser()
 {
     if [ "$(id -un)"  != "root" ]; then
         echo ":: Executing as regular user. Continuing."
-        user=true
     else
         echo ":: Warning: running as root. Please create a new user by running createuser or su into it to continue using this script."
-        user=false
+        exit 1
     fi
 }
 
@@ -71,7 +71,8 @@ function main()
     echo ":: Enabling An2Linux server"
     an2linuxserver.py
     systemctl --user enable an2linuxserver.service
-    echo ":: Don't forget to manually pair your device first, by running an2linuxserver.py"
+    TODO+=":: An2Linux\n"
+    TODO+=":: Don't forget to manually pair your device first, by running an2linuxserver.py\n"
     echo ":: Updating File Locations"
     sudo updatedb
 }
@@ -130,7 +131,23 @@ function lightdm()
     echo ":: Please do note that this also enables VNC"
     echo ":: Setting VNC passwd"
     sudo vncpasswd /etc/vncpasswd
-    echo ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED"
+    TODO+= ":: Lightdm\n"
+    TODO+= ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED\n"
+}
+function vnc(){
+    echo":: Configuring TigerVNC"
+    vncserver
+    vncserver -kill :1
+    sudo loginctl enable-linger reinout
+    systemctl --user enable vncserver@:1
+    systemctl --user start vncserver@:1
+}
+
+function wol(){
+    echo ":: Configuring WoL"
+    #Todo
+    #sudo systemctl enable wol@
+    #sudo systemctl enable wol@
 }
 
 function syncthing()
@@ -138,7 +155,8 @@ function syncthing()
     echo ":: Configuring Syncthing"
     sudo systemctl enable syncthing@$USER
     sudo systemctl start syncthing@$USER
-    echo ":: Further configurations can be done by the webui"
+    TODO+= ":: Syncthing\n"
+    TODO+= ":: Further configurations can be done by the webui\n"
 }
 
 function ssh()
@@ -185,18 +203,6 @@ function zsh()
     sudo pkgfile --update
     echo ":: Changing Shell"
     chsh -s /bin/zsh
-    echo ":: Reload Shell to see effects"
-}
-
-function xonsh()
-{
-    echo ":: Configuring XONSH"
-    stow -t ~/ zsh
-    confenable zsh 0
-    stow -t ~/ xonsh
-    confenable xonsh 0
-    echo ":: Changing Shell.."
-    chsh -s /usr/bin/xonsh
     echo ":: Reload Shell to see effects"
 }
 
@@ -266,21 +272,11 @@ function blackarch()
 {
     echo ":: Installing Blackarch Repo"
     curl -O https://blackarch.org/strap.sh && sha1sum strap.sh
-    chmod 777 strap.sh
+    chmod +x strap.sh
     sudo ./strap.sh
     rm strap.sh
     sudo pacman -Syyu
     echo ":: Finished Installing Blackarch Repo"
-}
-
-function odroidC2audiofix()
-{
-    echo ":: Installing odroid audio fix"
-    sudo ln -sf $PWD/OdroidC2AudioFix/etc/* /etc/
-    sudo chmod 666 /dev/am*
-    sudo gpasswd --add $USER audio
-    echo ":: Reboot to gain audio functionality"
-    confenable OdroidC2AudioFix 2
 }
 
 function audioclient()
@@ -293,6 +289,7 @@ function audioclient()
 function installvpn()
 {
     #https://github.com/Angristan/OpenVPN-install
+    echo ":: This needs to be redone"
     echo ":: Installing openvpn through git script"
     mkdir $PWD/tmp
     cd tmp
@@ -388,7 +385,7 @@ function audioserver()
         read -p $'\x0a:: I assume you also want the drive auto-mounted? [Y/n]' -r
         if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
             echo ":: Putting $REPLY drive in automount."
-            UUID=$(sudo blkid /dev/sda1)
+            UUID=$(lsblk -no UUID /dev/sda1)
             echo "UUID=$UUID /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" | sudo tee --append /etc/fstab > /dev/null
         fi
     fi
@@ -415,6 +412,13 @@ function audioserver()
     echo ":: Configuring Audio Client"
     stow -t ~/ ncmpcpp
     confenable ncmpcpp 0
+    echo ":: Configuring MPD Scribble"
+    read -p ":: Please enter your Last.FM username: " name
+    read -p ":: Please enter your Last.FM password: " passwd
+    sudo sed -i 's,^\(username = \).*,\1'$name',' /etc/mpdasrc
+    sudo sed -i 's,^\(password = \).*,\1'$passwd',' /etc/mpdasrc
+    systemctl --user enable mpdas.service
+    systemctl --user start mpdas.service
 }
 
 function pulsetransceiver()
@@ -429,13 +433,17 @@ function pulsetransceiver()
     systemctl --user start pulseaudio
     sudo loginctl enable-linger $USER
 }
+function microcode(){
+  sudo sed -i -e '1iinitrd  /intel-ucode.img \' /boot/loader/entries/arch.conf
+}
 
 function pulsebluetooth()
 {
     echo ":: Configuring PulseAudio for Bluetooth"
     sudo ln -sf $PWD/pulseBluetooth/etc/bluetooth/* /etc/bluetooth/
-    echo ":: You still need to manually pair and trust the device fam"
-    echo ":: Oh, and reboot before you do that. It sometimes gives issues."
+    TODO+= ":: Pulsaudio Bluetooth Configuration\n"
+    TODO+= ":: You still need to manually pair and trust the device fam\n"
+    TODO+= ":: Oh, and reboot before you do that. It sometimes gives issues.\n"
     confenable pulseBluetooth 2
 }
 
@@ -444,7 +452,8 @@ function windowspassthrough(){
     sudo systemctl enable --now libvirtd
     sudo systemctl enable virtlogd.socket
     sudo gpasswd -a $USER libvirt
-    echo ":: Read the README in ./vm for instructions how to do the passthrough"
+    TODO+= ":: Windows Passthrough\n"
+    TODO+= ":: Read the README in ./vm for instructions how to do the passthrough\n"
 }
 
 function ssd(){
@@ -452,6 +461,7 @@ function ssd(){
     sudo systemctl start fstrim.timer
     sudo systemctl enable fstrim.timer
 }
+
 function restow(){
     checkconf
     while read config sudo; do
@@ -489,6 +499,7 @@ for i in "$@"; do
             ;;
     esac
 done
+
 read -p ':: Do you want to install a minimal package list? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+=$(cat minpkglist)
@@ -503,32 +514,38 @@ else
         CONFIG_QUEUE+="main ssh "
     fi
 fi
+
 read -p ':: Do you want to use this machine as a Deluge Server? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="python2-service-identity python2-mako deluge "
     CONFIG_QUEUE+="delugeserver "
 fi
+
 read -p ':: Do you want to use this machine as a Syncthing server? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="syncthing "
     CONFIG_QUEUE+="syncthing "
 fi
+
 read -p ':: Do you want to install/update your configuration files? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="config "
 fi
+
 read -p ':: Do you want to install the BlackArch repositories? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="blackarch "
 fi
+
 read -p ':: Do you want to use this machine for passthrough? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="virt-manager qemu libvirt ovmf bridge-utils "
     CONFIG_QUEUE+="windowspassthrough "
 fi
+
 read -p ':: Do you want to use this machine as an Audio Server? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="mpd mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp "
+    INSTALL_QUEUE+="mpd mpdas mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp split2flac mac python-pyacoustid gst-plugins-bad gst-libav gst-plugins-good gst-plugins-ugly gst-python python-requests"
     CONFIG_QUEUE+="audioserver "
 else
     read -p ':: Do you want to use this machine as an Audio Client instead? [Y/n]'  -r
@@ -536,64 +553,76 @@ else
         CONFIG_QUEUE+="audioclient "
     fi
 fi
+
 read -p ':: Do you want Bluetooth? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="blueman "
     CONFIG_QUEUE+="bluetooth "
+    BLUETOOTH=true
 fi
+
 read -p ':: Should this device be able to stream audio to/from other devices? [Y/n]'  -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="pulseaudio-zeroconf avahi paprefs pavucontrol "
+    INSTALL_QUEUE+="pulseaudio-zeroconf avahi paprefs pavucontrol ttf-droid"
     CONFIG_QUEUE+="pulsetransceiver "
-    read -p ":: Do you also want Bluetooth streaming on this device? [Y/n]" -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="pulseaudio-alsa pulseaudio-bluetooth bluez bluez-libs bluez-utils bluez-firmware "
-        CONFIG_QUEUE+="pulsebluetooth "
+    if [ $BLUETOOTH == true ];then
+        read -p ":: Do you also want Bluetooth streaming on this device? [Y/n]" -r
+        if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+            INSTALL_QUEUE+="pulseaudio-alsa pulseaudio-bluetooth bluez bluez-libs bluez-utils bluez-firmware "
+            CONFIG_QUEUE+="pulsebluetooth "
+        fi
     fi
 fi
+
 read -p ':: Will this machine be connected to a pi-hole? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="piholeclient "
 fi
-read -p ':: Will this machine use awesome as WM? [Y/n]' -r
+
+read -p ':: Will this machine use i3 as WM? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="awesome lain-git "
-    CONFIG_QUEUE+="awesome "
+    INSTALL_QUEUE+="i3blocks i3-gaps rofi compton libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
+    CONFIG_QUEUE+="i3 "
 else
-    read -p ':: Will this machine use i3 instead? [Y/n]' -r
+    read -p ':: Will this machine use awesome as WM? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="i3blocks i3-gaps rofi compton polybar libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
-        CONFIG_QUEUE+="i3 "
+        INSTALL_QUEUE+="awesome lain-git "
+        CONFIG_QUEUE+="awesome "
     fi
 fi
+
 read -p ':: Do you want to install zsh as shell? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="oh-my-zsh-git zsh zsh-completions pkgfile "
     CONFIG_QUEUE+="zsh "
-else
-    echo ':: WARNING: THE FOLLOWING IS STILL VERY EXPERIMENTAL'
-    read -p ':: Do you want to install xonsh as shell instead? [Y/n]' -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="xonsh "
-        CONFIG_QUEUE+="xonsh "
-    fi
 fi
-#TODO remove, deprecated since pulse.
-#read -p ':: Is this an odroid C2 without working audio? [Y/n]' -r
-#if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-#    CONFIG_QUEUE+="OdroidC2AudioFix "
-#fi
+
 read -p ':: Set up as VPN point? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     CONFIG_QUEUE+="installvpn "
 fi
+
 read -p ':: Using an SSD? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
     INSTALL_QUEUE+="util-linux "
     CONFIG_QUEUE+="ssd "
 fi
+
+read -p ':: Want to install TigerVNC? [Y/n]' -r
+if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+    INSTALL_QUEUE+="TigerVNC "
+    read -p ':: As server?? [Y/n]' -r
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+        CONFIG_QUEUE+="vnc "
+    fi
+fi
+read -p ':: Want to WoL? [Y/n]' -r
+if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
+    INSTALL_QUEUE+="wol-systemd "
+    CONFIG_QUEUE+="wol "
+fi
 install
 configure
 addsshclients
 echo ':: Install script terminating'
-
+echo "$TODO"
