@@ -1,0 +1,17 @@
+apt-transport-https 
+alsa-utils 
+bzip2 
+curl 
+dialog 
+gzip 
+iw 
+htop 
+mlocate 
+p7zip 
+rxvt-unicode 
+stow 
+tmux 
+unzip 
+vim 
+wget 
+
