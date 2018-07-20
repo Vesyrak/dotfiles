@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/usr/share/oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -50,7 +50,7 @@ ZSH_CACHE_DIR="/tmp/zsh_cache"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(archlinux catimg web-search dirhistory vi-mode sudo)
+plugins=(command-not-found debian geeknote sudo systemd vi-mode)
 
 # User configuration
 # export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
@@ -83,7 +83,6 @@ export LANG=en_US.UTF-8
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 source ~/.zsh_aliases
 source $ZSH/oh-my-zsh.sh
-source /usr/share/doc/pkgfile/command-not-found.zsh
 export LC_CTYPE=en_US.UTF-8
 export WINEARCH=win32 
 export WINEPREFIX=~/.wine

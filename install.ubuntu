@@ -118,10 +118,11 @@ function syncthing()
 {
     echo ":: Enabling Syncthing PPA"
     curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
-echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
-sudo apt-get update
-sudo apt-get install syncthing
+    echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
+    sudo apt-get update
+    sudo apt-get install syncthing
     echo ":: Configuring Syncthing"
+    xmlstarlet ed -L -u '/configuration/gui/address' -v 0.0.0.0:8384 .config/syncthing/config.xml
     sudo systemctl enable syncthing@$USER
     sudo systemctl start syncthing@$USER
     TODO+= ":: Syncthing\n"
