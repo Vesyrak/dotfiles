@@ -75,7 +75,7 @@ function main()
 function install()
 {
     echo ":: Starting System Update"
-    pacaur -S --needed  $INSTALL_QUEUE
+    sudo apt install  $INSTALL_QUEUE
     echo ":: System Update Finished"
 }
 
@@ -125,15 +125,13 @@ function syncthing()
     xmlstarlet ed -L -u '/configuration/gui/address' -v 0.0.0.0:8384 .config/syncthing/config.xml
     sudo systemctl enable syncthing@$USER
     sudo systemctl start syncthing@$USER
-    TODO+= ":: Syncthing\n"
-    TODO+= ":: Further configurations can be done by the webui\n"
+    TODO+=":: Syncthing\n"
+    TODO+=":: Further configurations can be done by the webui\n"
 }
 
 function ssh()
 {
     echo  ":: Enabling sshd"
-    sudo systemctl enable sshd
-    sudo systemctl start sshd
     sudo ln -sf $PWD/ssh/etc/ssh/* /etc/ssh/
     sudo systemctl restart sshd
     confenable ssh 2
@@ -147,7 +145,7 @@ function zsh()
     stow -t ~/ zsh
     confenable zsh 0
     echo ":: Changing Shell"
-    chsh -s $(which zsh)
+    sudo chsh -s $(which zsh) $USER
     echo ":: Reload Shell to see effects"
 }
 
@@ -369,9 +367,9 @@ function pulsebluetooth()
 {
     echo ":: Configuring PulseAudio for Bluetooth"
     sudo ln -sf $PWD/pulseBluetooth/etc/bluetooth/* /etc/bluetooth/
-    TODO+= ":: Pulsaudio Bluetooth Configuration\n"
-    TODO+= ":: You still need to manually pair and trust the device fam\n"
-    TODO+= ":: Oh, and reboot before you do that. It sometimes gives issues.\n"
+    TODO+=":: Pulsaudio Bluetooth Configuration\n"
+    TODO+=":: You still need to manually pair and trust the device fam\n"
+    TODO+=":: Oh, and reboot before you do that. It sometimes gives issues.\n"
     confenable pulseBluetooth 2
 }
 
@@ -380,8 +378,8 @@ function windowspassthrough(){
     sudo systemctl enable --now libvirtd
     sudo systemctl enable virtlogd.socket
     sudo gpasswd -a $USER libvirt
-    TODO+= ":: Windows Passthrough\n"
-    TODO+= ":: Read the README in ./vm for instructions how to do the passthrough\n"
+    TODO+=":: Windows Passthrough\n"
+    TODO+=":: Read the README in ./vm for instructions how to do the passthrough\n"
 }
 
 function ssd(){
@@ -431,13 +429,16 @@ done
 
 read -p ':: Do you want to install a minimal package list? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+=$(cat minpkglist)
+    INSTALL_QUEUE+=$(cat minpkglist.ubuntu)
+    INSTALL_QUEUE+=" "
     CONFIG_QUEUE+="ssh "
 else
     read -p ':: Do you want to install a complete package list? [Y/n]' -r
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+=$(cat minpkglist)
-        INSTALL_QUEUE+=$(cat majpkglist)
+        INSTALL_QUEUE+=$(cat minpkglist.ubuntu)
+        INSTALL_QUEUE+=" "
+        INSTALL_QUEUE+=$(cat majpkglist.ubuntu)
+        INSTALL_QUEUE+=" "
         CONFIG_QUEUE+="main ssh "
     fi
 fi
