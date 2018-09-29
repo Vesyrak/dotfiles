@@ -1,7 +1,7 @@
 #!/bin/bash
 function zshArch(){
   print "Installing zsh"
-  sudo pacaur -S oh-my-zsh-git zsh zsh-completions pkgfile
+  pacaur -S oh-my-zsh-git zsh zsh-completions pkgfile
   print "Configuring ZSH"
   stow -t ~/ zsh
   confenable zsh 0

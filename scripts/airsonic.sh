@@ -1,5 +1,5 @@
 #!/bin/bash
-
+. scripts/beets.sh
 function airsonicArch() {
   todo "Airsonic not yet implemented"
 }
@@ -23,7 +23,9 @@ function airsonicUbuntu() {
   sudo ln -s /usr/bin/ffmpeg
   sudo chown -R tomcat8:tomcat8 /var/airsonic
   sudo systemctl start tomcat8.service
+  beetsUbuntu
 }
+
 
 while getopts "ua" opt; do
   case $opt in

@@ -2,7 +2,7 @@
 
 function delugeArch(){
   print "Installing Deluge Server"
-  sudo pacaur -S python2-service-identity python2-mako deluge
+  pacaur -S python2-service-identity python2-mako deluge
   print "Configuring Deluge Server"
   sudo systemctl enable deluged
   sudo systemctl start deluged

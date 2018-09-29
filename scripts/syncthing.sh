@@ -2,7 +2,7 @@
 
 function syncthingArch(){
   print "Installing Syncthing"
-  sudo pacaur -S syncthing
+  pacaur -S syncthing
   print "Configuring Syncthing"
   sudo systemctl enable syncthing@$USER
   sudo systemctl start syncthing@$USER

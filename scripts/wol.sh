@@ -3,7 +3,7 @@
 function wolArch()
 {
     print "Installing WoL"
-    sudo pacaur -S wol-systemd
+    pacaur -S wol-systemd
     todo  "Enabling WoL is not yet implemented"
 
 }

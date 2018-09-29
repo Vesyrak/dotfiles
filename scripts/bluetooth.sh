@@ -2,7 +2,7 @@
 print "Configuring Bluetooth"
 function bluetoothArch() {
   print "Installing bluetooth"
-  sudo pacaur -S bluInstallingeman
+  pacaur -S bluInstallingeman
   sudo systemctl start bluetooth
   sudo systemctl enable bluetooth
 }

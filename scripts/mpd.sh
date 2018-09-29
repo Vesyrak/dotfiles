@@ -1,8 +1,8 @@
 #!/bin/bash
-
+. scripts/beets.sh
 function mpdArch() {
   print "Installing mpd"
-  sudo pacaur -S mpd mpdas mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp split2flac mac python-pyacoustid gst-plugins-bad gst-libav gst-plugins-good gst-plugins-ugly gst-python python-requests
+  pacaur -S mpd mpdas mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp split2flac mac python-pyacoustid gst-plugins-bad gst-libav gst-plugins-good gst-plugins-ugly gst-python python-requests
   pip install discogs-client
   pip3 install flask pyacoustid requests
   sudo wget https://raw.githubusercontent.com/ftrvxmtrx/split2flac/master/split2flac -P /usr/bin/
@@ -34,6 +34,7 @@ function mpdArch() {
   sudo systemctl disable mpdscribble
   systemctl --user enable mpdscribble.service
   systemctl --user start mpdscribble.service
+  beetsArch
 }
 
 function mpdUbuntu() {
@@ -70,6 +71,7 @@ function mpdUbuntu() {
   sudo systemctl disable mpdscribble
   systemctl --user enable mpdscribble.service
   systemctl --user start mpdscribble.service
+  beetsUbuntu
 }
 
 while getopts "ua" opt; do
