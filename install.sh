@@ -4,64 +4,9 @@ CONFIG_FILE="$HOME/.config/sysconf/dotfiles.cfg"
 INSTALL_QUEUE=""
 CONFIG_QUEUE=""
 TODO=""
-BLUETOOTH=false
 
-function checkconf()
-{
-    echo ":: Reading configuration"
-    if !([ -f $CONFIG_FILE ]); then
-        echo ":: No config file found. Make sure you run a regular install with this script."
-    fi
-}
-
-function confenable()
-{
-    if !([ -f $CONFIG_FILE ]); then
-        mkdir -p $HOME/.config/sysconf/
-        touch $CONFIG_FILE
-    fi
-    if !(grep -q "$1 *= " $CONFIG_FILE); then
-        echo "$1 $2" >> $CONFIG_FILE
-    fi
-}
-
-function checksudo()
-{
-    if !(which sudo > /dev/null); then
-        echo ":: Warning: sudo has to be installed before running this script."
-        echo ":: Exiting"
-        exit 1
-    fi
-}
-
-function createuser()
-{
-    read -p ":: Do you want to create a new user? [Y/n] " -r
-    if [[ $REPLY =~ ^[Nn]$ ]]
-    then
-        exit 1
-    fi
-    echo
-    read -p ":: Please enter the user name: " NAME
-    if id -u $NAME >/dev/null 2>&1; then
-        echo ":: User already exists!"
-        exit 1
-    fi
-    sudo useradd $NAME -m -G audio
-    echo "$USER ALL=(ALL) ALL" | sudo tee --append /etc/sudoers > /dev/null
-    echo ":: Please enter preferred user passwd"
-    sudo passwd $NAME
-}
-
-function checkuser()
-{
-    if [ "$(id -un)"  != "root" ]; then
-        echo ":: Executing as regular user. Continuing."
-    else
-        echo ":: Warning: running as root. Please create a new user by running createuser or su into it to continue using this script."
-        exit 1
-    fi
-}
+. /etc/os-release
+OS=$NAME
 
 function main()
 {
@@ -118,57 +63,6 @@ function addsshclients()
     fi
 }
 
-function lightdm()
-{
-    echo ":: Configuring Lightdm"
-    sudo systemctl enable lightdm
-    sudo ln -sf $PWD/lightdm/etc/lightdm/* /etc/lightdm/
-    confenable lightdm 2
-    setfacl -m u:lightdm:rx ~/
-    setfacl -m u:lightdm:rx ~/repos
-    setfacl -m u:lightdm:rx $PWD
-    setfacl -R -m u:lightdm:rx repos/GNU-Linux-Config-Files/lightdm/
-    echo ":: Please do note that this also enables VNC"
-    echo ":: Setting VNC passwd"
-    sudo vncpasswd /etc/vncpasswd
-    TODO+= ":: Lightdm\n"
-    TODO+= ":: Don't forget to install a wallpaper for lightdm/awesome, otherwise ERRORS ENSURED\n"
-}
-function vnc(){
-    echo":: Configuring TigerVNC"
-    vncserver
-    vncserver -kill :1
-    sudo loginctl enable-linger reinout
-    systemctl --user enable vncserver@:1
-    systemctl --user start vncserver@:1
-}
-
-function wol(){
-    echo ":: Configuring WoL"
-    #Todo
-    #sudo systemctl enable wol@
-    #sudo systemctl enable wol@
-}
-
-function syncthing()
-{
-    echo ":: Configuring Syncthing"
-    sudo systemctl enable syncthing@$USER
-    sudo systemctl start syncthing@$USER
-    TODO+= ":: Syncthing\n"
-    TODO+= ":: Further configurations can be done by the webui\n"
-}
-
-function ssh()
-{
-    echo  ":: Enabling sshd"
-    sudo systemctl enable sshd
-    sudo systemctl start sshd
-    sudo ln -sf $PWD/ssh/etc/ssh/* /etc/ssh/
-    sudo systemctl restart sshd
-    confenable ssh 2
-}
-
 function aur()
 {
     echo ":: Installing AUR"
@@ -195,129 +89,11 @@ function aur()
     echo ":: AUR Installation Finished"
 }
 
-function zsh()
-{
-    echo ":: Configuring ZSH"
-    stow -t ~/ zsh
-    confenable zsh 0
-    sudo pkgfile --update
-    echo ":: Changing Shell"
-    chsh -s /bin/zsh
-    echo ":: Reload Shell to see effects"
-}
-
-function delugeserver()
-{
-    echo ":: Configuring Deluge Server"
-    sudo systemctl enable deluged
-    sudo systemctl start deluged
-    sudo sed -i "s/\(User*=*\).*/\1$USER/" /etc/systemd/system/deluged.service
-    echo ":: Configuring Deluge WebServer"
-    stow -t ~/ deluge
-    sudo cp /usr/lib/systemd/system/deluged.service /etc/systemd/system/deluged.service
-    echo ":: Creating deluge auth file"
-    read -p ":: Please enter the desired username: " name
-    read -p ":: Please enter the desired password: " passwd
-    echo "$name : $passwd :10" >> ~/.config/deluge/auth
-    sudo systemctl enable deluge-web
-    confenable deluge 0
-}
-
-function bluetooth()
-{
-    echo ":: Configuring Bluetooth"
-    sudo systemctl start bluetooth
-    sudo systemctl enable bluetooth
-}
-
-function awesome()
-{
-    echo ":: Configuring AwesomeWM"
-    stow -t ~/ awesome
-    confenable awesome 0
-}
-
-function i3()
-{
-    echo ":: Configuring i3"
-    stow -t ~/ i3
-    confenable i3 0
-    echo ":: Installing Polybar"
-    stow -t ~/ polybar
-    chmod +x polybar/.config/polybar/*
-    confenable polybar 0
-    echo ":: Installing Compton"
-    stow -t ~/ compton
-    confenable compton 0
-    echo ":: Installing dunst"
-    stow -t ~/ dunst
-    confenable dunst 0
-}
-
-function config()
-{
-    echo ":: Installing Config Files"
-    echo ":: Installing XResources"
-    mkdir -p ~/.config/xresources/
-    stow -t ~/ Xresources
-  #  stow -t ~/ xprofile
-    confenable Xresources 0
-  #  confenable xprofile 0
-    echo ":: Installing Vim"
-    stow -t ~/ vim
-    confenable vim 0
-}
-
-function blackarch()
-{
-    echo ":: Installing Blackarch Repo"
-    curl -O https://blackarch.org/strap.sh && sha1sum strap.sh
-    chmod +x strap.sh
-    sudo ./strap.sh
-    rm strap.sh
-    sudo pacman -Syyu
-    echo ":: Finished Installing Blackarch Repo"
-}
-
 function audioclient()
 {
     echo ":: NOTE: Due to mpd design, the actual audio client is run on the server, displaying it through ssh."
     echo ":: This purely sets the IP address for easy connection"
     sshclient mpd
-}
-
-function installvpn()
-{
-    #https://github.com/Angristan/OpenVPN-install
-    echo ":: This needs to be redone"
-    echo ":: Installing openvpn through git script"
-    mkdir $PWD/tmp
-    cd tmp
-    git clone https://github.com/Angristan/OpenVPN-install.git
-    cd OpenVPN-install
-    chmod +x openvpn-install.sh
-    sudo ./openvpn-install.sh
-    cd ../../
-    rm tmp -r
-    read -p ':: Is this an Arch-based machine? [Y/n]'  -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        echo ":: Due to current bugs in the script for the Arch distribution, several files still have to be moved/generated."
-        echo ":: Please check once in a while if this is still necessary."
-        sudo mv /etc/openvpn/server.conf /etc/openvpn/server/
-        sudo mv /etc/openvpn/ca.crt /etc/openvpn/server/
-        sudo mv /etc/openvpn/server.key /etc/openvpn/server/
-        sudo mv /etc/openvpn/server.crt /etc/openvpn/server/
-        sudo mv /etc/openvpn/crl.pem /etc/openvpn/server/
-        sudo mv /etc/openvpn/tls-auth.key /etc/openvpn/server/
-        sudo openssl dhparam -out /etc/openvpn/server/dh.pem 2048
-    fi
-    sudo systemctl enable openvpn-server@server
-    sudo systemctl start openvpn-server@server
-    read -p ":: What is this machine's local IP address? " SNATIP
-    sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 ! -d 10.8.0.0/24 -j SNAT --to $SNATIP
-    sudo iptables-save | sudo tee --append /etc/iptables/iptables.rules > /dev/null
-    sudo systemctl enable iptables
-    sudo systemctl start iptables
 }
 
 function sshclient()
@@ -340,164 +116,19 @@ function sshclient()
     echo ":: Updated ssh config file for easy server access under '$NAME'"
 
 }
-function pihole(){
-    #vpn
-    pacaur -S pi-hole-server
-    sudo cp /etc/dnsmasq.conf /etc/dnsmasq.orig
-    sudo cp /etc/pihole/configs/dnsmasq.main /etc/dnsmasq.conf
-    sudo cp /etc/lighttpd/lighttpd.conf /etc/lighttpd/lighttpd.orig
-    sudo cp /etc/pihole/configs/lighttpd.conf /etc/lighttpd/lighttpd.conf
-    sudo systemctl reenable dnsmasq.service
-    sudo systemctl restart dnsmasq.service
-    sudo systemctl reenable lighttpd.service
-    sudo systemctl restart lighttpd.service
-    echo "extension=sockets.so" | sudo tee --append /etc/php/php.ini > /dev/null
-    echo "interface=tun0" | sudo tee --append /etc/dnsmasq.d/01-pihole.conf > /dev/null
-    echo "localise-queries" | sudo tee --append /etc/dnsmasq.d/01-pihole.conf > /dev/null
-    echo "PIHOLE_INTERFACE=tun0" | sudo tee --append /etc/pihole/setupVars.conf > /dev/null
-    #todo domain hostname resolution
-
-}
-function hostname(){
-#todo
-    echo "Todo"
-}
-#TODO review
-function piholeclient()
-{
-    sshclient
-    echo ":: If you want to use the dns server, disable resolv.conf changing by your network manager."
-    echo ":: You can do this in e.g. connman by editing connman.service and adding --nodnsproxy to execstart"
-    echo ":: Setting the resolv.conf to the server"
-    sudo rm /etc/resolv.conf
-    sudo touch /etc/resolv.conf
-    echo "nameserver $IP" | sudo tee --append /etc/resolv.conf > /dev/null
-}
-
-function audioserver()
-{
-    sudo mkdir /media
-    read -p ":: If nessecary, is your HDD already mounted on /media? [Y/n]" -r
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        read -p ":: Please enter device name (e.g. /dev/sda2)"
-        echo ":: Mounting $REPLY"
-        sudo mount $REPLY /media
-        read -p $'\x0a:: I assume you also want the drive auto-mounted? [Y/n]' -r
-        if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-            echo ":: Putting $REPLY drive in automount."
-            UUID=$(lsblk -no UUID /dev/sda1)
-            echo "UUID=$UUID /media ext4 acl,noatime,nofail,x-systemd.device-timeout=10 0 2" | sudo tee --append /etc/fstab > /dev/null
-        fi
-    fi
-    echo ":: Configuring mpd"
-    stow -t ~/ mpd
-    confenable mpd 0
-    setfacl -m "u:mpd:rwx" /media
-    sudo sed  '/\[Unit\]/a RequiresMountsFor=/media/' /usr/lib/systemd/user/mpd.service
-    systemctl --user enable mpd
-    systemctl --user start mpd
-    sudo loginctl enable-linger $USER
-    echo ":: Installing PulseAudio Service."
-    sudo stow -t / pulseService
-    systemctl --user enable pulseaudio #todo unsynced with transceiver
-    systemctl --user start pulseaudio
-    confenable pulseService 1
-    # Makes sure the wifi-dongle doesn't power off causing connection issues
-    echo ":: Making sure the Wi-Fi connection doesn't sleep"
-    sudo stow -t / WLanPOFix
-    confenable WLanPOFix 1
-    echo ":: Configuring Beets audio manager"
-    stow -t ~/ beets
-    confenable beets 0
-    echo ":: Configuring Audio Client"
-    stow -t ~/ ncmpcpp
-    confenable ncmpcpp 0
-    echo ":: Configuring MPD Scribble"
-    read -p ":: Please enter your Last.FM username: " name
-    read -p ":: Please enter your Last.FM password: " passwd
-    sudo sed -i 's,^\(username = \).*,\1'$name',' /etc/mpdasrc
-    sudo sed -i 's,^\(password = \).*,\1'$passwd',' /etc/mpdasrc
-    systemctl --user enable mpdas.service
-    systemctl --user start mpdas.service
-}
-
-function pulsetransceiver()
-{
-    echo ":: Configuring PulseAudio for streaming"
-    mkdir ~/.config/pulse #Required, may not be symlink
-    stow -t ~/ pulsetransceiver
-    confenable pulsetransceiver 0
-    sudo systemctl start avahi-daemon
-    sudo systemctl enable avahi-daemon
-    systemctl --user enable pulseaudio
-    systemctl --user start pulseaudio
-    sudo loginctl enable-linger $USER
-}
-function microcode(){
-  sudo sed -i -e '1iinitrd  /intel-ucode.img \' /boot/loader/entries/arch.conf
-}
-
-function pulsebluetooth()
-{
-    echo ":: Configuring PulseAudio for Bluetooth"
-    sudo ln -sf $PWD/pulseBluetooth/etc/bluetooth/* /etc/bluetooth/
-    TODO+= ":: Pulsaudio Bluetooth Configuration\n"
-    TODO+= ":: You still need to manually pair and trust the device fam\n"
-    TODO+= ":: Oh, and reboot before you do that. It sometimes gives issues.\n"
-    confenable pulseBluetooth 2
-}
-
-function windowspassthrough(){
-    echo ":: Enabling libvirt for passthrough"
-    sudo systemctl enable --now libvirtd
-    sudo systemctl enable virtlogd.socket
-    sudo gpasswd -a $USER libvirt
-    TODO+= ":: Windows Passthrough\n"
-    TODO+= ":: Read the README in ./vm for instructions how to do the passthrough\n"
-}
-
-function ssd(){
-    echo ":: Enabling ssd trimming timer"
-    sudo systemctl start fstrim.timer
-    sudo systemctl enable fstrim.timer
-}
-
-function restow(){
-    checkconf
-    while read config sudo; do
-        case "$sudo" in
-            "0")
-                stow -R -t ~/ $config
-                ;;
-            "1")
-                sudo stow -R -t / $config
-                ;;
-            "2")
-                for DIR in $(find . -type f -name '*f*' | sed -r 's|/[^/]+$||' | sort -u); do
-                    sudo ln $config/$DIR/* $DIR/
-                done
-                ;;
-            *)
-                echo ":: WARNING: ERROR FOUND IN CONFIGURATION FILE"
-                echo ":: ABORTING"
-                exit 1
-                ;;
-        esac
-    done < $CONFIG_FILE
-}
 
 checkuser
 checksudo
-for i in "$@"; do
-    case "$i" in
-        "createuser")
-            createuser
-            ;;
-        "restow")
-            restow
-            exit 0
-            ;;
-    esac
+
+while getopts "a" opt; do
+  case $opt in
+    m)
+      echo "-a was triggered!" >&2
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
 done
 
 read -p ':: Do you want to install a minimal package list? [Y/n]' -r
@@ -515,114 +146,9 @@ else
     fi
 fi
 
-read -p ':: Do you want to use this machine as a Deluge Server? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="python2-service-identity python2-mako deluge "
-    CONFIG_QUEUE+="delugeserver "
-fi
-
-read -p ':: Do you want to use this machine as a Syncthing server? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="syncthing "
-    CONFIG_QUEUE+="syncthing "
-fi
-
-read -p ':: Do you want to install/update your configuration files? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    CONFIG_QUEUE+="config "
-fi
-
-read -p ':: Do you want to install the BlackArch repositories? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    CONFIG_QUEUE+="blackarch "
-fi
-
-read -p ':: Do you want to use this machine for passthrough? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="virt-manager qemu libvirt ovmf bridge-utils "
-    CONFIG_QUEUE+="windowspassthrough "
-fi
-
-read -p ':: Do you want to use this machine as an Audio Server? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="mpd mpdas mlocate screenfetch alsa-utils pulseaudio beets python2-discogs-client python-flask ncmpcpp split2flac mac python-pyacoustid gst-plugins-bad gst-libav gst-plugins-good gst-plugins-ugly gst-python python-requests"
-    CONFIG_QUEUE+="audioserver "
-else
-    read -p ':: Do you want to use this machine as an Audio Client instead? [Y/n]'  -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        CONFIG_QUEUE+="audioclient "
-    fi
-fi
-
-read -p ':: Do you want Bluetooth? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="blueman "
-    CONFIG_QUEUE+="bluetooth "
-    BLUETOOTH=true
-fi
-
-read -p ':: Should this device be able to stream audio to/from other devices? [Y/n]'  -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="pulseaudio-zeroconf avahi paprefs pavucontrol ttf-droid"
-    CONFIG_QUEUE+="pulsetransceiver "
-    if [ $BLUETOOTH == true ];then
-        read -p ":: Do you also want Bluetooth streaming on this device? [Y/n]" -r
-        if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-            INSTALL_QUEUE+="pulseaudio-alsa pulseaudio-bluetooth bluez bluez-libs bluez-utils bluez-firmware "
-            CONFIG_QUEUE+="pulsebluetooth "
-        fi
-    fi
-fi
-
-read -p ':: Will this machine be connected to a pi-hole? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    CONFIG_QUEUE+="piholeclient "
-fi
-
-read -p ':: Will this machine use i3 as WM? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="i3blocks i3-gaps rofi compton libmpdclient mpc redshift python-mpd2 python-requests compton dunst "
-    CONFIG_QUEUE+="i3 "
-else
-    read -p ':: Will this machine use awesome as WM? [Y/n]' -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        INSTALL_QUEUE+="awesome lain-git "
-        CONFIG_QUEUE+="awesome "
-    fi
-fi
-
-read -p ':: Do you want to install zsh as shell? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="oh-my-zsh-git zsh zsh-completions pkgfile "
-    CONFIG_QUEUE+="zsh "
-fi
-
-read -p ':: Set up as VPN point? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    CONFIG_QUEUE+="installvpn "
-fi
-
-read -p ':: Using an SSD? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="util-linux "
-    CONFIG_QUEUE+="ssd "
-fi
-
-read -p ':: Want to install TigerVNC? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="TigerVNC "
-    read -p ':: As server?? [Y/n]' -r
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-        CONFIG_QUEUE+="vnc "
-    fi
-fi
-read -p ':: Want to WoL? [Y/n]' -r
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-    INSTALL_QUEUE+="wol-systemd "
-    CONFIG_QUEUE+="wol "
-fi
 install
 configure
 addsshclients
 echo ':: Install script terminating'
 echo "$TODO"
+if [[ $OS == "Ubuntu"]]

@@ -5,3 +5,6 @@ Install script to install and configure my base arch systems, making them ready 
 ##Usage:
 Run ./install.sh from inside the directory.
 
+##Frequent installation problems:
+Make sure your EFI partition already exists in the fat32
+format
