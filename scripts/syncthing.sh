@@ -1,4 +1,5 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
 
 function syncthingArch(){
   print "Installing Syncthing"

@@ -1,12 +1,14 @@
 #!/bin/bash
+. ./scripts/core/formatting.sh
+CONFIG_FILE="$HOME/.config/sysconf/dotfiles.cfg"
 
 function confenable() {
   if !([ -f $CONFIG_FILE ]); then
     mkdir -p $HOME/.config/sysconf/
     touch $CONFIG_FILE
   fi
-  if !(grep -q "$0 *= " $CONFIG_FILE); then
-    echo "$0 $1" >> $CONFIG_FILE
+  if !(grep -q "$1 *= " $CONFIG_FILE); then
+    echo "$1 $2" >> "$CONFIG_FILE"
   fi
 }
 

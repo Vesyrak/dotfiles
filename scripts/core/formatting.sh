@@ -1,5 +1,6 @@
 #!/bin/bash
 
+TODO=""
 function print() {
   echo ":: $1"
 }

@@ -1,4 +1,6 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
+
 function sleepFixArch() {
   print "Making sure the Wi-Fi connection doesn't sleep"
   sudo stow -t / WLanPOFix

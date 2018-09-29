@@ -1,5 +1,6 @@
 #!/bin/bash
-print "Configuring Bluetooth"
+for f in ./scripts/core/*; do source $f; done
+
 function bluetoothArch() {
   print "Installing bluetooth"
   pacaur -S bluInstallingeman

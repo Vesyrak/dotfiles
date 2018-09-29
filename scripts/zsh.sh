@@ -1,4 +1,6 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
+
 function zshArch(){
   print "Installing zsh"
   pacaur -S oh-my-zsh-git zsh zsh-completions pkgfile
@@ -14,7 +16,7 @@ function zshArch(){
 function zshUbuntu()
 {
     print "Installing zsh"
-    sudo apt install zsh git-core
+    sudo apt install zsh
     wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
     print "Configuring ZSH"
     stow -t ~/ zsh

@@ -1,4 +1,6 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
+
 . scripts/beets.sh
 function mpdArch() {
   print "Installing mpd"

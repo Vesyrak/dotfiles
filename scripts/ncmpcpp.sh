@@ -1,4 +1,6 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
+
 function ncmpcppArch(parameter) {
   print "Configuring ncmpcpp"
   stow -t ~/ ncmpcpp

@@ -1,4 +1,5 @@
 #!/bin/bash
+for f in ./scripts/core/*; do source $f; done
 
 function atomArch() {
   todo "Installing atom in arch is not implemented yet"
