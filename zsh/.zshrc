@@ -86,4 +86,5 @@ source $ZSH/oh-my-zsh.sh
 export LC_CTYPE=en_US.UTF-8
 export WINEARCH=win32 
 export WINEPREFIX=~/.wine
+PATH=$PATH:/snap/bin
 

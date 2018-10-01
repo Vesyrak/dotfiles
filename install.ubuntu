@@ -6,7 +6,7 @@ CUSTOM=false
 
 . /etc/os-release
 OS=$NAME
-if [[ $OS == "Ubuntu" ]]; then
+if [[ $OS == "Ubuntu" || $OS == "Debian GNU/Linux" ]]; then
 	SUFFIX="-u"
 elif [[ $OS == "Arch" ]]; then
 	SUFFIX="-a"
@@ -18,7 +18,7 @@ for f in ./scripts/core/*; do source $f; done
 
 function install()
 {
-	if [[ $OS == "Ubuntu" ]]; then
+	if [[ $OS == "Ubuntu" || $OS == "Debian GNU/Linux" ]]; then
 		sudo apt install $INSTALL_QUEUE
 	elif [[ $OS == "Arch" ]]; then
 		aur
@@ -30,8 +30,7 @@ function configure(){
 	print "Starting Configuring"
 	arr=($CONFIG_QUEUE)
 	for config in ${arr[@]}; do
-		echo "$config"
-		eval ./scripts/"$config".sh
+		eval ./scripts/$config.sh $SUFFIX
 	done
 	print "Finished Configuring"
 }
@@ -164,7 +163,8 @@ fi
 
 read -p ':: Do you want to install/update your configuration files? [Y/n]' -r
 if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY == "" ]];then
-	CONFIG_QUEUE+="config "
+	sudo apt install stow
+	config
 fi
 
 install
