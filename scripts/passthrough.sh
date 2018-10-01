@@ -5,6 +5,7 @@ function prepare() {
   sudo apt install qemu-system-x86 qemu-utils ovmf libvirt-daemon virt-manager
   sudo perl -i -pe 's/(GRUB_CMDLINE_LINUX_DEFAULT=.*)"/\1 intel_iommu=on"/' /etc/default/grub
   sudo update-grub
+  #REBOOT
   sudo dmesg | grep -e DMAR -e IOMMU
 }
 
@@ -49,3 +50,8 @@ while getopts "pce" opt; do
       ;;
   esac
 done
+
+#sudo apt install apparmor-utils
+#<domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+#sudo vi /etc/apparmor.d/abstractions/libvirt-qemu
+#add /dev/input/eventX rwk,
