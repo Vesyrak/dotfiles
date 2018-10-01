@@ -11,8 +11,8 @@ function mpdArch() {
   print "Configuring mpd"
   stow -t ~/ mpd
   confenable mpd 0
-  sudo setfacl -m "u:mpd:rwx" /media
-  sudo sed  '/\[Unit\]/a RequiresMountsFor=/media/' /etc/systemd/system/multi-user.target.wants/mpd.service
+  sudo setfacl -m "u:mpd:rwx" /drive
+  sudo sed  '/\[Unit\]/a RequiresMountsFor=/drive/' /etc/systemd/system/multi-user.target.wants/mpd.service
   sudo cp /etc/systemd/system/multi-user.target.wants/mpd.service /usr/lib/systemd/user/
   systemctl --user enable mpd
   systemctl --user start mpd TODO
@@ -48,8 +48,8 @@ function mpdUbuntu() {
   print "Configuring mpd"
   stow -t ~/ mpd
   confenable mpd 0
-  sudo setfacl -m "u:mpd:rwx" /media
-  sudo sed  '/\[Unit\]/a RequiresMountsFor=/media/' /etc/systemd/system/multi-user.target.wants/mpd.service
+  sudo setfacl -m "u:mpd:rwx" /drive
+  sudo sed  '/\[Unit\]/a RequiresMountsFor=/drive/' /etc/systemd/system/multi-user.target.wants/mpd.service
   sudo cp /etc/systemd/system/multi-user.target.wants/mpd.service /usr/lib/systemd/user/
   systemctl --user enable mpd
   systemctl --user start mpd TODO
