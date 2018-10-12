@@ -8,7 +8,7 @@ function airsonicArch() {
 
 function airsonicUbuntu() {
   print "Installing Airsonic"
-  sudo apt install oracle-java8-jdk tomcat8 ffmpeg
+  sudo apt install oracle-java8-jdk tomcat8 ffmpeg alsa
   wget https://github.com/airsonic/airsonic/releases/download/v10.1.2/airsonic.war
   print "Configuring Airsonic"
   sudo sed -i 's/\(JAVA_HOME=\).*/\1/' /etc/default/config
