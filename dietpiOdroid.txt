@@ -199,7 +199,7 @@ CONFIG_WIFI_COUNTRY_CODE=GB
 CONFIG_SERIAL_CONSOLE_ENABLE=0
 
 #Soundcard
-CONFIG_SOUNDCARD=none
+CONFIG_SOUNDCARD=usb-dac
 
 #LCD Panel addon
 #	NB: Do not modify, you must use dietpi-config to configure/set options

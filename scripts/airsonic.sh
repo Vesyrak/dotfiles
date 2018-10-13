@@ -7,9 +7,7 @@ function airsonicArch() {
 }
 
 function airsonicUbuntu() {
-  print "Installing Airsonic"
-  sudo apt install oracle-java8-jdk tomcat8 ffmpeg alsa
-  wget https://github.com/airsonic/airsonic/releases/download/v10.1.2/airsonic.war
+  #Reminder: For jukebox to work, you need icedtea
   print "Configuring Airsonic"
   sudo sed -i 's/\(JAVA_HOME=\).*/\1/' /etc/default/config
   sudo sed -i '/^JAVA_HOME=/ s/$/'java-8-oracle'/' /etc/default/config
@@ -29,12 +27,23 @@ function airsonicUbuntu() {
 }
 
 
+function airsonicDiet() {
+  #Reminder: For jukebox to work, you need icedtea
+  print "Configuring Airsonic"
+  cp ./airsonic/airsonic.service /mnt/dietpi_userdata/airsonic/
+  beetsUbuntu
+}
+
+
 while getopts "ua" opt; do
   case $opt in
     a)
       airsonicArch
       ;;
     u)
+      airsonicUbuntu
+      ;;
+    d)
       airsonicUbuntu
       ;;
     \?)

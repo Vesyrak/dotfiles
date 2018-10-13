@@ -21,8 +21,6 @@ function delugeArch(){
 }
 
 function delugeUbuntu() {
-  print "Installing Deluge Server"
-  sudo apt install deluged deluge-web deluge-console
   print "Configuring Deluge Server"
   sudo adduser --system  --gecos "Deluge Service" --disabled-password --group --home /var/lib/deluge deluge
   sudo adduser reinout deluge
@@ -46,6 +44,15 @@ function delugeUbuntu() {
   confenable deluge 0
 }
 
+function delugeDiet() {
+  print "Configuring Deluge WebServer"
+  stow -t /mnt/dietpi_userdata/ deluge
+  print "Creating deluge auth file"
+  read -p "Please enter the desired username: " name
+  read -p "Please enter the desired password: " passwd
+  echo "$name : $passwd :10" >> /mnt/dietpi_userdata/deluge/.config/deluge/auth
+}
+
 while getopts "ua" opt; do
   case $opt in
     a)
@@ -53,6 +60,9 @@ while getopts "ua" opt; do
     ;;
     u)
     delugeUbuntu
+    ;;
+    d)
+    delugeDiet
     ;;
     \?)
     print "Invalid option: -$OPTARG" >&2
