@@ -79,36 +79,35 @@ function mpdUbuntu() {
 function mpdDiet() {
   print "Installing split2flac"
   sudo wget https://raw.githubusercontent.com/ftrvxmtrx/split2flac/master/split2flac -P /usr/bin/
+  sudo apt install acl mpdscribble
   print "Configuring mpd"
-  stow -t / mpd
-  confenable mpd 0
+  sudo stow -t / mpdDiet
+  confenable mpdDiet 0
   sudo setfacl -m "u:mpd:rwx" /drive
   print "Configuring MPD Scribble"
   mkdir ~/.mpdscribble
   sudo cp /etc/mpdscribble.conf ~/.mpdscribble/
-  sudo chown $USER:$USER ~/.mpdscribble/mpdscribble.conf
-  sudo cp mpdscribble/mpdscribble.service /usr/lib/systemd/user/
   read -p "Please enter your Last.FM username: " name
   read -p "Please enter your Last.FM password: " passwd
   mdpwd=$(echo -n "$passwd" | md5sum | cut -d ' ' -f 1)
-  sed -i 's/\(username =\).*/\1/' .mpdscribble/mpdscribble.conf
-  sed -i 's/\(password =\).*/\1/' .mpdscribble/mpdscribble.conf
-  sed -i '/^username =/ s/$/ '$name'/' ~/.mpdscribble/mpdscribble.conf
-  sed -i '/^password =/ s/$/ '$mdpwd'/' ~/.mpdscribble/mpdscribble.conf
-  sudo systemctl stop mpdscribble
-  sudo systemctl disable mpdscribble
-  systemctl --user enable mpdscribble.service
-  systemctl --user start mpdscribble.service
+  sed -i 's/\(username =\).*/\1/' /etc/mpdscribble.conf
+  sed -i 's/\(password =\).*/\1/' /etc/mpdscribble.conf
+  sed -i '/^username =/ s/$/ '$name'/' /etc/mpdscribble.conf
+  sed -i '/^password =/ s/$/ '$mdpwd'/' /etc/mpdscribble.conf
+  sudo systemctl restart mpdscribble
   beetsUbuntu
 }
 
-while getopts "ua" opt; do
+while getopts "uad" opt; do
   case $opt in
     a)
       mpdArch
       ;;
     u)
       mpdUbuntu
+      ;;
+    d)
+      mpdDiet
       ;;
     \?)
       print "Invalid option: -$OPTARG" >&2

@@ -17,7 +17,7 @@ function syncthingUbuntu()
     curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
     echo "deb http://apt.syncthing.net/ syncthing release" | sudo tee /etc/apt/sources.list.d/syncthing.list
     sudo apt-get update
-    sudo apt-get install syncthing
+    sudo apt-get install syncthing xmlstarlet
     print "Configuring Syncthing"
     xmlstarlet ed -L -u '/configuration/gui/address' -v 0.0.0.0:8384 .config/syncthing/config.xml
     sudo systemctl enable syncthing@$USER

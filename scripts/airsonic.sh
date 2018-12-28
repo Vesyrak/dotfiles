@@ -30,7 +30,7 @@ function airsonicUbuntu() {
 function airsonicDiet() {
   #Reminder: For jukebox to work, you need icedtea
   print "Configuring Airsonic"
-  cp ./airsonic/airsonic.service /mnt/dietpi_userdata/airsonic/
+  sudo cp ./airsonic/airsonic.service /etc/systemd/system/airsonic.service
   beetsUbuntu
 }
 

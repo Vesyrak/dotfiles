@@ -15,7 +15,7 @@ function ncmpcppDiet() {
   ncmpcppArch
 }
 
-while getopts "ua" opt; do
+while getopts "uad" opt; do
   case $opt in
     a)
       ncmpcppArch
