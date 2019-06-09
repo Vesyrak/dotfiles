@@ -11,6 +11,5 @@ xrdb -merge ~/.config/xresources/Netron.Xresource
 feh --bg-scale ~/Wallpapers/red.png --bg-scale ~/Wallpapers/blu.png
 compton -b
 redshift -l 51.291:4.492 &> /dev/null &
-light-locker --no-late-locking --lock-on-suspend &
-keepassxc &
+
 export STEAM_RUNTIME=0

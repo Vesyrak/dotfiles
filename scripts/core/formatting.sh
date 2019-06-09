@@ -1,15 +1,21 @@
 #!/bin/bash
 
-TODO=""
 function print() {
-  echo ":: $1"
+  echo ":: $@"
 }
 
 function todo() {
-  TODO+=":: $1\n"
+  TODO="$TODO:: $@\n"
+  echo $TODO
+  export TODO
+  echo $TODO
 }
 
 function finish() {
-  print "TODO"
+  echo "shit"
   echo $TODO
+  if [[ $TODO != "" ]]; then
+    print "TODO"
+    echo $TODO
+  fi
 }
