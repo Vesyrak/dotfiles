@@ -1,9 +1,6 @@
 #!/bin/bash
 for f in ./scripts/core/*; do source $f; done
 
-function mountArch() {
-  mountUbuntu
-}
 function mountUbuntu() {
   sudo mkdir /drive
   read -p ":: If nessecary, is your HDD already mounted on /drive? [Y/n]" -r
@@ -21,16 +18,4 @@ function mountUbuntu() {
   fi
 }
 
-while getopts "ua" opt; do
-  case $opt in
-    a)
-      mountArch
-      ;;
-    u)
-      mountUbuntu
-      ;;
-    \?)
-      print "Invalid option: -$OPTARG" >&2
-      ;;
-  esac
-done
+mountUbuntu

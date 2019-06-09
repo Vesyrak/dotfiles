@@ -1,0 +1,253 @@
+version: "3"
+
+services:
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    depends_on:
+      - deluge
+      - syncthing
+      - airsonic
+      - freshrss
+      - netdata
+      - plik
+      - organizr
+      - portainer
+      - headphones
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - URL=confusedhobo.ddns.net
+      - VALIDATION=http
+    volumes:
+      - /drive/LetsEncrypt/Config:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Deluge/Config:/config
+      - /drive/Deluge/Downloaded:/downloads
+    restart: unless-stopped
+
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Syncthing/Config:/config
+      - /drive/Syncthing/Data:/data
+    ports:
+      - 22000:22000
+      - 21027:21027/udp
+    restart: unless-stopped
+
+  beets:
+    image: linuxserver/beets
+    container_name: beets
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Beets/Config:/config
+      - /drive/MusicOrganized:/music
+      - /drive/MusicReOrganized:/musicnew
+      - /drive/MusicUnorganized:/downloads
+    ports:
+      - 8337:8337
+    restart: unless-stopped
+
+  airsonic:
+    image: linuxserver/airsonic
+    container_name: airsonic
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - CONTEXT_PATH=/airsonic
+    volumes:
+      - /drive/Airsonic/Config:/config
+      - /drive/MusicOrganized:/music
+      - /drive/Airsonic/Playlists:/playlists
+      - /drive/Airsonic/Podcasts:/podcasts
+      - /drive/Airsonic/Media:/media
+    restart: unless-stopped
+
+  freshrss:
+    image: linuxserver/freshrss
+    container_name: freshrss
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/FreshRSS/Config:/config
+    restart: unless-stopped
+
+  netdata:
+    image: titpetric/netdata
+    container_name: netdata
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    cap_add:
+      - SYS_PTRACE
+    restart: unless-stopped
+
+  plik:
+    image: rootgg/plik:latest
+    container_name: plik
+    user: 1000:1000
+    volumes:
+      - /drive/Plik/Data:/home/plik/server/files
+      - /drive/Plik/plikd.cfg:/home/plik/server/plikd.cfg
+    tty: true
+
+
+  organizr:
+    image: lsiocommunity/organizr
+    container_name: organizr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Organizr/Config:/config
+    restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Portainer/Config:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  headphones:
+    image: linuxserver/headphones
+    container_name: headphones
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/Headphones/Config:/config
+      - /drive/Headphones/Downloads:/downloads
+      - /drive/MusicOrganized:/music
+    restart: unless-stopped
+    ports:
+      - "8181:8181"
+
+  firefly: 
+    container_name: firefly 
+    environment: 
+      - FF_DB_HOST=firefly-db
+      - FF_DB_NAME=firefly
+      - FF_DB_USER=firefly
+      - FF_DB_PASSWORD=firefly
+      - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
+      - FF_APP_ENV=local
+      - FF_DB_CONNECTION=pgsql
+      - TZ=Europe/Brussels
+      - APP_LOG_LEVEL=debug
+      - TRUSTED_PROXIES=**
+    image: jc5x/firefly-iii
+    links: 
+      - firefly-db
+    volumes: 
+      - /drive/FireflyIII/Export:/var/www/firefly-iii/storage/export
+      - /drive/FireflyIII/Upload:/var/www/firefly-iii/storage/upload
+      - /drive/FireflyIII/Config/.env:/var/www/firefly-iii/.env
+
+  firefly-db: 
+    container_name: firefly-db
+    environment: 
+      - POSTGRES_PASSWORD=firefly
+      - POSTGRES_USER=firefly
+    image: "postgres:10"
+    volumes: 
+      - /drive/FireflyIII/Data:/var/lib/postgresql/data
+
+#https://github.com/pi-hole/docker-pi-hole
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8081:80/tcp"
+    environment:
+      TZ: "Europe/Brussels"
+      ServerIP: 10.0.1.30
+    volumes:
+      - '/drive/Pihole/Config/:/etc/pihole/'
+      - '/drive/Pihole/ConfigDNSMasq/:/etc/dnsmasq.d/'
+    restart: unless-stopped
+
+  lms:
+    container_name: lms
+    image: larsks/logitech-media-server
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - squeezebox:/srv/squeezebox
+      - /drive/MusicOrganized:/srv/music
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+      - "3483:3483"
+      - "3483:3483/udp"
+    restart: always
+
+  openvpn:
+    image: linuxserver/openvpn-as
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/OpenVPN:/config
+    ports:
+      - 943:943
+      - 9443:9443
+      - 1194:1194/udp
+    restart: unless-stopped
+
+  squeezelite:
+    image: vesyrak/squeezelite-docker
+    container_name: squeezelite
+    privileged: true
+    restart: always
+
+volumes:
+  squeezebox:

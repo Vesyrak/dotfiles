@@ -2,7 +2,7 @@
 for f in ./scripts/core/*; do source $f; done
 
 function prepare() {
-  sudo apt install qemu-system-x86 qemu-utils ovmf libvirt-daemon virt-manager
+  install qemu-system-x86 qemu-utils ovmf libvirt-daemon virt-manager
   sudo perl -i -pe 's/(GRUB_CMDLINE_LINUX_DEFAULT=.*)"/\1 intel_iommu=on"/' /etc/default/grub
   sudo update-grub
   #REBOOT
