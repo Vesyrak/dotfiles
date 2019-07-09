@@ -5,7 +5,7 @@ function zshUbuntu()
 {
     print "Installing zsh"
     install zsh
-    wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
+    git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
     print "Configuring ZSH"
     stow -t ~/ zsh
     confenable zsh 0
