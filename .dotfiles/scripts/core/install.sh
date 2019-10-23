@@ -6,7 +6,7 @@ function install()
   sudo apt install -y $@
 }
 
-function snapstall() {
+function snapinstall() {
   sudo snap install $@
 }
 

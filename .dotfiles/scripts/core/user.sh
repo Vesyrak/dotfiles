@@ -1,6 +1,5 @@
 #!/bin/bash
 . ./scripts/core/formatting.sh
-. ./scripts/core/configuration.sh
 
 function checksudo()
 {
