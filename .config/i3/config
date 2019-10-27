@@ -210,3 +210,7 @@ set_from_resource $white URxvt.color7 #bbbbbb
 client.focused $fg $bg $fg $blue $fg
 client.focused_inactive $bg $bg $fg $bg $bg
 client.unfocused $bg $bg $fg $bg $bg
+
+# Background
+exec --no-startup-id nitrogen --restore
+

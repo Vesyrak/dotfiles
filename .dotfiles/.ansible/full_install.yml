@@ -1,0 +1,104 @@
+- hosts: all
+  tasks:  
+    - name: Install full install packages with apt
+      become: true
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+          - wps-office
+          - chromium-browser
+          - gtk-chtheme
+          - lxrandr
+          - yakuake
+          - mpv
+          - gimp
+          - dosfstools
+          - wget
+          - rxvt-unicode
+          - zsh
+          - bluetooth
+          - nitrogen
+
+    - name: Add Etcher Repository
+      become: true
+      apt_repository:
+        repo: deb https://deb.etcher.io stable etcher
+        state: present
+
+    - name: Trust Etcher GPG
+      become: true
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 379CE192D401AB61
+        state: present
+
+    - name: Install etcher with apt
+      become: true
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - balena-etcher-electron
+
+    - name: Install i3 build requirements
+      become: true
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+          - libxcb1-dev 
+          - libxcb-keysyms1-dev
+          - libpango1.0-dev 
+          - libxcb-util0-dev 
+          - libxcb-icccm4-dev 
+          - libyajl-dev 
+          - libstartup-notification0-dev 
+          - libxcb-randr0-dev 
+          - libev-dev 
+          - libxcb-cursor-dev 
+          - libxcb-xinerama0-dev 
+          - libxcb-xkb-dev 
+          - libxkbcommon-dev 
+          - libxkbcommon-x11-dev 
+          - autoconf 
+          - libxcb-xrm0 
+          - libxcb-xrm-dev 
+          - automake 
+
+    - name: Clone and install i3 Repo
+      block: 
+        - git: 
+            repo: https://www.github.com/Airblader/i3
+            dest: /tmp/i3-gaps
+        - shell: autoreconf --force --install
+          args:
+            chdir: /tmp/i3-gaps
+        - file: 
+            path: /tmp/i3-gaps/build/
+            state: absent
+        - file:
+            path: /tmp/i3-gaps/build/
+            state: directory
+        - shell: ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
+          args:
+            chdir: /tmp/i3-gaps/build
+        - make: 
+            chdir: /tmp/i3-gaps/build
+        - make:
+            chdir: /tmp/i3-gaps/build
+            target: install
+          become: yes
+
+    - name: Install snap packages
+      block: 
+        - snap:
+            name:
+            - bluemail
+        - snap:
+            classic: yes
+            name:
+            - atom

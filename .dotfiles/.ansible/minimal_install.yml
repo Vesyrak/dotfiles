@@ -1,0 +1,26 @@
+- hosts: all
+  become: true
+  tasks:  
+    - name: Install minimal required libraries with apt
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - alsa-utils
+        - htop
+        - bzip2
+        - gzip
+        - p7zip
+        - unzip
+        - mlocate
+        - ntfs-3g
+        - dosfstools
+        - wget
+        - rxvt-unicode
+        - zsh
+        - bluetooth
+
+    - name: Enable ZSH
+      shell: chsh -s $(which zsh) $SUDO_USER
+
