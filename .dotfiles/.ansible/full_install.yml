@@ -102,3 +102,15 @@
             classic: yes
             name:
             - atom
+
+    - name: Rice KDE
+      tags: rice
+      block:
+        - name: Download Materia
+          get_url: 
+            url: https://raw.githubusercontent.com/PapirusDevelopmentTeam/materia-kde/master/install.sh
+            dest: /tmp
+          register: materia_file
+        - name: Install Materia
+          shell: sh "{{ materia_file.dest }}"
+

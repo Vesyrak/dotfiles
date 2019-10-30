@@ -1,0 +1,100 @@
+- hosts: all
+  tasks:  
+    - name: Disable logout confirmation
+      replace: 
+        path: /home/{{ ansible_user_id }}/.config/ksmserverrc
+        regexp: confirmLogout=.*
+        replace: confirmLogout=false
+
+    - name: Set SDDM Wallpaper
+      become: yes
+      replace:
+          path: /usr/share/sddm/themes/ubuntu-theme/theme.conf
+          regexp: background=.*
+          replace: background=/home/{{ ansible_user_id }}/Wallpapers/SDDM/background.png
+
+    - name: Install Kvantum
+      block:
+        - apt:
+            name: libvulkan1=1.1.101.0-2
+          become: yes
+        - apt:
+            name: "{{ packages }}"
+            state: latest
+          become: yes
+          vars: 
+            packages:
+            - g++ 
+            - libx11-dev 
+            - libxext-dev 
+            - qtbase5-dev 
+            - libqt5svg5-dev 
+            - libqt5x11extras5-dev 
+            - libkf5windowsystem-dev 
+            - qttools5-dev-tools 
+            - cmake 
+            - checkinstall
+        - git:
+            repo: https://github.com/tsujan/Kvantum
+            dest: /tmp/kvantum
+        - file: 
+            path: /tmp/kvantum/Kvantum/build
+            state: directory
+        - shell: cmake ..
+          args:
+            chdir: /tmp/kvantum/Kvantum/build
+        - make:
+            chdir: /tmp/kvantum/Kvantum/build
+        - make: 
+            chdir: /tmp/kvantum/Kvantum/build
+            target: install
+          become: yes
+
+    - name: Configure Materia
+      tags: rice
+      block:
+        - name: Add Materia repo
+          become: yes
+          apt_repository: 
+            repo: ppa:papirus/papirus
+        - name: Install Materia
+          become: yes
+          apt:
+            name: materia-kde
+            state: latest
+            update_cache: yes
+            install_recommends: yes
+        - name: Install Materia in Kvantum
+          shell: kvantummanager --set MateriaDark
+
+    - name: Configure Papirus Icon Pack
+      block: 
+        - name: Add Papirus repo
+          become: yes
+          apt_repository: 
+            repo: ppa:papirus/papirus
+        - name: Install Papirus
+          become: yes
+          apt:
+            name: papirus-icon-theme
+            state: latest
+            update_cache: yes
+            install_recommends: yes
+
+    - name: Install widgets
+      block:
+        - name: Download minimal menu
+          get_url:
+              url: https://www.pling.com/p/1275285/startdownload?file_id=1543049544&file_name=minimalmenu-0.3.0.plasmoid&file_type=application/zip&file_size=57923
+              dest: /tmp/minimal_menu.zip
+        - name: Ensure widget folder exists
+          file:
+              path: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids
+              state: directory
+        - name: extract minimal menu
+          unarchive:
+              src: /tmp/minimal_menu.zip
+              dest: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/
+
+
+
