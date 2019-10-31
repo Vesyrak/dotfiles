@@ -1,10 +1,14 @@
 - hosts: all
   become: true
   tasks:  
+    - name: Update System
+      apt: 
+        update_cache: yes
+        upgrade: yes
+
     - name: Install minimal required libraries with apt
       apt: 
         name: "{{ packages }}"
-        update_cache: yes
       vars:
         packages:
         - alsa-utils
@@ -18,7 +22,10 @@
         - dosfstools
         - wget
         - rxvt-unicode
+        - gawk
         - zsh
+        - vim
+        - openssh-server
         - bluetooth
 
     - name: Enable ZSH

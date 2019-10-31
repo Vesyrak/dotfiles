@@ -1,17 +1,42 @@
 - hosts: all
   tasks:  
+
     - name: Disable logout confirmation
-      replace: 
-        path: /home/{{ ansible_user_id }}/.config/ksmserverrc
-        regexp: confirmLogout=.*
-        replace: confirmLogout=false
+      shell: >
+          kwriteconfig5 
+          --file ksmserverrc 
+          --group General
+          --key confirmLogout
+          --type bool
+          false
+
+    - name: Login with empty session
+      shell: >
+          kwriteconfig5 
+          --file ksmserverrc 
+          --group General
+          --key loginMode
+          default
+
+    - name: Disable Splash
+      shell: >
+          kwriteconfig5 
+          --file ksplashrc
+          --group KSplash
+          --key Theme
+          None
 
     - name: Set SDDM Wallpaper
       become: yes
-      replace:
-          path: /usr/share/sddm/themes/ubuntu-theme/theme.conf
-          regexp: background=.*
-          replace: background=/home/{{ ansible_user_id }}/Wallpapers/SDDM/background.png
+      block:
+        - replace:
+            path: /usr/share/sddm/themes/ubuntu-theme/theme.conf
+            regexp: background=.*
+            replace: background=/home/{{ ansible_user_id }}/Wallpapers/SDDM/background.png
+        - replace:
+            path: /usr/share/sddm/themes/ubuntu-theme/theme.conf.user
+            regexp: background=.*
+            replace: background=/home/{{ ansible_user_id }}/Wallpapers/SDDM/background.png
 
     - name: Install Kvantum
       block:
@@ -19,7 +44,7 @@
             name: libvulkan1=1.1.101.0-2
           become: yes
         - apt:
-            name: "{{ packages }}"
+            name: "{{ packages }}" 
             state: latest
           become: yes
           vars: 
@@ -81,20 +106,76 @@
             update_cache: yes
             install_recommends: yes
 
-    - name: Install widgets
+    - name: Install Minimal Menu
       block:
         - name: Download minimal menu
-          get_url:
-              url: https://www.pling.com/p/1275285/startdownload?file_id=1543049544&file_name=minimalmenu-0.3.0.plasmoid&file_type=application/zip&file_size=57923
-              dest: /tmp/minimal_menu.zip
+          git:
+              repo: https://github.com/JNuutinen/plasma-minimalmenu.git
+              dest: /tmp/minimal_menu
         - name: Ensure widget folder exists
           file:
-              path: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids
+              path: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/com.gitlab.jnuutinen.minimalmenu
               state: directory
-        - name: extract minimal menu
-          unarchive:
-              src: /tmp/minimal_menu.zip
-              dest: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/
+        - name: Extract minimal menu
+          copy:
+              src: /tmp/minimal_menu/package/
+              dest: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/com.gitlab.jnuutinen.minimalmenu
 
+    - name: Install Event Calendar
+      block:
+        - name: Download Event Calendar
+          git:
+              repo: https://github.com/Zren/plasma-applet-eventcalendar.git
+              dest: /tmp/eventcalendar
+              force: yes
+        - name: Make installer executable
+          file: 
+            dest: /tmp/eventcalendar/install
+            mode: a+x
+        - name: Install Event Calendar
+          shell: ./install
+          ignore_errors: yes
+          args:
+            chdir: /tmp/eventcalendar
 
-
+    - name: Set Screen Locker to Materia
+      shell: >
+          kwriteconfig5 
+          --file kscreenlockerrc
+          --group Greeter
+          --key Theme
+          com.github.varlesh.materia
+    - name: Set Icon Pack to Papirus
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group Icons
+          --key Theme
+          Papirus
+    - name: Set KDE Global Theme
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group General
+          --key Name
+          Materia Dark
+    - name: Set KDE Global Theme
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group General
+          --key ColorScheme
+          Materia Dark
+    - name: Set Widget Style to kvantum
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group General
+          --key widgetStyle
+          kvantum
+    - name: Link Materia theme
+      file:
+        src: /usr/share/Materia
+        state: link
+        dest: /home/{{ ansible_user_id }}/.config/Kvantum/Materia
+        force: yes
