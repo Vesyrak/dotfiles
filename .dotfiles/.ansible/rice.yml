@@ -1,31 +1,27 @@
 - hosts: all
   tasks:  
     - name: Set locales
+      vars:
+          locale: en_BE.UTF-8
+          parameters:
+            - LC_MEASUREMENT
+            - LC_MONETARY
+            - LC_NUMERIC
+            - LC_TIME
       block:
         - shell: >
             kwriteconfig5
             --file plasma-localerc
             --group Formats
-            --key LC_MEASUREMENT
-            en_BE.UTF-8
-        - shell: >
-            kwriteconfig5
-            --file plasma-localerc
-            --group Formats
-            --key LC_MONETARY
-            en_BE.UTF-8
-        - shell: >
-            kwriteconfig5
-            --file plasma-localerc
-            --group Formats
-            --key LC_NUMERIC
-            en_BE.UTF-8
-        - shell: >
-            kwriteconfig5
-            --file plasma-localerc
-            --group Formats
-            --key LC_TIME
-            en_BE.UTF-8
+            --key {{ item }}
+            "{{ locale }}"
+          loop: "{{ parameters }}"
+        - replace:
+            path: /home/{{ ansible_user_id }}/.config/plasma-locale-settings.sh
+            regexp: 'export {{ item }}=.*'
+            replace: 'export {{ item }}={{ locale }}'
+          loop: "{{ parameters }}"
+
 
     - name: Disable logout confirmation
       shell: >
@@ -43,6 +39,13 @@
           --group General
           --key loginMode
           default
+    - name: Disable Splash
+      shell: >
+          kwriteconfig5 
+          --file ksplashrc
+          --group KSplash
+          --key Engine
+          none
 
     - name: Disable Splash
       shell: >

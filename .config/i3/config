@@ -214,3 +214,5 @@ client.unfocused $bg $bg $fg $bg $bg
 # Background
 exec --no-startup-id nitrogen --restore
 
+# Focus
+no_focus [window_role="plasmashell"]
