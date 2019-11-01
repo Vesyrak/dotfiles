@@ -1,5 +1,31 @@
 - hosts: all
   tasks:  
+    - name: Set locales
+      block:
+        - shell: >
+            kwriteconfig5
+            --file plasma-localerc
+            --group Formats
+            --key LC_MEASUREMENT
+            en_BE.UTF-8
+        - shell: >
+            kwriteconfig5
+            --file plasma-localerc
+            --group Formats
+            --key LC_MONETARY
+            en_BE.UTF-8
+        - shell: >
+            kwriteconfig5
+            --file plasma-localerc
+            --group Formats
+            --key LC_NUMERIC
+            en_BE.UTF-8
+        - shell: >
+            kwriteconfig5
+            --file plasma-localerc
+            --group Formats
+            --key LC_TIME
+            en_BE.UTF-8
 
     - name: Disable logout confirmation
       shell: >
@@ -89,6 +115,18 @@
             state: latest
             update_cache: yes
             install_recommends: yes
+        - name: Link Materia theme
+          file:
+            src: /usr/share/Kvantum/Materia
+            state: link
+            dest: /home/{{ ansible_user_id }}/.config/Kvantum/Materia
+            force: yes
+        - name: Link Materia Dark theme
+          file:
+            src: /usr/share/Kvantum/MateriaDark
+            state: link
+            dest: /home/{{ ansible_user_id }}/.config/Kvantum/MateriaDark
+            force: yes
         - name: Install Materia in Kvantum
           shell: kvantummanager --set MateriaDark
 
@@ -106,20 +144,20 @@
             update_cache: yes
             install_recommends: yes
 
-    - name: Install Minimal Menu
+    - name: Install Simple Menu
       block:
-        - name: Download minimal menu
+        - name: Download simple menu
           git:
-              repo: https://github.com/JNuutinen/plasma-minimalmenu.git
-              dest: /tmp/minimal_menu
+              repo: https://github.com/KDE/plasma-simplemenu/
+              dest: /tmp/simple_menu
         - name: Ensure widget folder exists
           file:
-              path: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/com.gitlab.jnuutinen.minimalmenu
+              path: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/org.kde.plasma.simplemenu
               state: directory
-        - name: Extract minimal menu
+        - name: Extract simple menu
           copy:
-              src: /tmp/minimal_menu/package/
-              dest: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/com.gitlab.jnuutinen.minimalmenu
+              src: /tmp/simple_menu/package/
+              dest: /home/{{ ansible_user_id }}/.local/share/plasma/plasmoids/org.kde.plasma.simplemenu
 
     - name: Install Event Calendar
       block:
@@ -145,6 +183,16 @@
           --group Greeter
           --key Theme
           com.github.varlesh.materia
+    - name: Set Screen Locker Background
+      shell: >
+          kwriteconfig5 
+          --file kscreenlockerrc
+          --group Greeter
+          --group Wallpaper
+          --group org.kde.image
+          --group General
+          --key Image
+          "file:///home/{{ ansible_user_id }}/Wallpapers/SDDM/background.png"
     - name: Set Icon Pack to Papirus
       shell: >
           kwriteconfig5 
@@ -152,6 +200,13 @@
           --group Icons
           --key Theme
           Papirus
+    - name: Set Plasma Shell to Materia
+      shell: >
+          kwriteconfig5 
+          --file plasmarc
+          --group Theme
+          --key name
+          Materia
     - name: Set KDE Global Theme
       shell: >
           kwriteconfig5 
@@ -165,7 +220,28 @@
           --file kdeglobals
           --group General
           --key ColorScheme
-          Materia Dark
+          MateriaDark
+    - name: Set KDE Global Theme
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group KDE
+          --key ColorScheme
+          MateriaDark
+    - name: Set KDE Global Theme
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group KDE
+          --key LookAndFeelPackage
+          com.github.varlesh.materia
+    - name: Set Widget Style to kvantum
+      shell: >
+          kwriteconfig5 
+          --file kdeglobals
+          --group KDE
+          --key widgetStyle
+          kvantum
     - name: Set Widget Style to kvantum
       shell: >
           kwriteconfig5 
@@ -173,9 +249,4 @@
           --group General
           --key widgetStyle
           kvantum
-    - name: Link Materia theme
-      file:
-        src: /usr/share/Materia
-        state: link
-        dest: /home/{{ ansible_user_id }}/.config/Kvantum/Materia
-        force: yes
+

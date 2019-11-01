@@ -13,6 +13,7 @@
               - libreoffice-common
               - kmahjongg
               - kmines
+              - kpatience
               - ksudoku
     - name: Install full install packages with apt
       become: true
