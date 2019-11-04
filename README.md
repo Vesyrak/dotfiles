@@ -1,6 +1,15 @@
 # GNU-Linux-Config-Files
 
-Install script to install and configure my base arch systems, making them ready for usage.
+Dotfiles configuring my KDE + i3 development environment.
+
 
 ##Usage:
-Run ./install.sh from inside the directory.
+Pull using YADM
+Install ansible
+Execute ansible scripts in .dotfiles/.ansible as wanted
+
+##Current Issues:
+* Simple Menu often appears in the centre of the screen
+    * Potential Causes: Wrong i3 configuration / NVidia drivers / 19.04 instead
+      of 18.04
+
