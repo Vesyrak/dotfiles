@@ -1,0 +1,70 @@
+version: "2.4"
+
+services:
+#https://github.com/pi-hole/docker-pi-hole
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Brussels"
+      ServerIP: 192.168.0.222
+      DNS1: 1.1.1.1
+    volumes:
+      - '/drive/DockerConfigs/Pihole/Config/:/etc/pihole/'
+      - '/drive/DockerConfigs/Pihole/ConfigDNSMasq/:/etc/dnsmasq.d/'
+    networks:
+      pihole_macvlan:
+        ipv4_address: 192.168.0.222
+    cap_add:
+      - NET_ADMIN
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+  wireguard:
+    image: lscr.io/linuxserver/wireguard
+    container_name: wireguard
+    networks:
+      pihole_macvlan:
+        ipv4_address: 192.168.0.221
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - SERVERURL=confusedhobo.duckdns.org #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=gyarados,scyther
+        #      - PEERDNS=auto #optional
+        #      - INTERNAL_SUBNET=10.13.13.0 #optional
+      - ALLOWEDIPS=0.0.0.0/0 #optional
+    volumes:
+      - /drive/DockerConfigs/WireGuard/Config:/config
+      - /lib/modules:/lib/modules
+        # network_mode: host
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+        #      - net.ipv4.ip_forward=1
+        #      - net.ipv6.conf.all.forwarding=1
+    restart: unless-stopped
+
+
+networks:
+  pihole_macvlan:
+    name: pihole_macvlan
+    driver: macvlan
+    driver_opts:
+      parent: eno1
+    ipam:
+      config: 
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
+          ip_range: 192.168.0.216/30
+          aux_addresses: 
+            host1: 192.168.0.219
+            host2: 192.168.0.220
+

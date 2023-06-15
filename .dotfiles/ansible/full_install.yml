@@ -1,0 +1,68 @@
+- hosts: all
+  tasks:  
+    - name: Remove redundant packages
+      become: true
+      apt:
+          name: "{{ packages }}"
+          state: absent
+          autoremove: yes
+      vars:
+          packages:
+            - libreoffice-base-core
+            - libreoffice-core
+            - libreoffice-common
+            - kmahjongg
+            - kmines
+            - kpatience
+            - ksudoku
+    - name: Install full install packages with apt
+      become: true
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+          - build-essential
+          - chromium-browser
+          - gtk-chtheme
+          - lxrandr
+          - yakuake
+          - mpv
+          - gimp
+          - dosfstools
+          - wget
+          - rxvt-unicode
+          - zsh
+          - bluetooth
+          - nitrogen
+          - syncthing
+          - kcolorchooser
+
+    - name: Install i3
+      block:
+      - shell: /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2022.02.17_all.deb keyring.deb SHA256:52053550c4ecb4e97c48900c61b2df4ec50728249d054190e8a0925addb12fc6
+      - shell: sudo apt install ./keyring.deb  
+      - shell: echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
+
+    - name: Install i3 with apt
+      become: true
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - i3
+
+    - name: Install snap packages
+      become: yes
+      block: 
+        - snap:
+            name:
+            - wps-office
+
+        - snap:
+            classic: yes
+            name:
+            - atom
+            - slack
+

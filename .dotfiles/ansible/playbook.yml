@@ -1,0 +1,55 @@
+- hosts: all
+  tasks:  
+    - name: Install minimal required libraries with apt
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - alsa-utils
+        - htop
+        - bzip2
+        - gzip
+        - p7zip
+        - unzip
+        - mlocate
+        - ntfs-3g
+        - dosfstools
+        - wget
+        - rxvt-unicode
+        - zsh
+        - bluetooth
+
+    - name: Install minimal required libraries with apt
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - wget
+        - apple-gcc42
+        - vim
+        - ack
+        - git
+        - rbenv
+        - ruby-build
+        - elasticsearch
+        - mysql
+        - tmux
+
+    - name: Install Docker
+
+    - name: Install Syncthing
+
+
+    - name: Start services at login
+      file: src=/usr/local/opt/{{ item }}/homebrew.mxcl.{{ item }}.plist path=~/Library/LaunchAgents/homebrew.mxcl.{{ item }}.plist state=link force=yes
+      with_items: 
+        - mysql
+        - elasticsearch
+
+    - name: Setup launch agents for services
+      command: launchctl load {{ home }}/Library/LaunchAgents/homebrew.mxcl.{{ item }}.plist
+      with_items:
+        - mysql
+        - elasticsearch

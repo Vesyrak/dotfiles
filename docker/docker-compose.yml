@@ -1,0 +1,337 @@
+version: "3.5"
+
+
+services:
+  plex:
+    container_name: plex
+    image: linuxserver/plex
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/Data/Series:/tv
+      - /mnt/storage/DockerConfigs/Plex/Config:/config
+      - /mnt/storage/Data/Movies:/movies
+    network_mode: host
+
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/Data/Series:/tv
+      - /mnt/storage/DockerConfigs/Sonarr/Config:/config
+      - /mnt/storage/Torrents:/downloads
+    ports:
+      - 8083:8989
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=999
+      - TZ=Europe/Brussels
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports: 
+      - 8084:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+
+        #  headphones:
+        #    image: linuxserver/headphones
+        #    container_name: headphones
+        #    restart: unless-stopped
+        #    environment:
+        #      - PUID=1000
+        #      - PGID=1000
+        #      - TZ=Europe/Brussels
+        #    volumes:
+        #      - /mnt/storage/DockerConfigs/Headphones/Config:/config
+        #      - /mnt/storage/Torrents:/downloads
+        #      - /mnt/storage/Music:/music
+
+
+  beets:
+    image: linuxserver/beets
+    container_name: beets
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/DockerConfigs/Beets/Config:/config
+      - /mnt/storage/Music:/music
+        #      - /mnt/storage/MusicReOrganized:/musicnew
+      - /mnt/storage/Torrents:/downloads
+    ports:
+      - 8085:8337
+
+  lms:
+    container_name: lms
+    image: lmscommunity/logitechmediaserver
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/storage/DockerConfigs/LMS/config:/config
+      - /mnt/storage/Music:/music
+      - /mnt/storage/Torrents/Headphones/PostProcessed:/music-hp
+    network_mode: host
+    #ports:
+    #  - 9000:9000
+    #  - 9090:9090
+    #  - 3483:3483
+    #  - 3483:3483/udp
+    devices:
+      - /dev/snd
+
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/DockerConfigs/Syncthing/Config:/config
+      - /mnt/storage/SyncthingData:/data
+    ports:
+      - 22000:22000
+      - 21027:21027/udp
+      - 8087:8384
+
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/DockerConfigs/Deluge/Config:/config:rw
+      - /mnt/storage/Torrents:/downloads:rw
+    ports:
+      - 8088:8112
+      - 6881:6881
+      - 6881:6881/udp
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - GUID=1000
+      - TZ=Europe/Brussels
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=yourdbpass
+      - MYSQL_DATABASE=nextcloud
+    volumes:
+      - /mnt/storage/DockerConfigs/NextCloud/Apps:/var/www/html/custom_apps
+      - /mnt/storage/DockerConfigs/NextCloud/Themes:/var/www/html/themes
+      - /mnt/storage/DockerConfigs/NextCloud/Data:/var/www/html/data
+      - /mnt/storage/DockerConfigs/NextCloud/HTML:/var/www/html
+      - /mnt/storage/DockerConfigs/NextCloud/Config:/var/www/html/config
+    ports:
+      - 8089:80
+
+  nextcloud_db:
+    container_name: nextcloud_db
+    image:  linuxserver/mariadb
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - MYSQL_ROOT_PASSWORD=yourdbpass
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=yourdbpass
+    volumes:
+      - /mnt/storage/DockerConfigs/NextCloud/DB:/config
+
+  duckdns:
+    container_name: duckdns
+    image: linuxserver/duckdns
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - SUBDOMAINS=confusedhobo
+      - TOKEN=5c0518e4-29a6-4dec-b0f3-81f501cc76fc
+
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    environment:
+      # All options with their default values:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_SCANINTERVAL: 1m
+      ND_LOGLEVEL: info
+      ND_PORT: 4533
+      ND_TRANSCODINGCACHESIZE: 100MB
+      ND_SESSIONTIMEOUT: 30m
+      ND_BASEURL: ""
+    volumes:
+      - /mnt/storage/DockerConfigs/Navidrome/Config:/data
+      - /mnt/storage/Music:/music:ro
+    ports: 
+      - 8090:4533
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+        #      - UMASK_SET=022 #optional
+    volumes:
+      - /mnt/storage/DockerConfigs/Lidarr/Config:/config
+      - /mnt/storage/Music:/music
+      - /mnt/storage/DockerConfigs/Downloads:/downloads
+        #    - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8091:8686
+    restart: unless-stopped
+
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/DockerConfigs/HomeAssistant/Config:/config
+    restart: unless-stopped
+
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    volumes:
+      - /mnt/storage/DockerConfigs/Homer/Assets:/www/assets
+    environment:
+      - UID=1000
+      - GID=1000
+    restart: unless-stopped
+    ports:
+      - 80:8080
+
+  paperless-ng:
+    image: lscr.io/linuxserver/paperless-ng
+    container_name: paperless-ng
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+        #- REDIS_URL= #optional
+    volumes:
+      - /mnt/storage/DockerConfigs/Paperless/Config:/config
+      - /mnt/storage/DockerConfigs/Paperless/Data:/data
+    restart: unless-stopped
+    ports:
+      - 8092:8000
+
+  guacd:
+    image: lscr.io/linuxserver/guacd
+    container_name: guacd
+    ports:
+      - 4822:4822
+    restart: unless-stopped
+
+  guacamole:
+    image: guacamole/guacamole
+    container_name: guacamole
+    environment:
+      - GUACD_HOSTNAME=guacd
+      - GUACD_PORT=4822
+      - TZ=Europe/Brussels
+      - MYSQL_DATABASE=guacamole_db
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=yourdbpass
+      - MYSQL_HOSTNAME=nextcloud_db
+      - MYSQL_PORT=3306
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
+  duplicati:
+    image: lscr.io/linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - CLI_ARGS= #optional
+    volumes:
+      - /mnt/storage/DockerConfigs/Duplicati/Config:/config
+      - /mnt/storage/DockerConfigs/Duplicati/Backups:/backups
+      - /mnt/storage/DockerConfigs/Duplicati/Source:/source
+    restart: unless-stopped
+    ports:
+      - 8093:8200
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/DockerConfigs/Prowlarr/Config:/config
+    ports:
+      - 8095:9696
+    restart: unless-stopped
+
+  radarr:
+    container_name: radarr
+    image: linuxserver/radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /mnt/storage/Data/Movies:/movies
+      - /mnt/storage/DockerConfigs/Radarr/Config:/config
+      - /mnt/storage/Torrents:/downloads
+    ports:
+      - 8096:7878
+
+
+  #https://github.com/juanfont/headscale/blob/main/docs/running-headscale-container.md
+  headscale:
+    image: headscale/headscale
+    container_name: headscale
+    volumes:
+      - /mnt/storage/DockerConfigs/Headscale/Config:/etc/headscale
+    ports:
+      - 51820:8080
+      - 9091:9090
+    command: headscale serve
+

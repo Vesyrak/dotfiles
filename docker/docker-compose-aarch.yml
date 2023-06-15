@@ -1,0 +1,360 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik
+    container_name: traefik
+    restart: unless-stopped
+    volumes:
+      #- /drive/Traefik/acme.json:/acme.json
+      - /drive/DockerConfigs/Traefik/Config:/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 443:443
+    command: 
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+        #- "--entrypoints.web-secure.address=:443"
+      - "--providers.docker.defaultRule=Host(`{{ print (index ( regexSplit \"-docker\" .Name -1 ) 0) \".Ditto.lan\" }}`)"
+      - "--providers.file.directory=/config"
+      - "--log.filePath=/config/logs/traefik.log"
+      - "--log.level=DEBUG"
+        #- "--certificatesResolvers.le.acme.email=reinald@memeware.net"
+        #- "--certificatesResolvers.le.acme.storage=acme.json"
+        #- "--certificatesResolvers.le.acme.httpChallenge.entryPoint=web"
+        #      - "--certificatesResolvers.le.acme.tlsChallenge=true"
+        #      - "--certificatesResolvers.le.acme.httpChallenge=true"
+    labels:
+      #      - "traefik.http.routers.traefik.tls=true"
+        #      - "traefik.http.routers.traefik.tls.certresolver=le"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+
+  jackett:
+    container_name: jackett
+    image: linuxserver/jackett
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/DockerConfigs/Jackett/Config:/config
+      - /drive/Torrents:/downloads
+    ports:
+      - 9117:9117
+
+  plex:
+    container_name: plex
+    image: linuxserver/plex
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/TV:/tv
+      - /drive/DockerConfigs/Plex/Config:/config
+      - /drive/Movies:/movies
+    network_mode: host
+    labels:
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
+
+  sonarr:
+    container_name: sonarr
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/TV:/tv
+      - /drive/DockerConfigs/Sonarr/Config:/config
+      - /drive/Torrents:/downloads
+    ports:
+      - 8989:8989
+
+        #  organizr:
+    #    image: organizrtools/organizr-v2:arm64
+    #    container_name: organizr
+    #restart: unless-stopped
+    #environment:
+    #  - PUID=1000
+    #  - PGID=1000
+    #  - TZ=Europe/Brussels
+    #volumes:
+    #  - /drive/DockerConfigs/Organizr/Config:/config
+
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=999
+      - TZ=Europe/Brussels
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports: 
+      - 8020:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+
+        #  openvpn:
+        #    image: giggio/docker-openvpn-arm
+        #    container_name: openvpn
+        #    restart: unless-stopped
+        #    privileged: true
+        #    environment:
+        #      - PUID=1000
+        #      - PGID=1000
+        #      - TZ=Europe/Brussels
+        #    volumes:
+        #      - /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn
+        #    ports:
+        #      - 1194:1194/udp
+        #    cap_add:
+        #      - NET_ADMIN
+
+        #  headphones:
+        #    image: linuxserver/headphones
+        #    container_name: headphones
+        #    restart: unless-stopped
+        #    environment:
+        #      - PUID=1000
+        #      - PGID=1000
+        #      - TZ=Europe/Brussels
+        #    volumes:
+        #      - /drive/DockerConfigs/Headphones/Config:/config
+        #      - /drive/Torrents:/downloads
+        #      - /drive/Music:/music
+    #  labels:
+    #  - "traefik.http.routers.headphones.rule=Host(`headphones.ditto.lan`)"
+    #  - "traefik.http.routers.headphones.tls=true"
+    #  - "traefik.http.routers.headphones.tls.certresolver=le"
+
+
+  beets:
+    image: linuxserver/beets
+    container_name: beets
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/DockerConfigs/Beets/Config:/config
+      - /drive/Music:/music
+        #      - /drive/MusicReOrganized:/musicnew
+      - /drive/Torrents:/downloads
+    ports:
+      - 8337:8337
+
+  lms:
+    container_name: lms
+    image: vesyrak/logitechmediaserver:latest-aarch64
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /drive/DockerConfigs/LMS/config:/config
+      - /drive/Music:/music
+      - /drive/Torrents/Headphones/PostProcessed:/music-hp
+    ports:
+      - 9090:9090
+      - 3483:3483
+      - 3483:3483/udp
+    devices:
+      - /dev/snd
+    labels:
+      - "traefik.http.services.lms.loadbalancer.server.port=9000"
+
+        #  airsonic:
+        #    image: linuxserver/airsonic
+        #    container_name: airsonic
+        #    restart: unless-stopped
+        #    environment:
+        #      - PUID=1000
+        #      - PGID=1000
+        #      - TZ=Europe/Brussels
+        #      - CONTEXT_PATH=/
+        #    volumes:
+        #      - /drive/DockerConfigs/Airsonic/Config:/config
+        #      - /drive/DockerConfigs/Airsonic/Playlists:/playlists
+        #      - /drive/DockerConfigs/Airsonic/Podcasts:/podcasts
+        #      - /drive/DockerConfigs/Airsonic/Media:/media
+        #      - /drive/Music:/music
+        #      - /drive/Torrents/Headphones/PostProcessed:/music-hp
+
+  syncthing:
+    image: linuxserver/syncthing
+    container_name: syncthing
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/DockerConfigs/Syncthing/Config:/config
+      - /drive/SyncthingData:/data
+    ports:
+      - 22000:22000
+      - 21027:21027/udp
+
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+    volumes:
+      - /drive/DockerConfigs/Deluge/Config:/config
+      - /drive/Torrents:/downloads
+    network_mode: host
+    labels:
+      - "traefik.http.routers.deluge.service=deluge-service"
+      - "traefik.http.services.deluge-service.loadBalancer.server.port=8112"
+      - "traefik.http.services.deluge-service.loadBalancer.server.url=http://172.17.0.1/"
+
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - GUID=1000
+      - TZ=Europe/Brussels
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=yourdbpass
+      - MYSQL_DATABASE=nextcloud
+    volumes:
+      - /drive/DockerConfigs/NextCloud/Apps:/var/www/html/custom_apps
+      - /drive/DockerConfigs/NextCloud/Themes:/var/www/html/themes
+      - /drive/DockerConfigs/NextCloud/Data:/var/www/html/data
+      - /drive/DockerConfigs/NextCloud/HTML:/var/www/html
+      - /drive/DockerConfigs/NextCloud/Config:/var/www/html/config
+
+  nextcloud_db:
+    container_name: nextcloud_db
+    image:  linuxserver/mariadb
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - MYSQL_ROOT_PASSWORD=yourdbpass
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=yourdbpass
+    volumes:
+      - /drive/DockerConfigs/NextCloud/DB:/config
+
+        #  bookstack:
+        #    container_name: bookstack
+        #    image: linuxserver/bookstack
+        #    restart: unless-stopped
+        #    environment:
+        #      - PUID=1000 
+        #      - PGID=1000 
+        #      - DB_HOST=bookstack_db
+        #      - DB_USER=bookstack
+        #      - DB_PASS=yourdbpass
+        #      - DB_DATABASE=bookstackapp
+        #    volumes:
+        #      - /drive/DockerConfigs/BookStack/Config:/config:rw
+
+        #  bookstack_db:
+        #    container_name: bookstack_db 
+        #    image:  linuxserver/mariadb
+        #restart: unless-stopped
+    #    environment:
+    #- PUID=1000
+    #  - PGID=1000
+    #  - TZ=Europe/Brussels
+    #  - MYSQL_ROOT_PASSWORD=yourdbpass
+    #  - MYSQL_DATABASE=bookstackapp
+    #  - MYSQL_USER=bookstack
+    #  - MYSQL_PASSWORD=yourdbpass
+    #volumes:
+    #  - /drive/DockerConfigs/BookStack/Data:/config
+
+  duckdns:
+    container_name: duckdns
+    image: linuxserver/duckdns
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - SUBDOMAINS=confusedhobo
+      - TOKEN=5c0518e4-29a6-4dec-b0f3-81f501cc76fc
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:latest
+    environment:
+      # All options with their default values:
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_SCANINTERVAL: 1m
+      ND_LOGLEVEL: info
+      ND_PORT: 4533
+      ND_TRANSCODINGCACHESIZE: 100MB
+      ND_SESSIONTIMEOUT: 30m
+      ND_BASEURL: ""
+    volumes:
+      - /drive/DockerConfigs/Navidrome/Config:/data
+      - /drive/Music:/music:ro
+    ports: 
+      - 4533:4533
+    labels:
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Brussels
+      - UMASK_SET=022 #optional
+    volumes:
+      - /drive/DockerConfigs/Lidarr/Config:/config
+      - /drive/Music:/music
+      - /drive/DockerConfigs/Downloads:/downloads
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+  openvpn:
+    image: giggio/openvpn-arm
+    container_name: openvpn
+    volumes:
+      - /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn
+    ports:
+      - 1194:1194
+    cap_add:
+      - NET_ADMIN
+##Startup:
+# docker run -v /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn --rm giggio/openvpn-arm ovpn_genconfig -u udp://confusedhobo.duckdns.org
+# docker run -v /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn --rm -it giggio/openvpn-arm ovpn_initpki nopass
+#
+# docker run -v /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn --rm -it giggio/openvpn-arm easyrsa build-client-full 
+# docker run -v /drive/DockerConfigs/OpenVPNARM/Config:/etc/openvpn --rm giggio/openvpn-arm ovpn_getclient LGE > LGE.ovpn
+
+
+

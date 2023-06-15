@@ -1,0 +1,52 @@
+- hosts: all
+  tasks:  
+    - name: Install required packages
+      become: true
+      apt: 
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+          - davfs2
+          - docker
+          - docker-compose
+
+    - name: Mount Stack
+      mount: 
+          path: /stack
+          src: https://ryno.stackstorage.com/remote.php/webdav/
+          fstype: davfs
+          opts: _netdev,user,uid=reinout
+          state: mounted
+
+    - name: Daily Backup Cron
+      tags:
+          - backup
+      cron:
+        name: "Backup Folders Daily"
+        minute: "0"
+        hour: "3"
+        job: "rsync –-archive --recursive --verbose --delete /drive/{{ item }} /stack/DriveBackup/daily"
+      loop:
+        - LMS
+
+    - name: Weekly Backup Cron
+      tags:
+          - backup
+      cron:
+        name: "Backup Folders Weekly"
+        minute: "0"
+        hour: "4"
+        weekday: "0"
+        job: "rsync –-archive --recursive --verbose --delete /stack/DriveBackup/daily /stack/DriveBackup/weekly"
+
+    - name: Monthly Backup Cron
+      tags:
+          - backup
+      cron:
+        name: "Backup Folders Monthly"
+        minute: "0"
+        hour: "3"
+        day: "1"
+        job: "tar -cvjf /stack/DriveBackup/monthly/monthly_$(date +%Y%m%d).tar.bz2 /stack/DriveBackup/daily/"
+

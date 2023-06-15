@@ -1,0 +1,46 @@
+- hosts: all
+  become: yes
+  tasks:  
+    - name: Update System
+      apt: 
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install minimal required packages with apt
+      apt: 
+        name: "{{ packages }}"
+      vars:
+        packages:
+        - alsa-utils
+        - btop
+        - bzip2
+        - gzip
+        - p7zip
+        - unzip
+        - mlocate
+        - ntfs-3g
+        - dosfstools
+        - wget
+        - rxvt-unicode
+        - gawk
+        - zsh
+        - openssh-server
+        - bluetooth
+        - ncdu
+
+    - name: Install minimal required packages with snap
+      community.general.snap:
+        classic: true
+        name:
+          - nvim
+
+    - name: Enable ZSH
+      shell: chsh -s $(which zsh) $SUDO_USER
+
+    - name: Install fonts
+      shell: "wget --content-disposition {{ item }} -P /usr/share/fonts/truetype/ "
+      loop: 
+        - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf"
+        - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf"
+        - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf"
+        - "https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf"

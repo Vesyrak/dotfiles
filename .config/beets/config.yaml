@@ -1,0 +1,23 @@
+directory: /drive/MusicOrganized
+library: /drive/data/musiclibrary.blb
+import:
+  copy: yes
+  write: yes
+  log: beetslog.txt
+threaded: yes
+ui:
+  color: yes
+plugins: edit web convert duplicates ftintitle
+bpd:
+    host: 127.0.0.1
+    port: 6600
+    password: reinald
+    volume: 70
+convert:
+  dest: /drive/musicmount
+  command: ffmpeg -i $source -y -vn -aq 4 $dest
+  extension: mp3
+chroma:
+  auto: yes
+web:
+    host: 0.0.0.0
