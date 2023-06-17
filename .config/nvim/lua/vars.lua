@@ -19,6 +19,3 @@ vim.o.packpath = vim.o.packpath .. "," .. packer_path
 
 -- vim-test
 g["test#strategy"] = "neovim"
-
--- vim-notify
-vim.notify = require("notify")

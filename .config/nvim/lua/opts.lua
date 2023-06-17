@@ -45,7 +45,7 @@ opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 --- Highlight Todo
-vim.api.nvim_set_hl(0, "@text.note", { link = "Todo" })
+-- vim.api.nvim_set_hl(0, "@text.note", { link = "Todo" })
 
 -- coc
 vim.opt.updatetime = 300

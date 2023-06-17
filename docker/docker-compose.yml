@@ -2,19 +2,27 @@ version: "3.5"
 
 
 services:
-  plex:
-    container_name: plex
-    image: linuxserver/plex
-    restart: unless-stopped
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/Brussels
+      - TZ=Etc/UTC
+      - JELLYFIN_PublishedServerUrl=192.168.0.210 #optional
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     volumes:
-      - /mnt/storage/Data/Series:/tv
-      - /mnt/storage/DockerConfigs/Plex/Config:/config
-      - /mnt/storage/Data/Movies:/movies
-    network_mode: host
+      - /mnt/storage/DockerConfigs/Jellyfin:/config
+      - /mnt/storage/Data/Series:/data/tvshows
+      - /mnt/storage/Data/Movies:/data/movies
+    ports:
+      - 8097:8096
+      - 8920:8920
+      - 7359:7359/udp
+        #      - 1900:1900/udp
+    restart: unless-stopped
+    devices:
+      - /dev/dri:/dev/dri
 
   sonarr:
     container_name: sonarr
@@ -43,7 +51,7 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports: 
+    ports:
       - 8084:19999
     cap_add:
       - SYS_PTRACE
@@ -94,11 +102,6 @@ services:
       - /mnt/storage/Music:/music
       - /mnt/storage/Torrents/Headphones/PostProcessed:/music-hp
     network_mode: host
-    #ports:
-    #  - 9000:9000
-    #  - 9090:9090
-    #  - 3483:3483
-    #  - 3483:3483/udp
     devices:
       - /dev/snd
 
@@ -197,7 +200,7 @@ services:
     volumes:
       - /mnt/storage/DockerConfigs/Navidrome/Config:/data
       - /mnt/storage/Music:/music:ro
-    ports: 
+    ports:
       - 8090:4533
 
   lidarr:
@@ -228,33 +231,6 @@ services:
     volumes:
       - /mnt/storage/DockerConfigs/HomeAssistant/Config:/config
     restart: unless-stopped
-
-  homer:
-    image: b4bz/homer
-    container_name: homer
-    volumes:
-      - /mnt/storage/DockerConfigs/Homer/Assets:/www/assets
-    environment:
-      - UID=1000
-      - GID=1000
-    restart: unless-stopped
-    ports:
-      - 80:8080
-
-  paperless-ng:
-    image: lscr.io/linuxserver/paperless-ng
-    container_name: paperless-ng
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Brussels
-        #- REDIS_URL= #optional
-    volumes:
-      - /mnt/storage/DockerConfigs/Paperless/Config:/config
-      - /mnt/storage/DockerConfigs/Paperless/Data:/data
-    restart: unless-stopped
-    ports:
-      - 8092:8000
 
   guacd:
     image: lscr.io/linuxserver/guacd
@@ -334,4 +310,3 @@ services:
       - 51820:8080
       - 9091:9090
     command: headscale serve
-
