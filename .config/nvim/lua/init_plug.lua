@@ -154,7 +154,7 @@ require("telescope").load_extension("refactoring")
 
 -- IndentLine
 require("indent_blankline").setup({
-	show_current_context = true,
+	show_current_context = false,
 	show_current_context_start = true,
 })
 

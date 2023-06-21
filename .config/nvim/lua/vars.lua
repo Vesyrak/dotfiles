@@ -16,6 +16,13 @@ g.blamer_delay = 300
 local packer_path = vim.fn.stdpath("config") .. "/site"
 vim.o.packpath = vim.o.packpath .. "," .. packer_path
 
-
 -- vim-test
 g["test#strategy"] = "neovim"
+
+local group = vim.api.nvim_create_augroup("Markdown Wrap Settings", { clear = true })
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = { "*.md" },
+    group = group,
+    command = "setlocal textwidth=80 wrap",
+})

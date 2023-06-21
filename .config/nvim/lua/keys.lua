@@ -120,32 +120,32 @@ wk.register({
 	r = {
 		name = "Refactoring",
 		b = {
-			"<cmd>lua require('refactoring').refactor('Extract Block')<cr>",
+			"<Esc><cmd>lua require('refactoring').refactor('Extract Block')<cr>",
 			"Extract Block",
 		},
 		e = {
-			"<cmd>lua require('refactoring').refactor('Extract Function')<cr>",
+			"<Esc><cmd>lua require('refactoring').refactor('Extract Function')<cr>",
 			"Extract Function",
 			mode = "v",
 		},
 		f = {
-			"<cmd>lua require('refactoring').refactor('Extract Function To File')<cr>",
+			"<Esc><cmd>lua require('refactoring').refactor('Extract Function To File')<cr>",
 			"Extract Function To File",
 			mode = "v",
 		},
 		i = {
-			"<cmd>lua require('refactoring').refactor('Inline Variable')<cr>",
+			"<Esc><cmd>lua require('refactoring').refactor('Inline Variable')<cr>",
 			"Inline Variable",
 			mode = "v",
 		},
 
 		s = {
-			"<cmd>lua require('telescope').extensions.refactoring.refactors()<cr>",
+			"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<cr>",
 			"Select Refactor",
 			mode = "v",
 		},
 		v = {
-			"<cmd>lua require('refactoring').refactor('Extract Variable')<cr>",
+			"<Esc><cmd>lua require('refactoring').refactor('Extract Variable')<cr>",
 			"Extract Variable",
 			mode = "v",
 		},
@@ -174,6 +174,7 @@ wk.register({
 	-- Test
 	t = {
 		name = "Test",
+		a = { "<cmd>call VimuxRunCommand('make test-fast')<cr>", "Run All Tests" },
 		n = { "<cmd>TestNearest -strategy=vimux<cr>", "Run Nearest Test" },
 		l = { "<cmd>TestLast -strategy=vimux<cr>", "Run Last Run Test" },
 		f = { "<cmd>TestFile -strategy=vimux<cr>", "Run Test File" },
