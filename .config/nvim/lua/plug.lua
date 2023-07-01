@@ -186,6 +186,9 @@ return require("packer").startup({
 		})
 		-- Open in remote
 		use({ "ruanyl/vim-gh-line" })
+		-- Scoped buffers
+		use({ "tiagovla/scope.nvim" })
+
 		if packer_bootstrap then
 			require("packer").sync()
 		end

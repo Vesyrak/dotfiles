@@ -1,5 +1,4 @@
 -- Simple setups
-require("aerial").setup({ close_automatic_events = { "unfocus" } })
 require("bufferline").setup()
 require("gitsigns").setup()
 require("luasnip").setup()
@@ -7,6 +6,7 @@ require("luasnip.loaders.from_vscode").lazy_load()
 require("nvim-autopairs").setup()
 require("nvim-surround").setup()
 require("refactoring").setup()
+require("scope").setup()
 require("trouble").setup()
 
 -- NVIM Tree
@@ -40,6 +40,22 @@ local on_attach = function(client, bufnr)
 		})
 	end
 end
+--Aerial
+local aerial = require("aerial")
+aerial.setup({
+	close_automatic_events = { "unfocus" },
+	keymaps = {
+		["<CR>"] = {
+			callback = function()
+				local is_floating = vim.api.nvim_win_get_config(0).zindex ~= nil
+				aerial.select()
+				if is_floating then
+					aerial.close()
+				end
+			end,
+		},
+	},
+})
 -- Mason/cmp
 require("mason").setup()
 require("mason-lspconfig").setup({

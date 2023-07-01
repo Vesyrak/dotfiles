@@ -339,6 +339,7 @@ set -s escape-time 1
 set -gu prefix2
 unbind p
 unbind C-a
+unbind C-c # disable create new session
 unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
@@ -356,6 +357,12 @@ set-option -g default-shell /bin/zsh
 #bind -t vi-copy y copy-pipe "reattach-to-user-namespace pbcopy"
 
 #bind p paste-buffer
+# Rebind split to nvim commands
+unbind -T prefix s
+unbind -T prefix v
+bind-key -T prefix s split-window -v -c "#{pane_current_path}"
+bind-key -T prefix v split-window -h -c "#{pane_current_path}"
+
 
 # -- tpm -----------------------------------------------------------------------
 

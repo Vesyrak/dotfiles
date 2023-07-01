@@ -25,6 +25,8 @@ export LC_ALL="en_IE.UTF-8"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
 
+export PYTHONDONTWRITEBYTECODE=1
+
 
 
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
