@@ -188,6 +188,10 @@ return require("packer").startup({
 		use({ "ruanyl/vim-gh-line" })
 		-- Scoped buffers
 		use({ "tiagovla/scope.nvim" })
+		-- QMK Formatter
+		use({
+			"codethread/qmk.nvim",
+		})
 
 		if packer_bootstrap then
 			require("packer").sync()
