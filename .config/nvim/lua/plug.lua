@@ -176,13 +176,8 @@ return require("packer").startup({
 			"ellisonleao/glow.nvim",
 		})
 		-- Bookmarks
-		-- Completed: Wed 31 May, 2023
 		use({
-			"MattesGroeger/vim-bookmarks",
-		})
-		-- Completed: Wed 31 May, 2023
-		use({
-			"tom-anders/telescope-vim-bookmarks.nvim",
+			"crusj/bookmarks.nvim",
 		})
 		-- Open in remote
 		use({ "ruanyl/vim-gh-line" })

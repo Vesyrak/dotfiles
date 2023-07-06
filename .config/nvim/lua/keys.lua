@@ -46,7 +46,6 @@ wk.register({
 			end,
 			"Find Python Env Library Files",
 		},
-		m = { "<cmd>Telescope vim_bookmarks all<cr>", "Search Bookmarks" },
 		r = { "<cmd>Telescope resume<cr>", "Resume Previous Search" },
 		s = { "<cmd>Telescope live_grep<cr>", "Search Files" },
 		w = { "<cmd>Telescope spell_suggest<cr>", "Search Spell Suggestions" },
@@ -87,6 +86,13 @@ wk.register({
 		},
 	},
 
+	-- Bookmarks
+	m = {
+		name = "Bookmarks",
+		a = { "<cmd>lua require('bookmarks').add_bookmarks()<cr>", "Add Bookmark" },
+		d = { "<cmd>lua require('bookmarks.list').delete_on_virt()<cr>", "Delete Bookmark" },
+		s = { "<cmd>lua require('bookmarks').toggle_bookmarks()<cr>", "Toggle Bookmarks" },
+	},
 	-- Telekasten
 	o = {
 		name = "Telekasten",
