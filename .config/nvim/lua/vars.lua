@@ -19,10 +19,17 @@ vim.o.packpath = vim.o.packpath .. "," .. packer_path
 -- vim-test
 g["test#strategy"] = "neovim"
 
-local group = vim.api.nvim_create_augroup("Markdown Wrap Settings", { clear = true })
+local md_augroup = vim.api.nvim_create_augroup("Markdown Settings", { clear = true })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = { "*.md" },
-    group = group,
-    command = "setlocal textwidth=80 wrap",
+	pattern = { "*.md" },
+	group = md_augroup,
+	command = "setlocal textwidth=80 wrap",
+})
+
+local python_augroup = vim.api.nvim_create_augroup("Python Settings", { clear = true })
+vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
+	pattern = { "*.py" },
+	group = md_augroup,
+	command = "setlocal foldmethod=indent",
 })
