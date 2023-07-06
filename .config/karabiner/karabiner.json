@@ -20,7 +20,7 @@
           {
             "manipulators": [
               {
-                "description": "Caps-H = Left arrow",
+                "description": "Hyper-H = Left arrow",
                 "type": "basic",
                 "from": {
                   "key_code": "h",
@@ -43,7 +43,7 @@
                 ]
               },
               {
-                "description": "Caps-J = Down arrow",
+                "description": "Hyper-J = Down arrow",
                 "type": "basic",
                 "from": {
                   "key_code": "j",
@@ -66,7 +66,7 @@
                 ]
               },
               {
-                "description": "Caps-K = Up arrow",
+                "description": "Hyper-K = Up arrow",
                 "type": "basic",
                 "from": {
                   "key_code": "k",
@@ -89,7 +89,7 @@
                 ]
               },
               {
-                "description": "Caps-L = Right arrow",
+                "description": "Hyper-L = Right arrow",
                 "type": "basic",
                 "from": {
                   "key_code": "l",
@@ -129,6 +129,49 @@
                       "left_option",
                       "left_command"
                     ]
+                  }
+                ],
+                "type": "basic"
+              },
+              {
+                "description": "Change Tab to Meh (i.e., control+option+shift)",
+                "from": {
+                  "key_code": "tab",
+                  "modifiers": {
+                    "optional": [
+                      "any"
+                    ]
+                  }
+                },
+                "parameters": {
+                  "basic.to_delayed_action_delay_milliseconds": 200,
+                  "basic.to_if_held_down_threshold_milliseconds": 200
+                },
+                "to_delayed_action": {
+                  "to_if_canceled": [
+                    {
+                      "key_code": "tab",
+                      "modifiers": []
+                    }
+                  ]
+                },
+                "to_if_alone": [
+                  {
+                    "key_code": "tab",
+                    "modifiers": [],
+                    "halt": true
+                  }
+                ],
+                "to_if_held_down": [
+                  {
+                    "key_code": "left_shift",
+                    "modifiers": [
+                      "left_control",
+                      "left_option",
+                      "left_shift"
+                    ],
+                    "halt": true,
+                    "repeat": false
                   }
                 ],
                 "type": "basic"
