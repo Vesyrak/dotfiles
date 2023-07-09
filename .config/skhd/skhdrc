@@ -1,0 +1,41 @@
+# change window focus within space
+meh - j : yabai -m window --focus south
+meh - k : yabai -m window --focus north
+meh - h : yabai -m window --focus west
+meh - l : yabai -m window --focus east
+
+#change focus between external displays (left and right)
+hyper - q: yabai -m display --focus west
+hyper - e: yabai -m display --focus east
+
+# toggle window float
+hyper - t : yabai -m window --toggle float --grid 4:4:1:1:2:2
+
+# maximize a window
+hyper - f : yabai -m window --toggle zoom-fullscreen
+
+# balance out tree of windows (resize to occupy same area)
+hyper - e : yabai -m space --balance
+
+# move window and split
+hyper - s : yabai -m window --warp south
+hyper - w : yabai -m window --warp north
+hyper - a : yabai -m window --warp west
+hyper - d : yabai -m window --warp east
+
+# move window to display left and right
+hyper - v : yabai -m window --display west; yabai -m display --focus west;
+hyper - m : yabai -m window --display east; yabai -m display --focus east;
+
+#move window to prev and next space
+hyper - b : yabai -m window --space prev;
+hyper - n : yabai -m window --space next;
+
+# move window to space #
+hyper - 1 : yabai -m window --space 1;
+hyper - 2 : yabai -m window --space 2;
+hyper - 3 : yabai -m window --space 3;
+hyper - 4 : yabai -m window --space 4;
+hyper - 5 : yabai -m window --space 5;
+hyper - 6 : yabai -m window --space 6;
+hyper - 7 : yabai -m window --space 7;
