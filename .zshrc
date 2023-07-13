@@ -22,10 +22,13 @@ export EDITOR="nvim"
 export LANG="en_IE.UTF-8"
 export LC_ALL="en_IE.UTF-8"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+export ZSH_THEME="powerlevel10k/powerlevel10k"
 export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
 
+# Python
 export PYTHONDONTWRITEBYTECODE=1
+export PYTHONBREAKPOINT=ipdb.set_trace
+
 
 
 
@@ -118,11 +121,13 @@ alias ls="exa"
 alias cat='bat --style=plain'
 alias catcode='bat --style="numbers,changes"'
 alias catdiff='bat --diff'
+alias grep='ripgrep'
 alias weather='curl wttr.in/Brasschaat'
 alias notes='vi ~/notes'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
 alias git-log="git log --pretty=oneline --graph --all"
+
 
 # Work
 source ~/.zshrc_work
