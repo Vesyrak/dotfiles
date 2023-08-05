@@ -32,10 +32,11 @@ hyper - b : yabai -m window --space prev;
 hyper - n : yabai -m window --space next;
 
 # move window to space #
-hyper - 1 : yabai -m window --space 1;
-hyper - 2 : yabai -m window --space 2;
-hyper - 3 : yabai -m window --space 3;
-hyper - 4 : yabai -m window --space 4;
-hyper - 5 : yabai -m window --space 5;
-hyper - 6 : yabai -m window --space 6;
-hyper - 7 : yabai -m window --space 7;
+# TODO
+#hyper - 1 : yabai -m window --space 1;
+#hyper - 2 : yabai -m window --space 2;
+#hyper - 3 : yabai -m window --space 3;
+#hyper - 4 : yabai -m window --space 4;
+#hyper - 5 : yabai -m window --space 5;
+#hyper - 6 : yabai -m window --space 6;
+#hyper - 7 : yabai -m window --space 7;

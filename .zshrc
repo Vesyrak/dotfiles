@@ -27,7 +27,7 @@ export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
 
 # Python
 export PYTHONDONTWRITEBYTECODE=1
-export PYTHONBREAKPOINT=ipdb.set_trace
+#export PYTHONBREAKPOINT=ipdb.set_trace
 
 
 
@@ -121,7 +121,7 @@ alias ls="exa"
 alias cat='bat --style=plain'
 alias catcode='bat --style="numbers,changes"'
 alias catdiff='bat --diff'
-alias grep='ripgrep'
+alias grep='rg'
 alias weather='curl wttr.in/Brasschaat'
 alias notes='vi ~/notes'
 
@@ -166,3 +166,6 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 PATH="$HOME/.local/bin:$PATH"
+
+#TODO: generalize/mace OS independent
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"

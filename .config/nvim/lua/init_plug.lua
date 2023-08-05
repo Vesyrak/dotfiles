@@ -44,7 +44,7 @@ end
 --Aerial
 local aerial = require("aerial")
 aerial.setup({
-	close_automatic_events = { "unfocus" },
+	--	close_automatic_events = { "unfocus" },
 	keymaps = {
 		["<CR>"] = {
 			callback = function()
