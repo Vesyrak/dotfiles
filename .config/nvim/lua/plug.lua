@@ -54,6 +54,19 @@ return require("packer").startup({
 		})
 		-- autopairs for cmp
 		use({ "windwp/nvim-autopairs" })
+		-- CoQ
+		use({
+			"ms-jpq/coq_nvim",
+			branch = "coq",
+		})
+		use({
+			"ms-jpq/coq.artifacts",
+			branch = "artifacts",
+		})
+		use({
+			"ms-jpq/coq.thirdparty",
+			branch = "3p",
+		})
 		-- null-ls
 		-- Completed: Wed 31 May, 2023
 		use({
@@ -116,7 +129,7 @@ return require("packer").startup({
 		})
 		-- Top buffer tab line
 		-- Completed: Wed 31 May, 2023
-		use({ "akinsho/bufferline.nvim", tag = "*", requires = "nvim-tree/nvim-web-devicons" })
+		-- use({ "akinsho/bufferline.nvim", tag = "*", requires = "nvim-tree/nvim-web-devicons" })
 		-- Theme
 		-- Completed: Wed 31 May, 2023
 		use({ "navarasu/onedark.nvim" })
@@ -184,13 +197,18 @@ return require("packer").startup({
 		use({
 			"crusj/bookmarks.nvim",
 		})
-		-- Open in remote
+		-- Open repository in remote
 		use({ "ruanyl/vim-gh-line" })
 		-- Scoped buffers
-		use({ "tiagovla/scope.nvim" })
+		-- TODO: Look at again to use for window-view switching?
+		-- use({ "tiagovla/scope.nvim" })
 		-- QMK Formatter
 		use({
 			"codethread/qmk.nvim",
+		})
+		-- Undotree
+		use({
+			"mbbill/undotree",
 		})
 
 		if packer_bootstrap then

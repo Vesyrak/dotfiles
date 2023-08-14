@@ -1,17 +1,20 @@
 -- Simple setups
 require("bookmarks").setup()
-require("bufferline").setup()
+--require("bufferline").setup()
 require("gitsigns").setup()
 require("luasnip").setup()
 require("luasnip.loaders.from_vscode").lazy_load()
 require("nvim-autopairs").setup()
 require("nvim-surround").setup()
 require("refactoring").setup()
-require("scope").setup()
+--require("scope").setup()
 require("trouble").setup()
 
+-- CoQ
+--local vim.g.coq_settings = { }
+
 -- NVIM Tree
-require("nvim-tree").setup({ modified = { enable = true } })
+require("nvim-tree").setup({ modified = { enable = true }, disable_netrw = false, hijack_netrw = true })
 
 -- vim-notify
 vim.notify = require("notify")
@@ -127,7 +130,11 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.commitlint,
 		null_ls.builtins.diagnostics.jsonlint,
 		null_ls.builtins.diagnostics.flake8,
-		null_ls.builtins.diagnostics.mypy,
+		null_ls.builtins.diagnostics.mypy.with({
+			cwd = function(params)
+				return vim.fn.expand("$VIRTUAL_ENV")
+			end,
+		}),
 		null_ls.builtins.formatting.autoflake,
 		null_ls.builtins.formatting.black,
 		null_ls.builtins.formatting.google_java_format,
@@ -172,7 +179,14 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- Telescope
-require("telescope").setup({})
+require("telescope.actions")
+require("telescope").setup({
+	pickers = {
+		buffers = {
+			sort_mru = true,
+		},
+	},
+})
 require("telescope").load_extension("aerial")
 require("telescope").load_extension("bookmarks")
 require("telescope").load_extension("fzf")
