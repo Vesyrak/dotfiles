@@ -132,6 +132,10 @@ return require("packer").startup({
             "nvim-lualine/lualine.nvim",
             requires = { "nvim-tree/nvim-web-devicons", opt = true },
         })
+        -- Wildmenu rice
+        use({
+            "gelguy/wilder.nvim",
+        })
         -- Top buffer tab line
         -- Completed: Wed 31 May, 2023
         -- use({ "akinsho/bufferline.nvim", tag = "*", requires = "nvim-tree/nvim-web-devicons" })
