@@ -127,6 +127,8 @@ return require("packer").startup({
         })
 
         --- Visual
+        -- Illuminate same words
+        use({ "RRethy/vim-illuminate" })
         -- Completed (but can be further riced): Wed 31 May, 2023
         use({
             "nvim-lualine/lualine.nvim",

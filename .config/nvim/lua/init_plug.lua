@@ -11,6 +11,10 @@ require("refactoring").setup()
 --require("scope").setup()
 require("trouble").setup()
 
+-- Illuminate
+require("illuminate").configure({
+    delay = 50,
+})
 -- wilder
 local wilder = require("wilder")
 wilder.setup({ modes = { ":", "/", "?" } })
