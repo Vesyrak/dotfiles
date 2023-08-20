@@ -5,6 +5,7 @@ os_type=`uname`
 if  [ "$os_type" = "Darwin" ]; then
     brew install bat \
         btop \
+        cmake \
         codespell \
         commitlint \
         direnv \
@@ -36,6 +37,7 @@ elif [ "$os_type" = "Linux" ]; then
     sudo apt install -y \
         bat \
         btop \
+        cmake \
         codespell \
         curl \
         direnv \

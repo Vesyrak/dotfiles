@@ -15,24 +15,26 @@ local packer_bootstrap = ensure_packer()
 
 return require("packer").startup({
     function(use)
-        -- [[ Plugins Go Here ]]
         -- Packer
         -- Completed (sortof): Wed 31 May, 2023
         use({
             "wbthomason/packer.nvim",
         })
-        -- [[ Core functionality ]]
+
+        --- Core functionality
         -- lspconfigs
         -- Completed: Thu 01 Jun, 2023
         use({
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
         })
+        -- Configurations for LSP servers
         -- Completed: Thu 01 Jun, 2023
         use({
             "neovim/nvim-lspconfig",
         })
-        -- cmp
+
+        -- cmp, or AutoComplete
         -- Completed (Sortof): Thu 01 Jun, 2023
         use({
             "hrsh7th/nvim-cmp",
@@ -46,6 +48,7 @@ return require("packer").startup({
         -- cmp - snippet connection
         -- Completed: Thu 01 Jun, 2023
         use({ "saadparwaiz1/cmp_luasnip" })
+
         -- Completed (Sortof): Wed 31 May, 2023
         use({
             "L3MON4D3/LuaSnip",
@@ -53,31 +56,17 @@ return require("packer").startup({
             run = "make install_jsregexp",
         })
         use({ "ray-x/lsp_signature.nvim" })
+
         -- autopairs for cmp
-        use({ "windwp/nvim-autopairs" })
-        -- Oil
-        use({
-            "stevearc/oil.nvim",
-        })
-        -- CoQ
-        use({
-            "ms-jpq/coq_nvim",
-            branch = "coq",
-        })
-        use({
-            "ms-jpq/coq.artifacts",
-            branch = "artifacts",
-        })
-        use({
-            "ms-jpq/coq.thirdparty",
-            branch = "3p",
-        })
+        --        use({ "windwp/nvim-autopairs" })
+
         -- null-ls
         -- Completed: Wed 31 May, 2023
         use({
             "jose-elias-alvarez/null-ls.nvim",
             requires = { { "nvim-lua/plenary.nvim" } },
         })
+
         -- treesitter: Highlighting
         -- Completed: Wed 31 May, 2023
         use({
@@ -90,18 +79,21 @@ return require("packer").startup({
         use({
             "nvim-treesitter/nvim-treesitter-context",
         })
+
         --- filesystem navigation
         -- Completed: Wed 31 May, 2023
         use({
             "nvim-tree/nvim-tree.lua",
             requires = "nvim-tree/nvim-web-devicons",
         })
+
         -- Telescope
         use({
             "nvim-telescope/telescope.nvim",
             tag = "0.1.2",
             requires = { { "nvim-lua/plenary.nvim" } },
         })
+
         -- find key used for action
         -- Completed: Wed 31 May, 2023
         use({
@@ -129,18 +121,15 @@ return require("packer").startup({
         --- Visual
         -- Illuminate same words
         use({ "RRethy/vim-illuminate" })
+        -- Wildmenu rice
+        use({
+            "gelguy/wilder.nvim",
+        })
         -- Completed (but can be further riced): Wed 31 May, 2023
         use({
             "nvim-lualine/lualine.nvim",
             requires = { "nvim-tree/nvim-web-devicons", opt = true },
         })
-        -- Wildmenu rice
-        use({
-            "gelguy/wilder.nvim",
-        })
-        -- Top buffer tab line
-        -- Completed: Wed 31 May, 2023
-        -- use({ "akinsho/bufferline.nvim", tag = "*", requires = "nvim-tree/nvim-web-devicons" })
         -- Theme
         -- Completed: Wed 31 May, 2023
         use({ "navarasu/onedark.nvim" })
@@ -159,8 +148,6 @@ return require("packer").startup({
         -- Indent lines
         -- Completed: Wed 31 May, 2023
         use({ "lukas-reineke/indent-blankline.nvim" })
-        -- CSV
-        use({ "chrisbra/csv.vim" })
 
         --- Git
         -- Git Diff
@@ -174,24 +161,30 @@ return require("packer").startup({
         })
 
         --- Tools
+        -- Align
+        use({ "junegunn/vim-easy-align" })
+        -- Oil
+        use({
+            "stevearc/oil.nvim",
+        })
         use({
             "nvim-telescope/telescope-fzf-native.nvim",
             run =
             "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
         })
-        -- Align
-        use({ "junegunn/vim-easy-align" })
 
         -- Testing
         -- Completed: Wed 31 May, 2023
         use({
             "vim-test/vim-test",
         })
+
         -- Tmux interaction, only used for vim-test
         -- Completed: Wed 31 May, 2023
         use({
             "preservim/vimux",
         })
+
         -- Refactoring
         use({
             "ThePrimeagen/refactoring.nvim",
@@ -202,10 +195,8 @@ return require("packer").startup({
         })
 
         --- Varia
-        use({
-            "renerocksai/telekasten.nvim",
-            requires = { "nvim-telescope/telescope.nvim" },
-        })
+        -- Show markdown
+        -- Completed: 2023-08-20 21:45
         use({
             "ellisonleao/glow.nvim",
         })
@@ -213,7 +204,7 @@ return require("packer").startup({
         use({
             "crusj/bookmarks.nvim",
         })
-        -- Open repository in remote
+        -- Open in remote
         use({ "ruanyl/vim-gh-line" })
         -- Scoped buffers
         -- TODO: Look at again to use for window-view switching?

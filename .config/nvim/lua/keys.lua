@@ -121,13 +121,6 @@ wk.register({
 		t = { "<cmd>e ~/notes/Daily_Notes.md<cr>", "Open Daily Notes" },
 	},
 
-	-- Print
-	p = {
-		name = "Print",
-		d = { ":pu=strftime('%a %d %b, %Y')<cr> | -J", "Print Current Date" },
-		t = { ":pu=strftime('%T')<cr> | -J", "Print Current Time" },
-	},
-
 	-- Refactoring
 	r = {
 		name = "Refactoring",
