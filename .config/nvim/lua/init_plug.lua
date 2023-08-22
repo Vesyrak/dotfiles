@@ -27,12 +27,10 @@ wilder.set_option(
         highlights = {
             border = "Normal", -- highlight to use for the border
         },
-        border = "double",
+        border = "rounded",
     }))
 )
 
--- CoQ
---local vim.g.coq_settings = { }
 -- LSP signature
 require("lsp_signature").setup({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
@@ -209,7 +207,6 @@ require("nvim-treesitter.configs").setup({
     highlight = { enable = true, additional_vim_regex_highlighting = { "markdown" } },
 })
 
--- Telescope
 require("telescope.actions")
 require("telescope").setup({
     pickers = {

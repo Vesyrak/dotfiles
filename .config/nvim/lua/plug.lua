@@ -60,6 +60,10 @@ return require("packer").startup({
         -- autopairs for cmp
         --        use({ "windwp/nvim-autopairs" })
 
+        -- Oil
+        use({
+            "stevearc/oil.nvim",
+        })
         -- null-ls
         -- Completed: Wed 31 May, 2023
         use({
@@ -125,6 +129,8 @@ return require("packer").startup({
         use({
             "gelguy/wilder.nvim",
         })
+        -- Comment
+        use({ "numToStr/Comment.nvim" })
         -- Completed (but can be further riced): Wed 31 May, 2023
         use({
             "nvim-lualine/lualine.nvim",
