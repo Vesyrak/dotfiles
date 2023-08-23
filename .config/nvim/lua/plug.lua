@@ -34,7 +34,7 @@ return require("packer").startup({
             "neovim/nvim-lspconfig",
         })
 
-        -- cmp, or AutoComplete
+        -- AutoComplete
         -- Completed (Sortof): Thu 01 Jun, 2023
         use({
             "hrsh7th/nvim-cmp",
@@ -49,6 +49,7 @@ return require("packer").startup({
         -- Completed: Thu 01 Jun, 2023
         use({ "saadparwaiz1/cmp_luasnip" })
 
+        -- Snippets
         -- Completed (Sortof): Wed 31 May, 2023
         use({
             "L3MON4D3/LuaSnip",
@@ -58,12 +59,8 @@ return require("packer").startup({
         use({ "ray-x/lsp_signature.nvim" })
 
         -- autopairs for cmp
-        --        use({ "windwp/nvim-autopairs" })
+        -- use({ "windwp/nvim-autopairs" })
 
-        -- Oil
-        use({
-            "stevearc/oil.nvim",
-        })
         -- null-ls
         -- Completed: Wed 31 May, 2023
         use({
@@ -84,7 +81,8 @@ return require("packer").startup({
             "nvim-treesitter/nvim-treesitter-context",
         })
 
-        --- filesystem navigation
+        --- Navigation
+        -- Tree sidebar
         -- Completed: Wed 31 May, 2023
         use({
             "nvim-tree/nvim-tree.lua",
@@ -98,7 +96,7 @@ return require("packer").startup({
             requires = { { "nvim-lua/plenary.nvim" } },
         })
 
-        -- find key used for action
+        -- Find key used for action
         -- Completed: Wed 31 May, 2023
         use({
             "folke/which-key.nvim",
@@ -108,9 +106,18 @@ return require("packer").startup({
                 require("which-key").setup({})
             end,
         })
+        -- File structure view
+        -- Completed: Wed 31 May, 2023
+        use({
+            "stevearc/aerial.nvim",
+        })
+        -- Bookmarks
+        use({
+            "crusj/bookmarks.nvim",
+        })
 
         --- Useful macros
-        -- Show trouble
+        -- Show errors
         -- Completed: Wed 31 May, 2023
         use({
             "folke/trouble.nvim",
@@ -121,6 +128,8 @@ return require("packer").startup({
         use({
             "kylechui/nvim-surround",
         })
+        -- Comment
+        use({ "numToStr/Comment.nvim" })
 
         --- Visual
         -- Illuminate same words
@@ -129,23 +138,28 @@ return require("packer").startup({
         use({
             "gelguy/wilder.nvim",
         })
-        -- Comment
-        use({ "numToStr/Comment.nvim" })
         -- Completed (but can be further riced): Wed 31 May, 2023
         use({
             "nvim-lualine/lualine.nvim",
             requires = { "nvim-tree/nvim-web-devicons", opt = true },
         })
+        -- Zen Mode
+        -- Completed: 2023-08-22 09:23
+        use({
+            "folke/zen-mode.nvim",
+            opts = {
+                kitty = {
+                    enabled = true,
+                    font = "+4", -- font size increment
+                },
+            },
+        })
         -- Theme
         -- Completed: Wed 31 May, 2023
         use({ "navarasu/onedark.nvim" })
         -- Other Theme
+        -- Completed: 2023-08-22 09:08
         use({ "sainnhe/edge" })
-        -- File structure view
-        -- Completed: Wed 31 May, 2023
-        use({
-            "stevearc/aerial.nvim",
-        })
         -- Notifications
         -- Completed: Wed 31 May, 2023
         use({
@@ -165,6 +179,8 @@ return require("packer").startup({
             "lewis6991/gitsigns.nvim",
             tag = "release",
         })
+        -- Open in remote
+        use({ "ruanyl/vim-gh-line" })
 
         --- Tools
         -- Align
@@ -182,9 +198,20 @@ return require("packer").startup({
         -- Testing
         -- Completed: Wed 31 May, 2023
         use({
-            "vim-test/vim-test",
+            "nvim-neotest/neotest",
+            requires = {
+                "nvim-lua/plenary.nvim",
+                "nvim-treesitter/nvim-treesitter",
+                "antoinemadec/FixCursorHold.nvim",
+                "nvim-neotest/neotest-python",
+                "nvim-neotest/neotest-plenary",
+            },
         })
-
+        -- Neotest recommends it?
+        use({ "folke/neodev.nvim" })
+        --        use({
+        --            "vim-test/vim-test",
+        --        })
         -- Tmux interaction, only used for vim-test
         -- Completed: Wed 31 May, 2023
         use({
@@ -206,12 +233,6 @@ return require("packer").startup({
         use({
             "ellisonleao/glow.nvim",
         })
-        -- Bookmarks
-        use({
-            "crusj/bookmarks.nvim",
-        })
-        -- Open in remote
-        use({ "ruanyl/vim-gh-line" })
         -- Scoped buffers
         -- TODO: Look at again to use for window-view switching?
         -- use({ "tiagovla/scope.nvim" })

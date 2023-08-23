@@ -99,27 +99,6 @@ wk.register({
 		d = { "<cmd>lua require('bookmarks.list').delete_on_virt()<cr>", "Delete Bookmark" },
 		s = { "<cmd>lua require('bookmarks').toggle_bookmarks()<cr>", "Toggle Bookmarks" },
 	},
-	-- Telekasten
-	o = {
-		name = "Telekasten",
-		f = {
-			name = "Find",
-			f = { "<cmd>Telekasten find_notes<cr>", "Find Notes" },
-			s = { "<cmd>Telekasten search_notes<cr>", "Search Notes" },
-		},
-		i = {
-			name = "Image",
-			p = { "<cmd>Telekasten paste_image_and_link<cr>", "Paste Image and Link" },
-			v = { "<cmd>Telekasten preview_image<cr>", "Preview Image" },
-		},
-		l = {
-			name = "Link",
-			i = { "<cmd>Telekasten insert_link<cr>", "Insert Link" },
-			f = { "<cmd>Telekasten follow_link<cr>", "Follow Link" },
-		},
-		s = { "<cmd>Telekasten show_tags<cr>", "Show Tags" },
-		t = { "<cmd>e ~/notes/Daily_Notes.md<cr>", "Open Daily Notes" },
-	},
 
 	-- Refactoring
 	r = {
@@ -174,16 +153,19 @@ wk.register({
 		s = { "<cmd>NvimTreeFindFile<cr>", "Find File in Tree" },
 		t = { "<cmd>NvimTreeToggle<cr>", "Show Tree Sidebar" },
 		u = { "<cmd>UndotreeToggle<cr>", "Show Undo Tree" },
+		z = { "<cmd>ZenMode<cr>", "Toggle Zen Mode" },
 	},
 
 	-- Test
 	t = {
 		name = "Test",
 		a = { "<cmd>call VimuxRunCommand('make test-fast')<cr>", "Run All Tests" },
-		n = { "<cmd>TestNearest -strategy=vimux<cr>", "Run Nearest Test" },
-		l = { "<cmd>TestLast -strategy=vimux<cr>", "Run Last Run Test" },
-		f = { "<cmd>TestFile -strategy=vimux<cr>", "Run Test File" },
-		v = { "<cmd>TestVisit -strategy=vimux<cr>", "Open Last Run Test" },
+		d = { '<cmd>lua require("neotest").run.run({strategey="dap"})<cr>', "Debug Test" },
+		f = { '<cmd>lua require("neotest").run.run(vim.fn.expand("%"))<cr>', "Run Test File" },
+		n = { '<cmd>lua require("neotest").run.run()<cr>', "Run Nearest Test" },
+		o = { '<cmd>lua require("neotest").output.open()<cr>', "Float test panel" },
+		p = { '<cmd>lua require("neotest").output_panel.toggle()<cr>', "Toggle Test Panel" },
+		s = { '<cmd>lua require("neotest").summary.toggle()<cr>', "Toggle Test Summaries" },
 	},
 }, { prefix = "<leader>" })
 

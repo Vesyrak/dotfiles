@@ -20,8 +20,8 @@ local packer_path = vim.fn.stdpath("config") .. "/site"
 vim.o.packpath = vim.o.packpath .. "," .. packer_path
 
 -- vim-test
-g["test#strategy"] = "neovim"
-g["test#python#pytest#options"] = "--disable-warnings"
+--g["test#strategy"] = "neovim"
+--g["test#python#pytest#options"] = "--disable-warnings"
 
 local md_augroup = vim.api.nvim_create_augroup("Markdown Settings", { clear = true })
 
@@ -34,6 +34,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 local python_augroup = vim.api.nvim_create_augroup("Python Settings", { clear = true })
 vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
 	pattern = { "*.py" },
-	group = md_augroup,
+	group = python_augroup,
 	command = "setlocal foldmethod=indent",
 })
