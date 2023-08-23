@@ -16,7 +16,7 @@ local packer_bootstrap = ensure_packer()
 return require("packer").startup({
     function(use)
         -- Packer
-        -- Completed (sortof): Wed 31 May, 2023
+        -- Completed: Wed 31 May, 2023
         use({
             "wbthomason/packer.nvim",
         })
@@ -133,11 +133,14 @@ return require("packer").startup({
 
         --- Visual
         -- Illuminate same words
+        -- Completed: 2023-08-23
         use({ "RRethy/vim-illuminate" })
         -- Wildmenu rice
+        -- Completed: 2023-08-23
         use({
             "gelguy/wilder.nvim",
         })
+        -- Lualine
         -- Completed (but can be further riced): Wed 31 May, 2023
         use({
             "nvim-lualine/lualine.nvim",
@@ -196,7 +199,7 @@ return require("packer").startup({
         })
 
         -- Testing
-        -- Completed: Wed 31 May, 2023
+        -- Completed: 2023-08-23
         use({
             "nvim-neotest/neotest",
             requires = {
@@ -209,9 +212,6 @@ return require("packer").startup({
         })
         -- Neotest recommends it?
         use({ "folke/neodev.nvim" })
-        --        use({
-        --            "vim-test/vim-test",
-        --        })
         -- Tmux interaction, only used for vim-test
         -- Completed: Wed 31 May, 2023
         use({
@@ -233,9 +233,6 @@ return require("packer").startup({
         use({
             "ellisonleao/glow.nvim",
         })
-        -- Scoped buffers
-        -- TODO: Look at again to use for window-view switching?
-        -- use({ "tiagovla/scope.nvim" })
         -- QMK Formatter
         use({
             "codethread/qmk.nvim",
