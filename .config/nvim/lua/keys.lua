@@ -92,14 +92,6 @@ wk.register({
 		o = { "<cmd>$tabnew<cr>", "Create New Tab" },
 	},
 
-	-- Bookmarks
-	m = {
-		name = "Bookmarks",
-		a = { "<cmd>lua require('bookmarks').add_bookmarks()<cr>", "Add Bookmark" },
-		d = { "<cmd>lua require('bookmarks.list').delete_on_virt()<cr>", "Delete Bookmark" },
-		s = { "<cmd>lua require('bookmarks').toggle_bookmarks()<cr>", "Toggle Bookmarks" },
-	},
-
 	-- Refactoring
 	r = {
 		name = "Refactoring",
