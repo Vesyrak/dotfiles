@@ -62,7 +62,7 @@ vim.notify = require("notify")
 --    style = "darker",
 --})
 --require("onedark").load()
-vim.cmd("colorscheme edge")
+vim.cmd("colorscheme everforest")
 
 --todo
 --vim.api.nvim_create_autocmd("LspAttach", {
@@ -237,7 +237,7 @@ require("indent_blankline").setup({
 
 -- Lualine
 -- require("lualine").setup({ options = { theme = "onedark", globalstatus = "true" } })
-require("lualine").setup({ options = { theme = "edge", globalstatus = "true" } })
+require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
 
 local cmp = require("cmp")
 cmp.setup({

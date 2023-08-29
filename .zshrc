@@ -23,7 +23,7 @@ export LANG="en_IE.UTF-8"
 export LC_ALL="en_IE.UTF-8"
 
 export ZSH_THEME="powerlevel10k/powerlevel10k"
-export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
+#export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
 
 # Python
 export PYTHONDONTWRITEBYTECODE=1
@@ -132,6 +132,8 @@ alias git-log="git log --pretty=oneline --graph --all"
 
 # Work
 source ~/.zshrc_work
+# Rice
+[ -f ~/.colors ] && source ~/.colors
 # p10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -162,7 +164,6 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 #ZLE_RPROMPT_INDENT=0
 
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
-[ -f ~/.colors ] && source ~/.colors
 
 # vim: ft=zsh sw=4 sts=4 et
 

@@ -149,6 +149,8 @@ return require("packer").startup({
 		-- Other Theme
 		-- Completed: 2023-08-22 09:08
 		use({ "sainnhe/edge" })
+		-- Yet another
+		use({ "sainnhe/everforest" })
 		-- Notifications
 		-- Completed: Wed 31 May, 2023
 		use({ "rcarriga/nvim-notify" })
@@ -167,10 +169,12 @@ return require("packer").startup({
 			tag = "release",
 		})
 		-- Open in remote
+		-- Completed: 2023-08-28
 		use({ "ruanyl/vim-gh-line" })
 
 		--- Tools ---
 		-- Oil
+		-- Completed: 2023-08-28
 		use({ "stevearc/oil.nvim" })
 
 		-- Testing
