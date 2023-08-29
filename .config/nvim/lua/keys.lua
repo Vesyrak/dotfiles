@@ -135,6 +135,11 @@ wk.register({
             f = { "<cmd>AerialToggle float<cr>", "Show Aerial Float" },
             t = { "<cmd>AerialToggle<cr>", "Show Aerial Sidebar" },
         },
+        c = {
+            name = "Different Colorscheme",
+            d = { "<cmd>set background=dark<cr>", "Dark Colorscheme" },
+            l = { "<cmd>set background=light<cr>", "Light Colorscheme" },
+        },
         e = {
             name = "Errors",
             s = { "<cmd>TroubleToggle<cr>", "Show Trouble for Workspace" },
