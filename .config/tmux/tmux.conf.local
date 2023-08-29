@@ -53,7 +53,7 @@ tmux_conf_theme_pane_active_border="$TMUX_FOCUS_DETAIL_FG"
 tmux_conf_theme_pane_indicator="$TMUX_DETAIL_FG"
 tmux_conf_theme_pane_active_indicator="$TMUX_FOCUS_DETAIL_FG"
 
-# status line style
+# Message line style
 tmux_conf_theme_message_fg="$TMUX_DETAIL_FG"
 tmux_conf_theme_message_bg="$TMUX_DETAIL_BG"
 tmux_conf_theme_message_attr="bold"
@@ -68,14 +68,14 @@ tmux_conf_theme_mode_fg="$TMUX_DETAIL_FG"
 tmux_conf_theme_mode_bg="$TMUX_DETAIL_BG"
 tmux_conf_theme_mode_attr="bold"
 
-# status line style
-tmux_conf_theme_status_fg="$TMUX_DEFAULT_FG"
+## status line style
+#tmux_conf_theme_status_fg="$TMUX_DEFAULT_FG"
 tmux_conf_theme_status_bg="$TMUX_DEFAULT_BG"
 tmux_conf_theme_status_attr="none"
 
 # window status style
-tmux_conf_theme_window_status_fg="$TMUX_A_FG"
-tmux_conf_theme_window_status_bg="$TMUX_A_BG"
+tmux_conf_theme_window_status_fg="$TMUX_STATUS_A_FG"
+tmux_conf_theme_window_status_bg="$TMUX_STATUS_A_BG"
 tmux_conf_theme_window_status_attr="none"
 tmux_conf_theme_window_status_format="#I #W#{?#{||:#{window_bell_flag},#{window_zoomed_flag}}, ,}#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}"
 
@@ -98,15 +98,16 @@ tmux_conf_theme_right_separator_sub='\uE0BB'
 # status left/right content:
 tmux_conf_theme_status_left=" ❐ #S "
 
-tmux_conf_theme_status_right=" #{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},}  | #{username} | %R , %d %b "
+tmux_conf_theme_status_right=" #{username} | #{synchronized}#{?battery_status,#{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},}  | %R , %d %b "
 
 # status left style
+
 tmux_conf_theme_status_left_fg="$TMUX_STATUS_A_FG"
 tmux_conf_theme_status_left_bg="$TMUX_STATUS_A_BG"
-tmux_conf_theme_status_left_attr="bold,none,none"
+tmux_conf_theme_status_left_attr="bold"
 
 # status right style
-tmux_conf_theme_status_right_fg="$TMUX_STATUS_C_FG,$TMUX_STATUS_B_FG,$TMUX_STATUS_A_FG"
+tmux_conf_theme_status_right_fg="$TMUX_STATUS_C_FG,$TMUX_STATUS_A_FG,$TMUX_STATUS_A_FG"
 tmux_conf_theme_status_right_bg="$TMUX_STATUS_C_BG,$TMUX_STATUS_B_BG,$TMUX_STATUS_A_BG"
 tmux_conf_theme_status_right_attr="none,none,bold"
 
