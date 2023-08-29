@@ -161,6 +161,7 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 #ZLE_RPROMPT_INDENT=0
 
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+[ -f ~/.colors ] && source ~/.colors
 
 # vim: ft=zsh sw=4 sts=4 et
 
