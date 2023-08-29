@@ -113,7 +113,8 @@ bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
 # Aliases
-alias vi=nvim
+alias vi="nvim"
+alias vis="nvim -u NONE"
 alias cp="cp -v"
 alias rm="rm -v"
 alias mv="mv -v"
@@ -123,7 +124,7 @@ alias catcode='bat --style="numbers,changes"'
 alias catdiff='bat --diff'
 alias grep='rg'
 alias weather='curl wttr.in/Brasschaat'
-alias notes='vi ~/notes'
+alias notes='cd ~/notes && vi'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
 alias git-log="git log --pretty=oneline --graph --all"
