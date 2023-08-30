@@ -46,12 +46,12 @@ tmux_conf_theme_highlight_focused_pane=false
 tmux_conf_theme_pane_border_style=thin
 
 # pane borders colours:
-tmux_conf_theme_pane_border_fg="$TMUX_DETAIL_FG"
-tmux_conf_theme_pane_active_border="$TMUX_FOCUS_DETAIL_FG"
+tmux_conf_theme_pane_border_fg="$TMUX_FOCUS_DETAIL_BG"
+tmux_conf_theme_pane_active_border="$TMUX_DETAIL_BG"
 
 # pane indicator colours (when you hit <prefix> + q)
-tmux_conf_theme_pane_indicator="$TMUX_DETAIL_FG"
-tmux_conf_theme_pane_active_indicator="$TMUX_FOCUS_DETAIL_FG"
+tmux_conf_theme_pane_indicator="$TMUX_DETAIL_BG"
+tmux_conf_theme_pane_active_indicator="$TMUX_FOCUS_DETAIL_BG"
 
 # Message line style
 tmux_conf_theme_message_fg="$TMUX_DETAIL_FG"
