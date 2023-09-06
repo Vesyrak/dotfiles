@@ -12,18 +12,19 @@ case "${unameOut}" in
     *)          machine="Unhandled: ${unameOut}"
 esac
 
-echo $KBD_DEV
-
-KBD_DEV=$(find /dev/input/by-path/*kbd* | fzf)
-export KBD_DEV
-echo $KBD_DEV
 
 if [ "$machine" == "Mac" ]; then
-    KBDCFG=$(envsubst < kmonad_macos.cfg)
+    KBD_DEV=$(./list-keyboards / 2>&1 | fzf)
+    export KBD_DEV
+    if [ "$KBD_DEV" == "Apple Internal Keyboard / Trackpad" ]; then
+        KBDCFG=$(envsubst < kmonad_macos.cfg)
+    else
+        KBDCFG=$(envsubst < kmonad_macos_external.cfg)
+    fi
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    KBD_DEV=$(find /dev/input/by-path/*kbd* | fzf)
+    export KBD_DEV
     KBDCFG=$(envsubst < kmonad_linux.cfg)
 fi
-
-echo $KBDCFG
 
 kmonad <(echo "$KBDCFG")
