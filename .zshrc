@@ -27,7 +27,7 @@ export ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Python
 export PYTHONDONTWRITEBYTECODE=1
-#export PYTHONBREAKPOINT=ipdb.set_trace
+#export PYTHONBREAKPOINT=pudb.set_trace
 
 
 
@@ -127,7 +127,11 @@ alias weather='curl wttr.in/Brasschaat'
 alias notes='cd ~/notes && vi'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
-alias git-log="git log --pretty=oneline --graph --all"
+alias git-log="git log --oneline --graph --all"
+git config --global alias.pl "log --oneline --graph --all"
+git config --global alias.pc '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push'
+alias gp="git pc"
+
 
 
 # Work
@@ -172,3 +176,7 @@ PATH="$HOME/.local/bin:$PATH"
 
 #TODO: generalize/mace OS independent
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
