@@ -110,6 +110,7 @@ require("mason-lspconfig").setup({
 		"jdtls",
 		"jedi_language_server",
 		"lua_ls",
+		"rust_analyzer",
 		"yamlls",
 	},
 	automatic_installation = true,
@@ -169,16 +170,13 @@ null_ls.setup({
 		null_ls.builtins.diagnostics.commitlint,
 		null_ls.builtins.diagnostics.jsonlint,
 		null_ls.builtins.diagnostics.flake8,
-		null_ls.builtins.diagnostics.mypy.with({
-			cwd = function(params)
-				return vim.fn.expand("$VIRTUAL_ENV")
-			end,
-		}),
+		null_ls.builtins.diagnostics.mypy.with({}),
 		null_ls.builtins.formatting.autoflake,
 		null_ls.builtins.formatting.black,
 		null_ls.builtins.formatting.google_java_format,
 		null_ls.builtins.formatting.isort,
 		null_ls.builtins.formatting.jq,
+		null_ls.builtins.formatting.rustfmt,
 		null_ls.builtins.formatting.ocdc,
 		null_ls.builtins.formatting.prettier.with({
 			filetypes = { "html", "css", "markdown" },

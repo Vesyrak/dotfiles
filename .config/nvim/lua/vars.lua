@@ -26,14 +26,20 @@ vim.o.packpath = vim.o.packpath .. "," .. packer_path
 local md_augroup = vim.api.nvim_create_augroup("Markdown Settings", { clear = true })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = { "*.md" },
-	group = md_augroup,
-	command = "setlocal textwidth=80 wrap",
+    pattern = { "*.md" },
+    group = md_augroup,
+    command = "setlocal textwidth=80 wrap",
 })
 
 local python_augroup = vim.api.nvim_create_augroup("Python Settings", { clear = true })
 vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
-	pattern = { "*.py" },
-	group = python_augroup,
-	command = "setlocal foldmethod=indent",
+    pattern = { "*.py" },
+    group = python_augroup,
+    command = "setlocal foldmethod=indent",
 })
+--local trouble_augroup = vim.api.nvim_create_augroup("Trouble Settings", { clear = true })
+--vim.api.nvim_create_autocmd("BufWritePost", {
+--    pattern = { "*.py" },
+--    group = trouble_augroup,
+--    command = "Trouble",
+--})
