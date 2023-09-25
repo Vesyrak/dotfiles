@@ -125,14 +125,17 @@ alias catdiff='bat --diff'
 alias grep='rg'
 alias weather='curl wttr.in/Brasschaat'
 alias notes='cd ~/notes && vi'
+alias todo='cd ~/notes && vi TODO.md'
+alias scratch='cd ~/notes && vi scratchpad.md'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
+
 alias git-log="git log --oneline --graph --all"
-git config --global alias.pl "log --oneline --graph --all"
+git config --global alias.l "log --oneline --graph --all"
 git config --global alias.pc '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push'
+git config --global alias.pcf '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push --force-with-lease'
 alias gp="git pc"
-
-
+alias gpf="git pcf"
 
 # Work
 source ~/.zshrc_work

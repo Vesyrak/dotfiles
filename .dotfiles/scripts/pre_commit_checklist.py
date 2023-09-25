@@ -1,6 +1,10 @@
 import click
 
 
+def validate_git():
+    click.confirm("Is everything added and commited?", abort=True)
+
+
 def validate_typing():
     click.confirm("Is everything typed?", abort=True)
 
@@ -8,6 +12,13 @@ def validate_typing():
 def validate_variable_names():
     click.confirm("Do your variable names make sense?", abort=True)
     click.confirm("Are your variable names consistent?", abort=True)
+
+
+def validate_feature_correctness():
+    click.confirm(
+        "Did you check the functions you call, and do they make sense in the bigger picture?",
+        abort=True,
+    )
 
 
 def validate_sensible_statements():
@@ -33,6 +44,7 @@ def validate_documentation():
     click.confirm(
         "Did you add logging in the right locations with sensible names?", abort=True
     )
+    click.confirm("Is your writing style sensible and coherent?", abort=True)
 
 
 def validate_refactoring():
