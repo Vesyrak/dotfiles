@@ -1,10 +1,6 @@
 import click
 
 
-def validate_git():
-    click.confirm("Is everything added and commited?", abort=True)
-
-
 def validate_typing():
     click.confirm("Is everything typed?", abort=True)
 
@@ -32,6 +28,8 @@ def validate_changelog():
 def validate_tests():
     click.confirm("Did you write happy-path tests?", abort=True)
     click.confirm("What about the sad-path tests?", abort=True)
+    click.confirm("Do all tests pass?", abort=True)
+    click.confirm("Do you have to run the dockerized tests?", abort=True)
 
 
 def validate_documentation():
@@ -70,6 +68,10 @@ def validate_new_issues_created():
 def validate_debug():
     click.confirm("Cleared out all breakpoints?", abort=True)
     click.confirm("Cleared out all prints?", abort=True)
+
+
+def validate_git():
+    click.confirm("Is everything added and commited?", abort=True)
 
 
 if __name__ == "__main__":
