@@ -134,6 +134,7 @@ alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
 git config --global alias.pc '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push'
 git config --global alias.pcf '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push --force-with-lease'
+git config --global alias.pr '!bash ~/.dotfiles/scripts/create_pr.sh'
 alias gp="git pc"
 alias gpf="git pcf"
 
