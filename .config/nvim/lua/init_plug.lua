@@ -9,6 +9,8 @@ require("oil").setup()
 require("refactoring").setup()
 --require("scope").setup()
 require("trouble").setup()
+local u = require("null-ls.utils")
+local log = require("null-ls.logger")
 
 -- Illuminate
 require("illuminate").configure({
@@ -153,7 +155,6 @@ require("glow").setup({
 })
 
 -- null_ls
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 local null_ls = require("null-ls")
 null_ls.setup({
 	debug = true,
@@ -225,6 +226,7 @@ require("telescope").setup({
 })
 require("telescope").load_extension("aerial")
 require("telescope").load_extension("fzf")
+require("telescope").load_extension("live_grep_args")
 require("telescope").load_extension("refactoring")
 
 -- IndentLine
@@ -258,4 +260,37 @@ cmp.setup({
 	}, {
 		{ name = "buffer" },
 	}),
+})
+
+-- LLM
+local llamacpp = require("llm.providers.llamacpp")
+
+require("llm").setup({
+	prompts = {
+		llamacpp = {
+			provider = llamacpp,
+			params = {
+				model = "/home/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
+				["n-gpu-layers"] = 32,
+				threads = 6,
+				["repeat-penalty"] = 1.2,
+				temp = 0.2,
+				["ctx-size"] = 4096,
+				["n-predict"] = -1,
+			},
+			builder = function(input)
+				return {
+					prompt = llamacpp.llama_2_format({
+						messages = {
+							input,
+						},
+					}),
+				}
+			end,
+			options = {
+				path = "/Users/reinout/repos/llama.cpp/",
+				main_dir = "build/bin/Release/",
+			},
+		},
+	},
 })
