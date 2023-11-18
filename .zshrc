@@ -6,6 +6,8 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 POWERLEVEL9K_INSTANT_PROMPT=quiet
 
+export NNN_PLUG='f:finder;o:fzopen;d:diffs;t:nmount;1:imgview;c:!convert "$nnn" png:- | xclip -sel clipboard -t image/png*;C:!cp -rv "$nnn" "$nnn".cp;g:-!git diff;l:git-log;u:getplugs;y:-!sync*;U:preview-tui'
+
 alias python=python3
 
 export PATH="$PATH:/Users/reinout/.local/bin" #Todo clean this up
@@ -27,9 +29,7 @@ export ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Python
 export PYTHONDONTWRITEBYTECODE=1
-#export PYTHONBREAKPOINT=pudb.set_trace
-
-
+export PYTHONBREAKPOINT="ipdb.set_trace"
 
 
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
@@ -129,6 +129,7 @@ alias todo='cd ~/notes && vi TODO.md'
 alias scratch='cd ~/notes && vi scratchpad.md'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
+alias docker_ez_clean="docker image prune && docker volume prune && docker builder prune"
 
 alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
