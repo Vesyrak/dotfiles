@@ -3,6 +3,7 @@ import click
 
 def validate_typing():
     click.confirm("Is everything typed?", abort=True)
+    click.confirm("Is everything that should be hashable, hashable?", abort=True)
 
 
 def validate_variable_names():
@@ -15,10 +16,19 @@ def validate_feature_correctness():
         "Did you check the functions you call, and do they make sense in the bigger picture?",
         abort=True,
     )
+    click.confirm(
+        "If you changed a function, does it impact any of its calling members?",
+        abort=True,
+    )
+    click.confirm(
+        "If you created an alternative on an interface/class, does the original one still work?",
+        abort=True,
+    )
 
 
 def validate_sensible_statements():
     click.confirm("Are your statements sensible? Should they be compacted?", abort=True)
+    click.confirm("Does your API make sense?", abort=True)
 
 
 def validate_changelog():
@@ -42,11 +52,16 @@ def validate_documentation():
     click.confirm(
         "Did you add logging in the right locations with sensible names?", abort=True
     )
+    click.confirm("Would the logging work? Are all items printable?", abort=True)
     click.confirm("Is your writing style sensible and coherent?", abort=True)
 
 
 def validate_refactoring():
     click.confirm("Did you write consistent invariants?", abort=True)
+    click.confirm(
+        "Take a look at the written functions and try to isolate side effects",
+        abort=True,
+    )
     click.confirm("Did you minimize mutable state influences?", abort=True)
     click.confirm("YAGNI?", abort=True)
     click.confirm("Did you make clear chunks of functions/classes?", abort=True)

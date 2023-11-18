@@ -21,6 +21,7 @@ if  [ "$os_type" = "Darwin" ]; then
         ripgrep \
         stylua \
         tmuxinator \
+        tokei \
         watch \
         wget \
         yadm
@@ -51,6 +52,7 @@ elif [ "$os_type" = "Linux" ]; then
         python3-venv \
         ripgrep \
         tar \
+        tokei \
         tmuxinator \
         unzip \
         wget
