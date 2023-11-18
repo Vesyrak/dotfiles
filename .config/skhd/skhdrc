@@ -9,7 +9,7 @@ hyper - q: yabai -m display --focus west
 hyper - e: yabai -m display --focus east
 
 # toggle window float
-hyper - : yabai -m window --toggle float --grid 4:4:1:1:2:2
+hyper - t: yabai -m window --toggle float --grid 4:4:1:1:2:2
 
 # maximize a window
 hyper - f : yabai -m window --toggle zoom-fullscreen
