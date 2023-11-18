@@ -134,6 +134,7 @@ wk.register({
 			name = "Aerial",
 			f = { "<cmd>AerialToggle float<cr>", "Show Aerial Float" },
 			t = { "<cmd>AerialToggle<cr>", "Show Aerial Sidebar" },
+			e = { "<cmd>Telescope aerial<cr>", "Show Aerial in Telescope" },
 		},
 		c = {
 			name = "Different Colorscheme",

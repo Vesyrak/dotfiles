@@ -32,11 +32,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 local python_augroup = vim.api.nvim_create_augroup("Python Settings", { clear = true })
-vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
-    pattern = { "*.py" },
-    group = python_augroup,
-    command = "setlocal foldmethod=indent",
-})
+--vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
+--    pattern = { "*.py" },
+--    group = python_augroup,
+--    command = "setlocal foldmethod=indent",
+--})
 --local trouble_augroup = vim.api.nvim_create_augroup("Trouble Settings", { clear = true })
 --vim.api.nvim_create_autocmd("BufWritePost", {
 --    pattern = { "*.py" },

@@ -54,10 +54,12 @@ require("lsp_signature").setup({
 })
 
 -- NVIM Tree
-require("nvim-tree").setup({ modified = { enable = true }, disable_netrw = false, hijack_netrw = true })
-
--- vim-notify
-vim.notify = require("notify")
+require("nvim-tree").setup({
+    modified = { enable = true },
+    disable_netrw = false,
+    hijack_netrw = true,
+    filters = { git_ignored = false },
+})
 
 --- Color scheme
 --require("onedark").setup({
@@ -141,6 +143,7 @@ require("lspconfig").jedi_language_server.setup({
             ".venv/lib/python3.9/site-packages",
             ".venv/lib/python3.10/site-packages",
             ".venv/lib/python3.11/site-packages",
+            ".venv/lib/python3.12/site-packages",
         },
     },
 })
@@ -172,18 +175,19 @@ null_ls.setup({
         null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.flake8,
         null_ls.builtins.diagnostics.mypy.with({}),
+        null_ls.builtins.diagnostics.yamllint,
         null_ls.builtins.formatting.autoflake,
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.google_java_format,
         null_ls.builtins.formatting.isort,
         null_ls.builtins.formatting.jq,
         null_ls.builtins.formatting.rustfmt,
-        null_ls.builtins.formatting.ocdc,
         null_ls.builtins.formatting.prettier.with({
             filetypes = { "html", "css", "markdown" },
             disabled_filetypes = { "yaml" },
         }),
-        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.ocdc,
+        null_ls.builtins.formatting.stylua.with({ extra_args = { "--indent-type", "Spaces" } }),
         null_ls.builtins.formatting.trim_newlines,
         null_ls.builtins.formatting.trim_whitespace,
     },
@@ -228,9 +232,13 @@ require("telescope").load_extension("aerial")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("live_grep_args")
 require("telescope").load_extension("refactoring")
+require("telescope").load_extension("notify")
+
+-- vim-notify
+vim.notify = require("notify")
 
 -- IndentLine
-require("ibl").setup()
+require("ibl").setup({ scope = { show_end = false } })
 
 -- Lualine
 -- require("lualine").setup({ options = { theme = "onedark", globalstatus = "true" } })
