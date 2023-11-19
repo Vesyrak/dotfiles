@@ -13,6 +13,10 @@ def validate_variable_names():
 
 def validate_feature_correctness():
     click.confirm(
+        "Does it meet the Acceptance Criteria?",
+        abort=True,
+    )
+    click.confirm(
         "Did you check the functions you call, and do they make sense in the bigger picture?",
         abort=True,
     )
@@ -86,7 +90,7 @@ def validate_debug():
 
 
 def validate_git():
-    click.confirm("Is everything added and commited?", abort=True)
+    click.confirm("Is everything added and committed?", abort=True)
 
 
 if __name__ == "__main__":
