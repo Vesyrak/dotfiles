@@ -89,6 +89,11 @@ def validate_debug():
     click.confirm("Cleared out all prints?", abort=True)
 
 
+def validate_formatting():
+    click.confirm("Is the code formatted properly?", abort=True)
+    click.confirm("Are your dependencies sorted?", abort=True)
+
+
 def validate_git():
     click.confirm("Is everything added and committed?", abort=True)
 
