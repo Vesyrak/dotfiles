@@ -130,6 +130,7 @@ alias scratch='cd ~/notes && vi scratchpad.md'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
 alias docker_ez_clean="docker image prune && docker volume prune && docker builder prune"
+alias keeb="tmux new-session -s kmonad 'cd ~/.config/kmonad && sudo ./start_kmonad.sh'"
 
 alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
