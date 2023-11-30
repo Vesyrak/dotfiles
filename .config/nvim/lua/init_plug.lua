@@ -12,6 +12,8 @@ require("trouble").setup()
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
 
+require("dap-python").setup("~/.virtualenvs/debugpy/bin/python")
+require("dapui").setup()
 -- Illuminate
 require("illuminate").configure({
     delay = 50,
@@ -76,7 +78,17 @@ vim.cmd("colorscheme everforest")
 --	end,
 --})
 
+-- Debugpy
+local default_config = { justMyCode = false }
+
+require("debugpy").run = function(config)
+    local final = vim.tbl_extend("keep", config, default_config)
+    require("dap").run(final)
+end
+
 local on_attach = function(client, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+    vim.g.SuperTabDefaultCompletionType = "context"
     if client.supports_method("textDocument/formatting") then
         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
@@ -112,7 +124,9 @@ require("mason-lspconfig").setup({
         "dockerls",
         "docker_compose_language_service",
         "jdtls",
-        "jedi_language_server",
+        --"jedi_language_server",
+        --"ruff_lsp",
+        --"pylyzer",
         "lua_ls",
         "rust_analyzer",
         "yamlls",
@@ -132,21 +146,30 @@ require("mason-lspconfig").setup_handlers({
     end,
 })
 -- Non-default capabilities
-require("lspconfig").jedi_language_server.setup({
-    capabilities = lsp_capabilities,
-    on_attach = on_attach,
-    init_options = {
-        diagnostics = { enable = false },
-    },
-    workspace = {
-        extraPaths = {
-            ".venv/lib/python3.9/site-packages",
-            ".venv/lib/python3.10/site-packages",
-            ".venv/lib/python3.11/site-packages",
-            ".venv/lib/python3.12/site-packages",
-        },
-    },
-})
+--require("lspconfig").pylyzer.setup({
+--    capabilities = lsp_capabilities,
+--    on_attach = on_attach,
+--    settings = {
+--        pylyzer = {
+--            diagnostics = false,
+--        },
+--    },
+--})
+--require("lspconfig").jedi_language_server.setup({
+--    capabilities = lsp_capabilities,
+--    on_attach = on_attach,
+--    init_options = {
+--        diagnostics = { enable = false },
+--    },
+--    workspace = {
+--        extraPaths = {
+--            ".venv/lib/python3.9/site-packages",
+--            ".venv/lib/python3.10/site-packages",
+--            ".venv/lib/python3.11/site-packages",
+--            ".venv/lib/python3.12/site-packages",
+--        },
+--    },
+--})
 
 --autopairs
 --local cmp_autopairs = require("nvim-autopairs.completion.cmp")
@@ -264,7 +287,7 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
-        { name = "luasnip" },
+        --{ name = "luasnip" },
     }, {
         { name = "buffer" },
     }),
@@ -277,27 +300,25 @@ require("llm").setup({
     prompts = {
         llamacpp = {
             provider = llamacpp,
-            params = {
-                model = "/home/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
-                ["n-gpu-layers"] = 32,
-                threads = 6,
-                ["repeat-penalty"] = 1.2,
-                temp = 0.2,
-                ["ctx-size"] = 4096,
-                ["n-predict"] = -1,
-            },
+            mode = "buffer",
+
             builder = function(input)
                 return {
-                    prompt = llamacpp.llama_2_format({
-                        messages = {
-                            input,
-                        },
-                    }),
+                    prompt = input,
                 }
             end,
             options = {
-                path = "/Users/reinout/repos/llama.cpp/",
-                main_dir = "build/bin/Release/",
+                server_start = {
+                    command = "/Users/reinout/repos/llama.cpp/server",
+                    args = {
+                        "-m",
+                        "/Users/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
+                        "-c",
+                        4096,
+                        "-ngl",
+                        22,
+                    },
+                },
             },
         },
     },
