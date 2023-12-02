@@ -68,7 +68,6 @@ require("nvim-tree").setup({
 --    style = "darker",
 --})
 --require("onedark").load()
-vim.cmd("colorscheme everforest")
 
 --todo
 --vim.api.nvim_create_autocmd("LspAttach", {
@@ -266,9 +265,18 @@ vim.notify = require("notify")
 -- IndentLine
 require("ibl").setup({ scope = { show_end = false } })
 
--- Lualine
--- require("lualine").setup({ options = { theme = "onedark", globalstatus = "true" } })
-require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
+-- Color Scheme
+color_scheme = os.getenv("COLOR_SCHEME")
+if (color_scheme == "green") then
+    require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
+    vim.cmd("colorscheme everforest")
+elseif (color_scheme == "purple") then
+    require("lualine").setup({ options = { theme = "tokyonight-moon", globalstatus = "true" } })
+    vim.cmd("colorscheme tokyonight-moon")
+else
+    require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
+    vim.cmd("colorscheme everforest")
+end
 
 local cmp = require("cmp")
 cmp.setup({

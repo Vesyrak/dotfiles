@@ -18,6 +18,7 @@ export HISTSIZE=10000
 export SAVEHIST=$HISTSIZE
 HIST_STAMPS="dd/mm/yyyy"
 export BAT_THEME="Dracula"
+export COLOR_SCHEME="purple"
 
 export EDITOR="nvim"
 
@@ -142,8 +143,16 @@ alias gpf="git pcf"
 
 # Work
 source ~/.zshrc_work
-# Rice
-[ -f ~/.colors ] && source ~/.colors
+
+# Colors
+if [ "$COLOR_SCHEME" = "green" ]; then
+[ -f ~/.colors_green ] && source ~/.colors_green
+elif [ "$COLOR_SCHEME" = "purple" ]; then
+[ -f ~/.colors_green ] && source ~/.colors_purple
+else
+[ -f ~/.colors_green ] && source ~/.colors_green
+fi
+
 # p10k
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
