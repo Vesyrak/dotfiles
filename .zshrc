@@ -184,6 +184,9 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
+# Pomodoro Timer
+source ~/.pomodoro.sh
+
 # vim: ft=zsh sw=4 sts=4 et
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
