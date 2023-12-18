@@ -112,7 +112,13 @@ wk.register({
             l = { "<cmd>Gitsigns blame_line<cr>", "Blame current line" },
             t = { "<cmd>Gitsigns toggle_current_line_blame<cr>", "Toggle Current Line Blame" },
         },
-        d = { "<cmd>Gitsigns diffthis<cr>", "Diff this file" },
+        d = {
+            name = "Diff",
+            b = { "<cmd>Gitsigns diffthis<cr>", "Diff this file with source branch" },
+            d = { "<cmd>Gitsigns diffthis origin/develop<cr>", "Diff this file with origin/develop" },
+            m = { "<cmd>Gitsigns diffthis origin/master", "Diff this file with origin/master" },
+            v = { "<cmd>DiffviewOpen", "Open DiffView" },
+        },
         f = {
             name = "Buffer",
             r = { "<cmd>Gitsigns reset_buffer<cr>", "Reset Buffer" },
@@ -204,7 +210,8 @@ wk.register({
         o = { "<cmd>Oil<cr>", "Show Oil" },
         s = { "<cmd>NvimTreeFindFile<cr>", "Find File in Tree" },
         t = { "<cmd>NvimTreeToggle<cr>", "Show Tree Sidebar" },
-        u = { "<cmd>UndotreeToggle<cr>", "Show Undo Tree" },
+        u = { "<cmd>UndotreeToggle<cr>", "Show Undo ree" },
+        x = { "<cmd>TodoTelescope<cr>", "Show Todos" },
         z = { "<cmd>ZenMode<cr>", "Toggle Zen Mode" },
     },
 

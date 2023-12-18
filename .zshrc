@@ -18,7 +18,7 @@ export HISTSIZE=10000
 export SAVEHIST=$HISTSIZE
 HIST_STAMPS="dd/mm/yyyy"
 export BAT_THEME="Dracula"
-export COLOR_SCHEME="purple"
+export COLOR_SCHEME="green"
 
 export EDITOR="nvim"
 
@@ -131,6 +131,7 @@ alias scratch='cd ~/notes && vi scratchpad.md'
 
 alias docker_stop_all="docker stop $(docker ps -a -q)"
 alias docker_ez_clean="docker image prune && docker volume prune && docker builder prune"
+alias kmonad="cd ~/.config/kmonad && sudo ./start_kmonad.sh"
 alias keeb="tmux new-session -s kmonad 'cd ~/.config/kmonad && sudo ./start_kmonad.sh'"
 
 alias git-log="git log --oneline --graph --all"

@@ -8,6 +8,12 @@ require("nvim-surround").setup()
 require("oil").setup()
 require("refactoring").setup()
 --require("scope").setup()
+require("todo-comments").setup({
+    highlight = {
+        --        pattern = "[[\b(KEYWORDS)[[:alpha:]]*:]]", -- ripgrep regex
+        --
+    },
+})
 require("trouble").setup()
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
@@ -31,6 +37,7 @@ require("neodev").setup({
     setup_jsonls = false,
     lspconfig = false,
 })
+
 -- wilder
 local wilder = require("wilder")
 wilder.setup({ modes = { ":", "/", "?" } })
@@ -62,20 +69,6 @@ require("nvim-tree").setup({
     hijack_netrw = true,
     filters = { git_ignored = false },
 })
-
---- Color scheme
---require("onedark").setup({
---    style = "darker",
---})
---require("onedark").load()
-
---todo
---vim.api.nvim_create_autocmd("LspAttach", {
---	desc = "LSP actions",
---	callback = function(event)
---		-- Create your keybindings here...
---	end,
---})
 
 -- Debugpy
 local default_config = { justMyCode = false }
@@ -234,6 +227,7 @@ require("nvim-treesitter.configs").setup({
         "markdown",
         "markdown_inline",
         "python",
+        "rust",
         "rst",
         "toml",
         "yaml",
@@ -267,10 +261,10 @@ require("ibl").setup({ scope = { show_end = false } })
 
 -- Color Scheme
 color_scheme = os.getenv("COLOR_SCHEME")
-if (color_scheme == "green") then
+if color_scheme == "green" then
     require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
     vim.cmd("colorscheme everforest")
-elseif (color_scheme == "purple") then
+elseif color_scheme == "purple" then
     require("lualine").setup({ options = { theme = "tokyonight-moon", globalstatus = "true" } })
     vim.cmd("colorscheme tokyonight-moon")
 else
@@ -302,32 +296,32 @@ cmp.setup({
 })
 
 -- LLM
-local llamacpp = require("llm.providers.llamacpp")
-
-require("llm").setup({
-    prompts = {
-        llamacpp = {
-            provider = llamacpp,
-            mode = "buffer",
-
-            builder = function(input)
-                return {
-                    prompt = input,
-                }
-            end,
-            options = {
-                server_start = {
-                    command = "/Users/reinout/repos/llama.cpp/server",
-                    args = {
-                        "-m",
-                        "/Users/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
-                        "-c",
-                        4096,
-                        "-ngl",
-                        22,
-                    },
-                },
-            },
-        },
-    },
-})
+--local llamacpp = require("llm.providers.llamacpp")
+--
+--require("llm").setup({
+--    prompts = {
+--        llamacpp = {
+--            provider = llamacpp,
+--            mode = "buffer",
+--
+--            builder = function(input)
+--                return {
+--                    prompt = input,
+--                }
+--            end,
+--            options = {
+--                server_start = {
+--                    command = "/Users/reinout/repos/llama.cpp/server",
+--                    args = {
+--                        "-m",
+--                        "/Users/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
+--                        "-c",
+--                        4096,
+--                        "-ngl",
+--                        22,
+--                    },
+--                },
+--            },
+--        },
+--    },
+--})

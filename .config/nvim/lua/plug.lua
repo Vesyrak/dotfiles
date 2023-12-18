@@ -76,6 +76,11 @@ return require("lazy").setup({
     { "nvim-treesitter/nvim-treesitter-context" },
 
     --- Navigation ---
+    -- Todo List
+    {
+        "folke/todo-comments.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+    },
     -- Tree sidebar
     -- Updated: 2023-10-30
     {
@@ -87,7 +92,6 @@ return require("lazy").setup({
     -- Updated: 2023-10-30
     {
         "nvim-telescope/telescope.nvim",
-        tag = "0.1.4",
         dependencies = { { "nvim-lua/plenary.nvim" } },
     },
     {
