@@ -134,6 +134,10 @@ alias docker_ez_clean="docker image prune && docker volume prune && docker build
 alias kmonad="cd ~/.config/kmonad && sudo ./start_kmonad.sh"
 alias keeb="tmux new-session -s kmonad 'cd ~/.config/kmonad && sudo ./start_kmonad.sh'"
 
+alias pomo="python3 ~/.dotfiles/scripts/pomodoro.py"
+alias domo="python3 ~/.dotfiles/scripts/pomodoro.py break"
+alias doro="python3 ~/.dotfiles/scripts/pomodoro.py work"
+
 alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
 git config --global alias.pc '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push'
@@ -185,8 +189,6 @@ zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
-# Pomodoro Timer
-source ~/.pomodoro.sh
 
 # vim: ft=zsh sw=4 sts=4 et
 
