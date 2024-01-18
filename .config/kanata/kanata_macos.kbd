@@ -1,0 +1,67 @@
+(defcfg
+;;  cmp-seq ralt
+;;  cmp-seq-delay 5
+;;
+;;  fallthrough true
+;;  allow-cmd true
+)
+
+(defsrc
+  esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  1 2 3 4 5 6 7 8 9 0 - =
+  tab q w u i o p
+  caps a s d f g h j k l
+  lshift z x n m
+  fn lctl lalt lmet rmet ralt left down up rght
+)
+
+
+(deflayer qwerty
+  _ brdn brup _ _ bldn blup prev pp  next mute vold volu
+  _ _ _ _ _ _ _ _ _ _ _ _
+  @stab _ _ _ _ _ _ 
+  @hypr _ _ _ _ _ _ _ _ _
+  @medt _ _ _ _
+  lctl @fn lmet lalt @meh _ XX XX XX XX
+)
+
+(deflayer tabl
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ @lbra @rbra _ _ _ _
+  @base [ ] _ _ _ left down up rght
+  _ @lcbr @rcbr _ _
+  _ _ _ _ _ _ _ _ _ _
+)
+
+(deflayer media
+  _ _ _ _ _ _ _ _ _ _ brdn brup _
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  _ _ _ _ _ _ _
+  @base _ _ _ _ _ prev vold volu next
+  _ _ _ pp mute
+  _ _ _ _ _ _ _ _ _ _
+)
+
+(defalias lbra S-9)
+(defalias rbra S-0)
+(defalias lcbr S-[)
+(defalias rcbr S-])
+
+(defalias metc (tap-hold 200 200 (one-shot 2000 lctl) lmet))
+(defalias stab (tap-hold 200 200 tab (one-shot 2000 (layer-while-held tabl))))
+(defalias hypr (tap-dance-eager 200 (C-M-S-lalt (layer-switch tabl))))
+(defalias medt (tap-dance-eager 200 (lshift (layer-while-held media))))
+(defalias base (layer-switch qwerty ))
+(defalias meh C-S-lalt)
+
+;; Mac FN fix
+(deflayer function
+  _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _
+)
+(defalias fn (one-shot 2000 (layer-while-held function)))
