@@ -19,10 +19,10 @@
 (deflayer qwerty
   _ brdn brup _ _ bldn blup prev pp  next mute vold volu
   _ _ _ _ _ _ _ _ _ _ _ _
-  @stab _ _ _ _ _ _ 
+  @stab _ _ _ _ _ _
   @hypr _ _ _ _ _ _ _ _ _
   @medt _ _ _ _
-  lctl @fn lmet lalt @meh _ XX XX XX XX
+  lctl @fn lmet lalt @warpd _ XX XX XX XX
 )
 
 (deflayer tabl
@@ -48,6 +48,7 @@
 (defalias lcbr S-[)
 (defalias rcbr S-])
 
+(defalias warpd (tap-dance-eager 200 (rmet A-M-x)))
 (defalias metc (tap-hold 200 200 (one-shot 2000 lctl) lmet))
 (defalias stab (tap-hold 200 200 tab (one-shot 2000 (layer-while-held tabl))))
 (defalias hypr (tap-dance-eager 200 (C-M-S-lalt (layer-switch tabl))))
