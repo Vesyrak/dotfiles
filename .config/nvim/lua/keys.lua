@@ -92,6 +92,7 @@ wk.register({
                     prompt_title = "Python Env Library Grep",
                     path_display = { "smart" },
                     search_dirs = { "$VIRTUAL_ENV" },
+                    no_ignore = true,
                 })
             end,
             "Search Python Env Library Files",
@@ -103,6 +104,7 @@ wk.register({
                     prompt_title = "Python Env Library Files",
                     path_display = { "smart" },
                     search_dirs = { "$VIRTUAL_ENV" },
+                    no_ignore = true,
                 })
             end,
             "Find Python Env Library Files",
