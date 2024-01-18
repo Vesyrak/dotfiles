@@ -4,6 +4,14 @@ local wk = require("which-key")
 
 wk.register({
     -- Buffers
+    a = {
+        name = "AI",
+        c = { "<cmd>Model code<cr>", "Suggest code" },
+        g = { "<cmd>Model gitcommit<cr>", "Write a git commit" },
+        s = { "<cmd>Mcancel<cr>", "Stop generation" },
+        w = { "<cmd>Model write<cr>", "Write for me" },
+    },
+
     b = {
         name = "Buffers",
         c = { "<cmd>%bd|e#|bd#<cr>", "Delete All But Current Buffer" },

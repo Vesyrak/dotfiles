@@ -38,6 +38,9 @@ require("neodev").setup({
     lspconfig = false,
 })
 
+-- Start Screen
+require("alpha").setup(require("alpha.themes.dashboard").config)
+
 -- wilder
 local wilder = require("wilder")
 wilder.setup({ modes = { ":", "/", "?" } })
@@ -119,6 +122,7 @@ require("mason-lspconfig").setup({
         --"jedi_language_server",
         --"ruff_lsp",
         --"pylyzer",
+        "pyright",
         "lua_ls",
         "rust_analyzer",
         "yamlls",
@@ -126,6 +130,7 @@ require("mason-lspconfig").setup({
     automatic_installation = true,
 })
 local lspconfig = require("lspconfig")
+require("lspconfig").pyright.setup({})
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 require("mason-lspconfig").setup_handlers({
@@ -137,31 +142,15 @@ require("mason-lspconfig").setup_handlers({
         end
     end,
 })
--- Non-default capabilities
---require("lspconfig").pylyzer.setup({
---    capabilities = lsp_capabilities,
---    on_attach = on_attach,
---    settings = {
---        pylyzer = {
---            diagnostics = false,
---        },
---    },
---})
---require("lspconfig").jedi_language_server.setup({
---    capabilities = lsp_capabilities,
---    on_attach = on_attach,
---    init_options = {
---        diagnostics = { enable = false },
---    },
---    workspace = {
---        extraPaths = {
---            ".venv/lib/python3.9/site-packages",
---            ".venv/lib/python3.10/site-packages",
---            ".venv/lib/python3.11/site-packages",
---            ".venv/lib/python3.12/site-packages",
---        },
---    },
---})
+require("lspconfig").pyright.setup({
+    capabilities = lsp_capabilities,
+    on_attach = on_attach,
+    settings = {
+        python = {
+            venvPath = ".venv/lib",
+        },
+    },
+})
 
 --autopairs
 --local cmp_autopairs = require("nvim-autopairs.completion.cmp")
@@ -183,7 +172,7 @@ null_ls.setup({
         null_ls.builtins.code_actions.proselint,
         null_ls.builtins.code_actions.refactoring,
         null_ls.builtins.diagnostics.checkstyle.with({
-            extra_args = { "-c", "/google_checks.xml" }, -- or "/sun_checks.xml" or path to self written rules
+            extra_args = { "-c", "/google_checks.xml" },
         }),
         null_ls.builtins.diagnostics.codespell,
         null_ls.builtins.diagnostics.commitlint,
@@ -218,17 +207,23 @@ require("nvim-treesitter.configs").setup({
         "bash",
         "comment",
         "css",
+        "diff",
+        "gitattributes",
+        "gitcommit",
+        "gitignore",
         "html",
+        "ini",
         "java",
         "javascript",
         "json",
+        "latex",
         "lua",
         "make",
         "markdown",
         "markdown_inline",
         "python",
-        "rust",
         "rst",
+        "rust",
         "toml",
         "yaml",
     },
@@ -241,10 +236,28 @@ require("nvim-treesitter.configs").setup({
 
 require("telescope.actions")
 require("telescope").setup({
-    pickers = {
-        buffers = {
-            sort_mru = true,
+    defaults = {
+        pickers = {
+            buffers = {
+                sort_mru = true,
+            },
         },
+        file_ignore_patterns = { ".git/", ".cache", "build/", "%.class", "%.pdf", "%.mkv", "%.mp4", "%.zip" },
+
+        layout_config = {
+            horizontal = {
+                prompt_position = "bottom",
+                preview_width = 0.55,
+                results_width = 0.8,
+            },
+            vertical = {
+                mirror = false,
+            },
+            width = 0.85,
+            height = 0.92,
+            preview_cutoff = 120,
+        },
+        prompt_prefix = "  ",
     },
 })
 require("telescope").load_extension("aerial")
@@ -260,7 +273,7 @@ vim.notify = require("notify")
 require("ibl").setup({ scope = { show_end = false } })
 
 -- Color Scheme
-color_scheme = os.getenv("COLOR_SCHEME")
+local color_scheme = os.getenv("COLOR_SCHEME")
 if color_scheme == "green" then
     require("lualine").setup({ options = { theme = "everforest", globalstatus = "true" } })
     vim.cmd("colorscheme everforest")
@@ -296,32 +309,47 @@ cmp.setup({
 })
 
 -- LLM
---local llamacpp = require("llm.providers.llamacpp")
---
---require("llm").setup({
---    prompts = {
---        llamacpp = {
---            provider = llamacpp,
---            mode = "buffer",
---
---            builder = function(input)
---                return {
---                    prompt = input,
---                }
---            end,
---            options = {
---                server_start = {
---                    command = "/Users/reinout/repos/llama.cpp/server",
---                    args = {
---                        "-m",
---                        "/Users/reinout/repos/llama.cpp/models/7B/ggml-model-f16.gguf",
---                        "-c",
---                        4096,
---                        "-ngl",
---                        22,
---                    },
---                },
---            },
---        },
---    },
---})
+local ollama = require("model.providers.ollama")
+local mode = require("model").mode
+
+require("model").setup({
+    prompts = {
+        code = {
+            provider = ollama,
+            params = {
+                model = "stable-code",
+            },
+            builder = function(input)
+                return {
+                    prompt = input,
+                }
+            end,
+        },
+        codeimprove = {
+            provider = ollama,
+            params = {
+                model = "stable-code",
+            },
+            builder = function(input)
+                return {
+                    prompt = "Improve the following code: " .. input,
+                }
+            end,
+        },
+        gitcommit = {
+            provider = ollama,
+            params = {
+                model = "stable-code",
+            },
+            mode = mode.INSERT,
+            builder = function()
+                local git_diff = vim.fn.system({ "git", "diff", "--staged" })
+                return {
+                    prompt = "Write a short commit message according to the Conventional Commits specification for the following git diff: ```\n"
+                        .. git_diff
+                        .. "\n```",
+                }
+            end,
+        },
+    },
+})

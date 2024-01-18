@@ -26,6 +26,9 @@ return require("lazy").setup({
     -- Completed: Thu 01 Jun, 2023
     { "neovim/nvim-lspconfig" },
 
+    -- Big Files
+    { "LunarVim/bigfile.nvim" },
+
     -- DAP
     { "mfussenegger/nvim-dap" },
     { "mfussenegger/nvim-dap-python" },
@@ -96,7 +99,8 @@ return require("lazy").setup({
     },
     {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        build =
+        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
     },
     {
         "nvim-telescope/telescope-live-grep-args.nvim",
@@ -180,7 +184,7 @@ return require("lazy").setup({
     --- Git ---
     -- Git Diff
     -- Completed: Wed 31 May, 2023
-    { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
+    { "sindrets/diffview.nvim",              dependencies = "nvim-lua/plenary.nvim" },
     -- Git change visualiser
     -- Completed: Wed 31 May, 2023
     {
@@ -223,8 +227,30 @@ return require("lazy").setup({
     },
 
     --- Varia ---
+    -- Start Screen
+    {
+        "goolord/alpha-nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
     -- LLM
-    { "gsuuon/llm.nvim" },
+    {
+        "gsuuon/model.nvim",
+        cmd = { "M", "Model", "Mchat" },
+        init = function()
+            vim.filetype.add({
+                extension = {
+                    mchat = "mchat",
+                },
+            })
+        end,
+        ft = "mchat",
+
+        keys = {
+            { "<C-m>d",       ":Mdelete<cr>", mode = "n" },
+            { "<C-m>s",       ":Mselect<cr>", mode = "n" },
+            { "<C-m><space>", ":Mchat<cr>",   mode = "n" },
+        },
+    },
     -- Show markdown
     -- Completed: 2023-08-20 21:45
     { "ellisonleao/glow.nvim" },
