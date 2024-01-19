@@ -26,7 +26,6 @@ export LANG="en_IE.UTF-8"
 export LC_ALL="en_IE.UTF-8"
 
 export ZSH_THEME="powerlevel10k/powerlevel10k"
-#export TMUX_POWERLINE_RCFILE="/Users/reinout/.config/tmux/tmux-powerlinerc"
 
 # Python
 export PYTHONDONTWRITEBYTECODE=1
