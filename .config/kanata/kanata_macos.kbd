@@ -13,7 +13,7 @@
   1 2 3 4 5 6 7 8 9 0 - =
   tab q w u i o p
   caps a s d f g h j k l
-  lshift z x n m , .
+  lshift z x b n m , .
   fn lctl lalt lmet rmet ralt left down up rght
 )
 
@@ -23,7 +23,7 @@
   _ _ _ _ _ _ _ _ _ _ _ _
   @stab _ _ _ _ _ _
   @hypr _ _ _ _ _ _ _ _ _
-  @medt _ _ _ _ _ _
+  @medt _ _ _ _ _ _ _
   lctl @fn lmet lalt @warpd _ XX XX XX XX
 )
 
@@ -32,7 +32,7 @@
   _ _ _ _ _ _ _ _ _ _ _ _
   _ @lbra @rbra _ _ _ _
   @base [ ] _ _ _ left down up rght
-  _ @lcbr @rcbr _ _ _ _
+  _ @lcbr @rcbr _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _
 )
 
@@ -41,7 +41,7 @@
   f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
   _ _ _ _ _ _ _
   @base _ _ _ _ _ prev vold volu next
-  _ _ _ pp mute _ _
+  _ _ _ _ pp mute _ _
   _ _ _ _ _ _ _ _ _ _
 )
 
@@ -66,7 +66,7 @@
   _ _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _
 )
 (defalias fn (one-shot 2000 (layer-while-held function)))
@@ -74,15 +74,15 @@
 (deflayer yabai
   _ _ _ _ _ _ _ _ _ _ _ _ _
   @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _
-  _ _ _ @move-display-left @move-space-left @move-space-right @move-display-right
+  _ _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next
   _ _ _ _ @window-float @window-balance @focus-west @focus-south @focus-north @focus-east
-  _ _ _ @move-west @move-south @move-north @move-east
+  _ _ _ @window-max @move-west @move-south @move-north @move-east
   _ _ _ _ _ _ _ _ _ _
 )
 ;; Yabai
 (defalias
-  display-left (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus west'")
-  display-right (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus east'")
+  display-prev (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus prev'")
+  display-next (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus next'")
 
   window-float (cmd bash -c "su $SUDO_USER -c 'yabai -m window --toggle float --grid 4:4:1:1:2:2'")
   window-max (cmd bash -c "su $SUDO_USER -c 'yabai -m window --toggle zoom-fullscreen'")
@@ -93,10 +93,10 @@
   move-west (cmd bash -c "su $SUDO_USER -c 'yabai -m window --warp west'")
   move-east (cmd bash -c "su $SUDO_USER -c 'yabai -m window --warp east'")
 
-  move-display-left (cmd bash -c "su $SUDO_USER -c 'yabai -m window --display west; yabai -m display --focus west;'")
-  move-display-right (cmd bash -c "su $SUDO_USER -c 'yabai -m window --display east; yabai -m display --focus east;'")
-  move-space-left (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space prev'")
-  move-space-right (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space next'")
+  move-display-prev (cmd bash -c "su $SUDO_USER -c 'yabai -m window --display prev; yabai -m display --focus prev;'")
+  move-display-next (cmd bash -c "su $SUDO_USER -c 'yabai -m window --display next; yabai -m display --focus next;'")
+  move-space-prev (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space prev'")
+  move-space-next (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space next'")
   move-space-1 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 1'")
   move-space-2 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 2'")
   move-space-3 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 3'")
