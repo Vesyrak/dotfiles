@@ -11,7 +11,7 @@
 (defsrc
   esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
   1 2 3 4 5 6 7 8 9 0 - =
-  tab q w u i o p
+  tab q w t u i o p
   caps a s d f g h j k l
   lshift z x b n m , .
   fn lctl lalt lmet rmet ralt left down up rght
@@ -21,15 +21,15 @@
 (deflayer qwerty
   _ brdn brup _ _ bldn blup prev pp  next mute vold volu
   _ _ _ _ _ _ _ _ _ _ _ _
-  @stab _ _ _ _ _ _
-  @hypr _ _ _ _ _ _ _ _ _
+  @stab _ _ _ _ _ _ _
+  @hyplayer _ _ _ _ _ _ _ _ _
   @medt _ _ _ _ _ _ _
   lctl @fn lmet lalt @warpd _ XX XX XX XX
 )
 
 (deflayer tabl
   _ _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
   _ @lbra @rbra _ _ _ _
   @base [ ] _ _ _ left down up rght
   _ @lcbr @rcbr _ _ _ _ _
@@ -39,7 +39,7 @@
 (deflayer media
   _ _ _ _ _ _ _ _ _ _ brdn brup _
   f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-  _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _
   @base _ _ _ _ _ prev vold volu next
   _ _ _ _ pp mute _ _
   _ _ _ _ _ _ _ _ _ _
@@ -54,17 +54,17 @@
 (defalias metc (tap-hold 200 200 (one-shot 2000 lctl) lmet))
 (defalias stab (tap-hold 200 200 tab (one-shot 2000 (layer-while-held tabl))))
 ;;(defalias hypr (tap-dance-eager 200 (C-M-S-lalt (layer-switch tabl))))
-;;(defalias hypr C-M-S-lalt)
-(defalias hypr (multi C-M-S-lalt (layer-while-held yabai)))
+(defalias hypr (multi lctl lsft lmet lalt))
+(defalias hyplayer (multi (layer-while-held yabai) @hypr))
 (defalias medt (tap-dance-eager 200 (lshift (layer-while-held media))))
 (defalias base (layer-switch qwerty ))
-(defalias meh C-S-lalt)
+(defalias meh (multi lctl lsft lalt))
 
 ;; Mac FN fix
 (deflayer function
   _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
   _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _
@@ -74,9 +74,9 @@
 (deflayer yabai
   _ _ _ _ _ _ _ _ _ _ _ _ _
   @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _
-  _ _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next
-  _ _ _ _ @window-float @window-balance @focus-west @focus-south @focus-north @focus-east
-  _ _ _ @window-max @move-west @move-south @move-north @move-east
+  _ _ _ @window-float @move-display-prev @move-space-prev @move-space-next @move-display-next
+  _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east
+  _ _ _ _ @move-west @move-south @move-north @move-east
   _ _ _ _ _ _ _ _ _ _
 )
 ;; Yabai
