@@ -11,6 +11,11 @@ def validate_variable_names():
     click.confirm("Are your variable names consistent?", abort=True)
 
 
+def validate_infra():
+    click.confirm("Did you create relevant infra updates?", abort=True)
+    click.confirm("If you added new config vars, are these added?", abort=True)
+
+
 def validate_feature_correctness():
     click.confirm(
         "Does it meet the Acceptance Criteria?",
@@ -33,6 +38,7 @@ def validate_feature_correctness():
 def validate_sensible_statements():
     click.confirm("Are your statements sensible? Should they be compacted?", abort=True)
     click.confirm("Does your API make sense?", abort=True)
+    click.confirm("If you used a config, can the config be reloaded live?", abort=True)
 
 
 def validate_changelog():
@@ -44,6 +50,7 @@ def validate_tests():
     click.confirm("What about the sad-path tests?", abort=True)
     click.confirm("Do all tests pass?", abort=True)
     click.confirm("Do you have to run the dockerized tests?", abort=True)
+    click.confirm("If you added new config vars, are all states tested?", abort=True)
 
 
 def validate_documentation():

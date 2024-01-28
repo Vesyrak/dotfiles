@@ -114,7 +114,7 @@ bindkey '^[[B' history-substring-search-down
 
 # Aliases
 alias vi="nvim"
-alias vis="nvim -u NONE"
+alias vis="nvim -u NONE -R"
 alias cp="cp -v"
 alias rm="rm -v"
 alias mv="mv -v"

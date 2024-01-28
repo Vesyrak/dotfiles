@@ -393,11 +393,11 @@
     fi
 
     # Styling for different parts of Git status.
-    local       meta=$P10K_LOADING_FG # white foreground
-    local      clean=$P10K_NORMAL_FG # black foreground
-    local   modified=$P10K_ATTENTION_FG # black foreground
-    local  untracked=$P10K_NORMAL_FG # black foreground
-    local conflicted=$P10K_ATTENTION_FG # red foreground
+    local       meta='%7F' # white foreground
+    local      clean='%9F' # black foreground
+    local   modified='%0F' # black foreground
+    local  untracked='%0F' # black foreground
+    local conflicted='%1F' # red foreground
 
     local res
 
