@@ -239,7 +239,7 @@ require("telescope").setup({
     defaults = {
         pickers = {
             buffers = {
-                sort_mru = true,
+                sort_lru = true,
             },
         },
         file_ignore_patterns = { ".git/", ".cache", "build/", "%.class", "%.pdf", "%.mkv", "%.mp4", "%.zip" },

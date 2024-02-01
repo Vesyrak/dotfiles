@@ -8,6 +8,10 @@
 
 )
 
+(deflocalkeys-macos
+  ± 177
+)
+
 (defsrc
   esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
   1 2 3 4 5 6 7 8 9 0 min eql bspc
@@ -17,16 +21,24 @@
   fn lctl lalt lmet spc rmet ralt left down up rght
 )
 
-
 (deflayer qwerty
   _ brdn brup _ _ bldn blup prev pp next mute vold volu
   _ _ _ _ _ _ _ _ _ _ _ _ _
   @stab _ _ _ _ _ _ _ _ _ _ _ _ _
   @hyplayer _ _ _ _ _ _ _ _ _ _ _ _
   @medt _ _ _ _ _ _ _ _ _ _ _ _
-  lctl @fn lmet lalt _ @warpd _ XX XX XX XX
+  lctl @fn lmet lalt _ @warpd _ XX XX XX @col
 )
 
+(deflayer colemak
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  @stab q w f p b j l u y ; { } _
+  @hyplayer a r s t g m n e i o ' \
+  @medt grv z x c d v k h , . / _
+  lctl @fn lmet lalt _ @warpd _ XX XX XX @base
+
+)
 (deflayer tabl
   _ _ _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _ _ _
@@ -60,6 +72,7 @@
 (defalias medt (tap-dance-eager 200 (lshift (layer-while-held media))))
 (defalias base (layer-switch qwerty ))
 (defalias meh (multi lctl lsft lalt))
+(defalias col (layer-switch colemak))
 
 ;; Mac FN fix
 (deflayer function
@@ -74,11 +87,11 @@
 
 (deflayer yabai
   _ _ _ _ _ _ _ _ _ _ _ _ _
-  @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _
-  _ _ _ @window-float _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next _ _ _ _
+  @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _ _
+  _ _ @window-float _ _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next _ _ _ _
   _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east _ _ _
   _ _ _ _ _ @visor _ @move-west @move-south @move-north @move-east _ _
-  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _
 )
 ;; Visor
 (defalias

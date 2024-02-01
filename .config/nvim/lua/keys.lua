@@ -92,6 +92,7 @@ wk.register({
                     prompt_title = "Python Env Library Grep",
                     path_display = { "smart" },
                     search_dirs = { "$VIRTUAL_ENV" },
+                    additional_args = { "--no-ignore-vcs" },
                     no_ignore = true,
                 })
             end,
