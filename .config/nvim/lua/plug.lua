@@ -18,12 +18,12 @@ vim.opt.rtp:prepend(lazypath)
 return require("lazy").setup({
     --- Core functionality ---
     -- lspconfigs
-    -- Completed: Thu 01 Jun, 2023
+    -- Completed: Mon 26 Feb, 2024
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
 
     -- Configurations for LSP servers
-    -- Completed: Thu 01 Jun, 2023
+    -- Completed: Mon 26 Feb, 2024
     { "neovim/nvim-lspconfig" },
 
     -- Big Files
@@ -56,31 +56,48 @@ return require("lazy").setup({
     -- use({ "windwp/nvim-autopairs" },
 
     -- none-ls
-    -- Completed: 2023-10-30
+    -- Completed: Tue 27 Feb, 2024
     {
         "nvimtools/none-ls.nvim",
         dependencies = { { "nvim-lua/plenary.nvim" } },
     },
 
     -- treesitter: Highlighting
-    -- Completed: Wed 31 May, 2023
+    -- Completed: Mon 26 Feb, 2024
     {
         "nvim-treesitter/nvim-treesitter",
         --build = ":TSUpdate",
     },
     -- treesitter context: Highlighting which context/indent you are in
     -- if context is out of screen
-    -- Completed: Wed 31 May, 2023
+    -- Completed: Mon 26 Feb, 2024
     { "nvim-treesitter/nvim-treesitter-context" },
 
-    --- Navigation ---
-    -- Todo List
+    -- Todo Highlighting
+    -- For some reason it doesn't work in `init_plug`, and I'm too lazy
+    -- to figure out why
+    -- Completed: Mon 26 Feb, 2024
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {
+            highlight = {
+                keyword = "bg",
+                pattern = [[.*<(KEYWORDS)\s*]],
+                max_line_len = 100,
+            },
+            -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
+            search = {
+                pattern = [[ \b(KEYWORDS)\b]],
+            },
+        },
     },
+
+    --- Navigation ---
     -- Tree sidebar
-    -- Updated: 2023-10-30
+    -- Completed: Tue 27 Feb, 2024
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -94,15 +111,20 @@ return require("lazy").setup({
     },
     {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build =
-        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
     },
     {
         "nvim-telescope/telescope-live-grep-args.nvim",
     },
+    {
+        "nvim-telescope/telescope-frecency.nvim",
+    },
+    {
+        "nvim-telescope/telescope-ui-select.nvim",
+    },
 
     -- Find key used for action
-    -- Updated: 2023-10-30
+    -- Completed: Mon 26 Feb, 2024
     {
         "folke/which-key.nvim",
         config = function()
@@ -112,12 +134,18 @@ return require("lazy").setup({
         end,
     },
     -- File structure view
-    -- Updated: 2023-10-30
+    -- Completed: Tue 27 Feb, 2024
     { "stevearc/aerial.nvim" },
 
     --- Useful macros ---
+    --
+    {
+        "ThePrimeagen/harpoon",
+        branch = "harpoon2",
+        dependencies = { "nvim-lua/plenary.nvim" },
+    },
     -- Show errors
-    -- Completed: Wed 31 May, 2023
+    -- Completed: Tue 27 Feb, 2024
     {
         "folke/trouble.nvim",
         dependencies = "nvim-tree/nvim-web-devicons",
@@ -128,10 +156,10 @@ return require("lazy").setup({
 
     --- Visual ---
     -- Illuminate same words
-    -- Completed: 2023-08-23
+    -- Completed: Tue 27 Feb, 2024
     { "RRethy/vim-illuminate" },
     -- Wildmenu rice
-    -- Completed: 2023-08-23
+    -- Completed: Mon 26 Feb, 2024
     { "gelguy/wilder.nvim" },
     -- Lualine
     -- Completed (but can be further riced): Wed 31 May, 2023
@@ -144,19 +172,21 @@ return require("lazy").setup({
     {
         "folke/zen-mode.nvim",
         opts = {
+            width = 80,
             kitty = {
                 enabled = true,
-                font = "+4", -- font size increment
+                font = "+20", -- font size increment
             },
         },
     },
     -- Theme
-    -- Completed: Wed 31 May, 2023
+    -- Completed: Tue 27 Feb, 2024
     { "navarasu/onedark.nvim" },
     -- Other Theme
-    -- Completed: 2023-08-22 09:08
+    -- Completed: Tue 27 Feb, 2024
     { "sainnhe/edge" },
     -- Green Theme
+    -- Completed: Tue 27 Feb, 2024
     { "sainnhe/everforest" },
     -- Purple Theme
     {
@@ -167,25 +197,25 @@ return require("lazy").setup({
     },
 
     -- Notifications
-    -- Updated: 2023-10-30 09:02
+    -- Completed: Tue 27 Feb, 2024
     { "rcarriga/nvim-notify" },
 
     -- Indent lines
-    -- Completed: 2023-10-30
+    -- Completed: Tue 27 Feb, 2024
     { "lukas-reineke/indent-blankline.nvim", main = "ibl" },
 
     --- Git ---
     -- Git Diff
     -- Completed: Wed 31 May, 2023
-    { "sindrets/diffview.nvim",              dependencies = "nvim-lua/plenary.nvim" },
+    { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
     -- Git change visualiser
-    -- Completed: Wed 31 May, 2023
+    -- Completed: Mon 26 Feb, 2024
     {
         "lewis6991/gitsigns.nvim",
         tag = "release",
     },
     -- Open in remote
-    -- Completed: 2023-08-28
+    -- Completed: Mon 26 Feb, 2024
     { "ruanyl/vim-gh-line" },
 
     --- Tools ---
@@ -216,34 +246,50 @@ return require("lazy").setup({
     },
 
     --- Varia ---
-    -- Start Screen
+    -- Better Quickfix
     {
-        "goolord/alpha-nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        "kevinhwang91/nvim-bqf",
     },
+
     -- LLM
     {
-        "gsuuon/model.nvim",
-        cmd = { "M", "Model", "Mchat" },
-        init = function()
-            vim.filetype.add({
-                extension = {
-                    mchat = "mchat",
-                },
-            })
-        end,
-        ft = "mchat",
-
-        keys = {
-            { "<C-m>d",       ":Mdelete<cr>", mode = "n" },
-            { "<C-m>s",       ":Mselect<cr>", mode = "n" },
-            { "<C-m><space>", ":Mchat<cr>",   mode = "n" },
+        "David-Kunz/gen.nvim",
+        opts = {
+            model = "stable-code", -- The default model to use.
+            display_mode = "float", -- The display mode. Can be "float" or "split".
+            show_prompt = false, -- Shows the Prompt submitted to Ollama.
+            show_model = false, -- Displays which model you are using at the beginning of your chat session.
+            no_auto_close = false, -- Never closes the window automatically.
+            init = function(options)
+                pcall(io.popen, "ollama serve > /dev/null 2>&1 &")
+            end,
+            -- Function to initialize Ollama
+            command = "curl --silent --no-buffer -X POST http://localhost:11434/api/generate -d $body",
+            -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
+            -- This can also be a lua function returning a command string, with options as the input parameter.
+            -- The executed command must return a JSON object with { response, context }
+            -- (context property is optional).
+            debug = false, -- Prints errors and the command which is run.
         },
     },
+
+    -- Templates
+    {
+        "glepnir/template.nvim",
+        cmd = { "Template", "TemProject" },
+        config = function()
+            require("template").setup({
+                temp_dir = "~/.config/nvim/templates/",
+            })
+        end,
+    },
+
     -- Show markdown
-    -- Completed: 2023-08-20 21:45
+    -- Completed: Mon 26 Feb, 2024
     { "ellisonleao/glow.nvim" },
+
     -- Undotree
+    -- Completed: Mon 26 Feb, 2024
     { "mbbill/undotree" },
 
     config = {

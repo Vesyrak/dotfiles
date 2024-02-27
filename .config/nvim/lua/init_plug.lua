@@ -97,6 +97,10 @@ aerial.setup({
         },
     },
 })
+
+--Harpoon
+require("harpoon").setup()
+
 -- Mason/cmp
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -108,6 +112,7 @@ require("mason-lspconfig").setup({
         --"jedi_language_server",
         --"ruff_lsp",
         --"pylyzer",
+        "marksman",
         "pyright",
         "lua_ls",
         "rust_analyzer",
@@ -172,7 +177,7 @@ null_ls.setup({
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.google_java_format,
         null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.jq,
+        null_ls.builtins.formatting.fixjson,
         null_ls.builtins.formatting.rustfmt,
         null_ls.builtins.formatting.prettier.with({
             filetypes = { "html", "css", "markdown" },
@@ -247,10 +252,12 @@ require("telescope").setup({
     },
 })
 require("telescope").load_extension("aerial")
+require("telescope").load_extension("frecency")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("live_grep_args")
-require("telescope").load_extension("refactoring")
 require("telescope").load_extension("notify")
+require("telescope").load_extension("refactoring")
+require("telescope").load_extension("ui-select")
 
 -- vim-notify
 vim.notify = require("notify")

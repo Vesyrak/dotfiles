@@ -2,6 +2,26 @@
 
 local wk = require("which-key")
 
+local harpoon = require("harpoon")
+local conf = require("telescope.config").values
+local function harpoon_telescope(harpoon_files)
+    local file_paths = {}
+    for _, item in ipairs(harpoon_files.items) do
+        table.insert(file_paths, item.value)
+    end
+
+    require("telescope.pickers")
+        .new({}, {
+            prompt_title = "Harpoon",
+            finder = require("telescope.finders").new_table({
+                results = file_paths,
+            }),
+            previewer = conf.file_previewer({}),
+            sorter = conf.generic_sorter({}),
+        })
+        :find()
+end
+
 wk.register({
     -- Buffers
     a = {
@@ -82,6 +102,7 @@ wk.register({
     -- Telescope / Find
     f = {
         name = "Telescope",
+        a = { "<cmd>Telescope frecency workspace=CWD<cr>", "Search Frecency" },
         b = { "<cmd>Telescope buffers<cr>", "Search Open Buffers" },
         f = { "<cmd>Telescope find_files<cr>", "Find Files" },
         g = { "<cmd>Telescope grep_string<cr>", "Grep String" },
@@ -110,6 +131,7 @@ wk.register({
             end,
             "Find Python Env Library Files",
         },
+        n = { "<cmd>Telescope notifications<cr>", "Show notifications" },
         r = { "<cmd>Telescope resume<cr>", "Resume Previous Search" },
         s = { "<cmd>Telescope live_grep_args<cr>", "Search Files" },
         w = { "<cmd>Telescope spell_suggest<cr>", "Search Spell Suggestions" },
@@ -138,7 +160,6 @@ wk.register({
         h = {
             name = "Hunk",
             p = { "<cmd>Gitsigns preview_hunk<cr>", "Preview Hunk" },
-            q = { "<cmd>Gitsigns setqflist<cr>", "Something something gitsigns" },
             r = { "<cmd>Gitsigns reset_hunk<cr>", "Reset Hunk" },
             s = { "<cmd>Gitsigns stage_hunk<cr>", "Stage Hunk" },
             u = { "<cmd>Gitsigns undo_stage_hunk<cr>", "Undo Stage Hunk" },
@@ -149,10 +170,26 @@ wk.register({
             l = { "<Plug>(gh-line)", "Open Web Repository Line" },
             r = { "<Plug>(gh-repo)", "Open Web Repository" },
         },
+        q = { "<cmd>Gitsigns setqflist<cr>", "Show buffer gitsigns" },
         s = {
             name = "Status",
             b = { "<cmd>Telescope git_branches<cr>", "Show Branches" },
             t = { "<cmd>Telescope git_status<cr>", "Show Status" },
+        },
+    },
+    h = {
+        name = "Harpoon",
+        a = {
+            function()
+                harpoon:list():append()
+            end,
+            "Add",
+        },
+        p = {
+            function()
+                harpoon_telescope(harpoon:list())
+            end,
+            "View files",
         },
     },
     -- Tab (Layers)
@@ -212,16 +249,18 @@ wk.register({
             l = { "<cmd>set background=light<cr>", "Light Colorscheme" },
         },
         e = {
-            name = "Errors",
-            s = { "<cmd>TroubleToggle<cr>", "Show Trouble for Workspace" },
             f = { "<cmd>TroubleToggle document_diagnostics<cr>", "Show Trouble for File" },
+            n = { '<cmd>lua require("trouble").next({skip_groups = true, jump = true})<cr>', "Go to next entry" },
+            p = {
+                '<cmd>lua require("trouble").previous({skip_groups = true, jump = true})<cr>',
+                "Go to previous entry",
+            },
         },
         f = { "<cmd>NvimTreeFocus<cr>", "Focus on Tree Sidebar" },
         m = { "<cmd>Glow<cr>", "Show Markdown" },
-        o = { "<cmd>Oil<cr>", "Show Oil" },
         s = { "<cmd>NvimTreeFindFile<cr>", "Find File in Tree" },
         t = { "<cmd>NvimTreeToggle<cr>", "Show Tree Sidebar" },
-        u = { "<cmd>UndotreeToggle<cr>", "Show Undo ree" },
+        u = { "<cmd>UndotreeToggle<cr>", "Show Undo Tree" },
         x = { "<cmd>TodoTelescope<cr>", "Show Todos" },
         z = { "<cmd>ZenMode<cr>", "Toggle Zen Mode" },
     },
