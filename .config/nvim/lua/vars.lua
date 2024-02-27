@@ -1,6 +1,8 @@
 --[[ vars.lua ]]
 
 local g = vim.g
+local ag = vim.api.nvim_create_augroup
+local au = vim.api.nvim_create_autocmd
 
 -- Copy to clipboard
 vim.cmd("set clipboard=unnamedplus")
@@ -23,15 +25,24 @@ vim.o.packpath = vim.o.packpath .. "," .. packer_path
 --g["test#strategy"] = "neovim"
 --g["test#python#pytest#options"] = "--disable-warnings"
 
-local md_augroup = vim.api.nvim_create_augroup("Markdown Settings", { clear = true })
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = { "*.md" },
+--" For documentation files, enable text wrapping and spell checking"
+local md_augroup = ag("Markdown Settings", { clear = true })
+au({ "BufWritePre" }, {
+    pattern = { "*.md", "*.rst" },
     group = md_augroup,
     command = "setlocal textwidth=80 wrap",
 })
 
-local python_augroup = vim.api.nvim_create_augroup("Python Settings", { clear = true })
+local python_augroup = ag("Python Settings", { clear = true })
+---Highlight yanked text
+--
+au("TextYankPost", {
+    group = ag("yank_highlight", {}),
+    pattern = "*",
+    callback = function()
+        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300 })
+    end,
+})
 --vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
 --    pattern = { "*.py" },
 --    group = python_augroup,
