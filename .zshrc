@@ -58,6 +58,7 @@ plugins=(
     vi-mode
     wd
     zbell
+    zoxide
 )
 
 source $ZSH/oh-my-zsh.sh
