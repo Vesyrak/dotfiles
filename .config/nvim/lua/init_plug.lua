@@ -1,4 +1,6 @@
--- Simple setups
+--- Simple setups
+
+require("bigfile").setup()
 --require("bufferline").setup()
 require("gitsigns").setup()
 require("luasnip").setup()
