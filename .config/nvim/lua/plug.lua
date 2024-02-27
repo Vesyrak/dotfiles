@@ -27,13 +27,8 @@ return require("lazy").setup({
     { "neovim/nvim-lspconfig" },
 
     -- Big Files
+    -- Completed: Mon 26 Feb, 2024
     { "LunarVim/bigfile.nvim" },
-
-    -- DAP
-    { "mfussenegger/nvim-dap" },
-    { "mfussenegger/nvim-dap-python" },
-    { "rcarriga/nvim-dap-ui" },
-    { "HiPhish/debugpy.nvim" },
 
     -- AutoComplete
     -- Completed (Sortof): Thu 01 Jun, 2023
@@ -130,8 +125,6 @@ return require("lazy").setup({
     -- nvim-surround
     -- Updated: 2023-10-30
     { "kylechui/nvim-surround" },
-    -- Comment
-    { "numToStr/Comment.nvim" },
 
     --- Visual ---
     -- Illuminate same words
@@ -196,10 +189,6 @@ return require("lazy").setup({
     { "ruanyl/vim-gh-line" },
 
     --- Tools ---
-    -- Oil
-    -- Completed: 2023-08-28
-    { "stevearc/oil.nvim" },
-
     -- Testing
     -- Completed: 2023-08-23
     {

@@ -7,21 +7,13 @@ require("luasnip").setup()
 require("luasnip.loaders.from_vscode").lazy_load()
 -- require("nvim-autopairs").setup()
 require("nvim-surround").setup()
-require("oil").setup()
 require("refactoring").setup()
 --require("scope").setup()
-require("todo-comments").setup({
-    highlight = {
-        --        pattern = "[[\b(KEYWORDS)[[:alpha:]]*:]]", -- ripgrep regex
-        --
-    },
-})
 require("trouble").setup()
+
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
 
-require("dap-python").setup("~/.virtualenvs/debugpy/bin/python")
-require("dapui").setup()
 -- Illuminate
 require("illuminate").configure({
     delay = 50,
@@ -39,9 +31,6 @@ require("neodev").setup({
     setup_jsonls = false,
     lspconfig = false,
 })
-
--- Start Screen
-require("alpha").setup(require("alpha.themes.dashboard").config)
 
 -- wilder
 local wilder = require("wilder")
@@ -77,11 +66,6 @@ require("nvim-tree").setup({
 
 -- Debugpy
 local default_config = { justMyCode = false }
-
-require("debugpy").run = function(config)
-    local final = vim.tbl_extend("keep", config, default_config)
-    require("dap").run(final)
-end
 
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -308,50 +292,4 @@ cmp.setup({
     }, {
         { name = "buffer" },
     }),
-})
-
--- LLM
-local ollama = require("model.providers.ollama")
-local mode = require("model").mode
-
-require("model").setup({
-    prompts = {
-        code = {
-            provider = ollama,
-            params = {
-                model = "stable-code",
-            },
-            builder = function(input)
-                return {
-                    prompt = input,
-                }
-            end,
-        },
-        codeimprove = {
-            provider = ollama,
-            params = {
-                model = "stable-code",
-            },
-            builder = function(input)
-                return {
-                    prompt = "Improve the following code: " .. input,
-                }
-            end,
-        },
-        gitcommit = {
-            provider = ollama,
-            params = {
-                model = "stable-code",
-            },
-            mode = mode.INSERT,
-            builder = function()
-                local git_diff = vim.fn.system({ "git", "diff", "--staged" })
-                return {
-                    prompt = "Write a short commit message according to the Conventional Commits specification for the following git diff: ```\n"
-                        .. git_diff
-                        .. "\n```",
-                }
-            end,
-        },
-    },
 })
