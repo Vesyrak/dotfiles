@@ -2,7 +2,9 @@
 
 require("bigfile").setup()
 --require("bufferline").setup()
+require("dressing").setup()
 require("gitsigns").setup()
+require("headlines").setup()
 require("luasnip").setup()
 require("luasnip.loaders.from_vscode").lazy_load()
 -- require("nvim-autopairs").setup()
@@ -10,6 +12,12 @@ require("nvim-surround").setup()
 require("refactoring").setup()
 --require("scope").setup()
 require("trouble").setup()
+
+-- vim-notify
+vim.notify = require("notify")
+vim.notify.setup({
+    background_colour = "#000000",
+})
 
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
@@ -19,6 +27,17 @@ require("illuminate").configure({
     delay = 50,
 })
 
+require("zen-mode").setup({
+    window = {
+        width = 100,
+    },
+    plugins = {
+        kitty = {
+            enabled = true,
+            font = "+4", -- font size increment
+        },
+    },
+})
 -- Testing
 require("neotest").setup({
     adapters = {
@@ -120,9 +139,9 @@ require("mason-lspconfig").setup({
     },
     automatic_installation = true,
 })
-local lspconfig = require("lspconfig")
-require("lspconfig").pyright.setup({})
+
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+local lspconfig = require("lspconfig")
 
 require("mason-lspconfig").setup_handlers({
     function(server_name)
@@ -157,7 +176,7 @@ local null_ls = require("null-ls")
 null_ls.setup({
     debug = true,
     sources = {
-        null_ls.builtins.code_actions.cspell,
+        --    null_ls.builtins.code_actions.cspell,
         null_ls.builtins.code_actions.gitrebase,
         null_ls.builtins.code_actions.gitsigns,
         null_ls.builtins.code_actions.proselint,
@@ -167,18 +186,17 @@ null_ls.setup({
         }),
         null_ls.builtins.diagnostics.codespell,
         null_ls.builtins.diagnostics.commitlint,
-        null_ls.builtins.diagnostics.jsonlint,
-        null_ls.builtins.diagnostics.flake8,
+        --null_ls.builtins.diagnostics.jsonlint,
         null_ls.builtins.diagnostics.mypy.with({}),
         null_ls.builtins.diagnostics.terraform_validate,
         null_ls.builtins.diagnostics.tfsec,
         null_ls.builtins.diagnostics.yamllint,
-        null_ls.builtins.formatting.autoflake,
+        --        null_ls.builtins.formatting.autoflake,
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.google_java_format,
         null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.fixjson,
-        null_ls.builtins.formatting.rustfmt,
+        --        null_ls.builtins.formatting.fixjson,
+        --       null_ls.builtins.formatting.rustfmt,
         null_ls.builtins.formatting.prettier.with({
             filetypes = { "html", "css", "markdown" },
             disabled_filetypes = { "yaml" },
@@ -186,11 +204,15 @@ null_ls.setup({
         null_ls.builtins.formatting.ocdc,
         null_ls.builtins.formatting.stylua.with({ extra_args = { "--indent-type", "Spaces" } }),
         null_ls.builtins.formatting.terraform_fmt,
-        null_ls.builtins.formatting.trim_newlines,
-        null_ls.builtins.formatting.trim_whitespace,
+        --null_ls.builtins.formatting.trim_newlines,
     },
     on_attach = on_attach,
 })
+--require("none-ls.diagnostics.flake8").with({
+--    extra_args = { "--max-line-length", "100" },
+--})
+
+require("editorconfig").trim_trailing_whitespace = true
 
 -- Treesitter
 require("nvim-treesitter.configs").setup({
@@ -252,15 +274,12 @@ require("telescope").setup({
     },
 })
 require("telescope").load_extension("aerial")
-require("telescope").load_extension("frecency")
+--require("telescope").load_extension("frecency")
 require("telescope").load_extension("fzf")
 require("telescope").load_extension("live_grep_args")
 require("telescope").load_extension("notify")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("ui-select")
-
--- vim-notify
-vim.notify = require("notify")
 
 -- IndentLine
 require("ibl").setup({ scope = { show_end = false } })
@@ -278,13 +297,9 @@ else
     vim.cmd("colorscheme everforest")
 end
 
+-- Autocomplete
 local cmp = require("cmp")
 cmp.setup({
-    snippet = {
-        expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-        end,
-    },
     mapping = cmp.mapping.preset.insert({
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -292,10 +307,15 @@ cmp.setup({
         ["<C-e>"] = cmp.mapping.abort(),
         ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
+    snippet = {
+        expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+        end,
+    },
     sources = cmp.config.sources({
         { name = "nvim_lsp_signature_help" },
         { name = "nvim_lsp" },
-        --{ name = "luasnip" },
+        { name = "luasnip" },
     }, {
         { name = "buffer" },
     }),

@@ -61,6 +61,7 @@ return require("lazy").setup({
         "nvimtools/none-ls.nvim",
         dependencies = { { "nvim-lua/plenary.nvim" } },
     },
+    { "nvimtools/none-ls-extras.nvim" },
 
     -- treesitter: Highlighting
     -- Completed: Mon 26 Feb, 2024
@@ -111,7 +112,8 @@ return require("lazy").setup({
     },
     {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        build =
+        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
     },
     {
         "nvim-telescope/telescope-live-grep-args.nvim",
@@ -155,6 +157,19 @@ return require("lazy").setup({
     { "kylechui/nvim-surround" },
 
     --- Visual ---
+    -- Updated UI
+    -- Completed: Tue 2 Apr, 2024
+    {
+        'stevearc/dressing.nvim',
+        opts = {},
+    },
+
+    -- Headline Highlighting
+    -- Completed: Mon 25 Mar, 2024
+    {
+        "lukas-reineke/headlines.nvim",
+        after = "nvim-treesitter",
+    },
     -- Illuminate same words
     -- Completed: Tue 27 Feb, 2024
     { "RRethy/vim-illuminate" },
@@ -168,17 +183,11 @@ return require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons", opt = true },
     },
     -- Zen Mode
-    -- Completed: 2023-08-22 09:23
+    -- Completed: Wed 28 Feb, 2024
     {
         "folke/zen-mode.nvim",
-        opts = {
-            width = 80,
-            kitty = {
-                enabled = true,
-                font = "+20", -- font size increment
-            },
-        },
     },
+
     -- Theme
     -- Completed: Tue 27 Feb, 2024
     { "navarasu/onedark.nvim" },
@@ -207,7 +216,7 @@ return require("lazy").setup({
     --- Git ---
     -- Git Diff
     -- Completed: Wed 31 May, 2023
-    { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
+    { "sindrets/diffview.nvim",              dependencies = "nvim-lua/plenary.nvim" },
     -- Git change visualiser
     -- Completed: Mon 26 Feb, 2024
     {
@@ -230,6 +239,7 @@ return require("lazy").setup({
             "nvim-neotest/neotest-python",
             "nvim-neotest/neotest-plenary",
             "folke/neodev.nvim",
+            "nvim-neotest/nvim-nio",
         },
     },
     -- Tmux interaction
@@ -255,11 +265,11 @@ return require("lazy").setup({
     {
         "David-Kunz/gen.nvim",
         opts = {
-            model = "stable-code", -- The default model to use.
+            model = "stable-code",  -- The default model to use.
             display_mode = "float", -- The display mode. Can be "float" or "split".
-            show_prompt = false, -- Shows the Prompt submitted to Ollama.
-            show_model = false, -- Displays which model you are using at the beginning of your chat session.
-            no_auto_close = false, -- Never closes the window automatically.
+            show_prompt = false,    -- Shows the Prompt submitted to Ollama.
+            show_model = false,     -- Displays which model you are using at the beginning of your chat session.
+            no_auto_close = false,  -- Never closes the window automatically.
             init = function(options)
                 pcall(io.popen, "ollama serve > /dev/null 2>&1 &")
             end,

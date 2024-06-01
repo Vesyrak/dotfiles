@@ -7,6 +7,8 @@ local au = vim.api.nvim_create_autocmd
 -- Copy to clipboard
 vim.cmd("set clipboard=unnamedplus")
 
+g.editorconfig = true
+
 -- Colors
 g.t_co = 256
 g.background = "dark"
@@ -43,6 +45,7 @@ au("TextYankPost", {
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300 })
     end,
 })
+g.nonels_supress_issue58 = true
 --vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
 --    pattern = { "*.py" },
 --    group = python_augroup,

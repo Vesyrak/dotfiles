@@ -149,8 +149,9 @@ wk.register({
             name = "Diff",
             b = { "<cmd>Gitsigns diffthis<cr>", "Diff this file with source branch" },
             d = { "<cmd>Gitsigns diffthis origin/develop<cr>", "Diff this file with origin/develop" },
-            m = { "<cmd>Gitsigns diffthis origin/master", "Diff this file with origin/master" },
-            v = { "<cmd>DiffviewOpen", "Open DiffView" },
+            m = { "<cmd>Gitsigns diffthis origin/master<cr>", "Diff this file with origin/master" },
+            n = { "<cmd>Gitsigns diffthis origin/main<cr>", "Diff this file with origin/main" },
+            v = { "<cmd>DiffviewOpen<cr>", "Open DiffView" },
         },
         f = {
             name = "Buffer",
@@ -181,7 +182,7 @@ wk.register({
         name = "Harpoon",
         a = {
             function()
-                harpoon:list():append()
+                harpoon:list():add()
             end,
             "Add",
         },
@@ -281,11 +282,9 @@ wk.register({
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
+    desc = "LSP actions",
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
-        -- Enable completion triggered by <c-x><c-o>
-        vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
-
         -- Buffer local mappings.
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         local opts = { buffer = ev.buf }
