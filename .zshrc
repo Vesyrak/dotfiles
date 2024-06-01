@@ -4,7 +4,6 @@
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 export NNN_PLUG='f:finder;o:fzopen;d:diffs;t:nmount;1:imgview;c:!convert "$nnn" png:- | xclip -sel clipboard -t image/png*;C:!cp -rv "$nnn" "$nnn".cp;g:-!git diff;l:git-log;u:getplugs;y:-!sync*;U:preview-tui'
 
@@ -31,6 +30,7 @@ export ZSH_THEME="powerlevel10k/powerlevel10k"
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONBREAKPOINT="ipdb.set_trace"
 
+export CONDA_AUTO_ACTIVATE_BASE=false
 
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
@@ -115,6 +115,7 @@ bindkey '^[[B' history-substring-search-down
 
 # Aliases
 alias vi="nvim"
+alias vit="nvim -u NONE"
 alias cp="cp -v"
 alias rm="rm -v"
 alias mv="mv -v"
@@ -133,9 +134,16 @@ alias docker_ez_clean="docker image prune && docker volume prune && docker build
 alias kmonad="cd ~/.config/kmonad && sudo ./start_kmonad.sh"
 alias keeb="tmux new-session -s kmonad 'cd ~/.config/kmonad && sudo ./start_kmonad.sh'"
 
+alias kanata_select="~/.dotfiles/scripts/kanata_select.sh"
 alias pomo="python3 ~/.dotfiles/scripts/pomodoro.py"
 alias domo="python3 ~/.dotfiles/scripts/pomodoro.py break"
 alias doro="python3 ~/.dotfiles/scripts/pomodoro.py work"
+
+alias doing='~/.dotfiles/scripts/addnote.sh --header "## $(date +%a\ %Y-%m-%d)"'
+alias todoing='~/.dotfiles/scripts/addnote.sh --task --header "# TODO"'
+alias improvements='~/.dotfiles/scripts/addnote.sh --task --header "# Improvements"'
+alias reflect='function _reflect() { week=$(date +%V-%Y); vi "$HOME/notes/weekly_notes/week-${week}.md"}; _reflect'
+alias refract='function _refract() { week=$(date +%V-%Y); cd "$HOME/notes/weekly_notes/"; vi "week-${week}.md"}; _refract'
 
 alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
