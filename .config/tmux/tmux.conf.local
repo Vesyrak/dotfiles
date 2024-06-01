@@ -144,7 +144,7 @@ set -g mouse off
 set -s escape-time 1
 setw -g mode-keys vi
 set-option -g default-shell /bin/zsh
-set-option -g automatic-rename-format '#{b:pane_current_path}'
+set-option -g automatic-rename-format '#{b:pane_current_path}: #{pane_current_command}'
 
 
 # -- keybinds ------------------------------------------------------------------
