@@ -8,41 +8,70 @@
 
 )
 
-(defsrc
-  esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-  1 2 3 4 5 6 7 8 9 0 - =
-  tab q w t u i o p
-  caps a s d f g h j k l
-  lshift z x b n m , .
-  rctl rmet lalt ralt left down up rght
+(deflocalkeys-macos
+  ± 177
 )
 
+(defsrc
+  esc f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  1 2 3 4 5 6 7 8 9 0 min eql bspc
+  tab q w e r t y u i o p { } enter
+  caps a s d f g h j k l ; ' \
+  lshift grv z x c v b n m , . / rshift
+  fn lctl lalt lmet spc rmet ralt left down up rght
+)
 
+(deflayer qwerty-mac
+  _ brdn brup _ _ bldn blup prev pp next mute vold volu
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  @stab _ _ _ _ _ _ _ _ _ _ _ _ _
+  @hyplayer _ _ _ _ _ _ _ _ _ _ _ _
+  @medt _ _ _ _ _ _ _ _ _ _ _ _
+  lctl @fn lmet lalt _ @warpd _ XX XX XX XX
+)
 (deflayer qwerty
-  _ brdn brup _ _ bldn blup prev pp  next mute vold volu
-  _ _ _ _ _ _ _ _ _ _ _ _
-  @stab _ _ _ _ _ _ _
-  @hyplayer _ _ _ _ _ _ _ _ _
-  @medt _ _ _ _ _ _ _
-  rmet rctl _  @warpd XX XX XX XX
+  _ brdn brup _ _ bldn blup prev pp next mute vold volu
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  @stab _ _ _ _ _ _ _ _ _ _ _ _ _
+  @hyplayer _ _ _ _ _ _ _ _ _ _ _ _
+  @medt _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ @warpd _ _ _ _ _
+)
+
+(deflayer plebeian
+  _ brdn brup _ _ bldn blup prev pp next mute vold volu
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  @medt _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _
 )
 
 (deflayer tabl
   _ _ _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _ _ _
-  _ @lbra @rbra _ _ _ _
-  @base [ ] _ _ _ left down up rght
-  _ @lcbr @rcbr _ _ _ _ _
-  _ _ _ _ _ _  _ _
+  _ @lbra @rbra _ _ _ _ _ _ _ _ _ _ _
+  _ [ ] _ _ _ left down up rght _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _
 )
 
 (deflayer media
-  _ _ _ _ _ _ _ _ _ _ brdn brup _
-  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-  _ _ _ _ _ _ _ _
-  @base _ _ _ _ _ prev vold volu next
-  _ _ _ _ pp mute _ _
-  _ _ _ _ _ _  _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ @scrm _ _ _ _ prev vold volu next _ _ _
+  _ _ @qw @qwmac @pleb _ _ pp mute _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _
+)
+
+(deflayer scream
+  a a a a a a a a a a a a a
+  a a a a a a a a a a a a a
+  a a a a a a a a a a a a a a
+  a a a a a a a a a a a a a
+  @medta a a a a a a a a a a a a
+  a a a a a a a a a a a
 )
 
 (defalias lbra S-9)
@@ -58,28 +87,36 @@
 (defalias hyplayer (multi (layer-while-held yabai) @hypr))
 
 (defalias medt (tap-dance-eager 200 (lshift (layer-while-held media))))
-(defalias base (layer-switch qwerty ))
+(defalias medta (tap-dance-eager 200 (a (layer-while-held media))))
 (defalias meh (multi lctl lsft lalt))
+(defalias qw (layer-switch qwerty))
+(defalias qwmac (layer-switch qwerty-mac))
+(defalias pleb (layer-switch plebeian))
+(defalias scrm (layer-switch scream))
 
 ;; Mac FN fix
 (deflayer function
-  _    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
-  _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _ _
-  _ _ _ _ _ _  _ _
+  del f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _
 )
 (defalias fn (one-shot 2000 (layer-while-held function)))
 
-;; @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _
+;; @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _ _
 (deflayer yabai
   _ _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ @window-float @move-display-prev @move-space-prev @move-space-next @move-display-next
-  _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east
-  _ _ _ _ @move-west @move-south @move-north @move-east
-  _ _ _ _ _ _  _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ @window-float _ _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next _ _ _ _
+  _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east _ _ _
+  _ _ _ _ _ @visor _ @move-west @move-south @move-north @move-east _ _
+  _ _ _ _ _ _ _ _ _ _ _
+)
+;; Visor
+(defalias
+    visor (cmd bash -c "su $SUDO_USER -c '/Users/reinout/.dotfiles/scripts/visor.sh'")
 )
 ;; Yabai
 (defalias
