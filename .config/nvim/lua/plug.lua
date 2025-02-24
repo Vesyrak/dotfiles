@@ -96,6 +96,8 @@ return require("lazy").setup({
         },
     },
 
+    -- Dynamic Tabstop
+    { "tpope/vim-sleuth" },
     --- Navigation ---
     -- Tree sidebar
     -- Completed: Tue 27 Feb, 2024
