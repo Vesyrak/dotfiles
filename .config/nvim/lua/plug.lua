@@ -26,34 +26,11 @@ return require("lazy").setup({
     -- Completed: Mon 26 Feb, 2024
     { "neovim/nvim-lspconfig" },
 
-    -- Big Files
-    -- Completed: Mon 26 Feb, 2024
-    { "LunarVim/bigfile.nvim" },
-
-    -- AutoComplete
-    -- Completed (Sortof): Thu 01 Jun, 2023
-    { "hrsh7th/nvim-cmp" },
-    -- cmp - lsp connection
-    -- Completed: Thu 01 Jun, 2023
-    { "hrsh7th/cmp-nvim-lsp" },
-    -- cmp - lsp signature helper
-    -- Completed: Thu 01 Jun, 2023
-    { "hrsh7th/cmp-nvim-lsp-signature-help" },
-    -- cmp - snippet connection
-    -- Completed: Thu 01 Jun, 2023
-    { "saadparwaiz1/cmp_luasnip" },
-
-    -- Snippets
-    -- Completed (Sortof): Wed 31 May, 2023
     {
         "L3MON4D3/LuaSnip",
         dependencies = { "rafamadriz/friendly-snippets" },
         build = "make install_jsregexp",
     },
-    { "ray-x/lsp_signature.nvim" },
-
-    -- autopairs for cmp
-    -- use({ "windwp/nvim-autopairs" },
 
     -- none-ls
     -- Completed: Tue 27 Feb, 2024
@@ -81,19 +58,6 @@ return require("lazy").setup({
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {
-            highlight = {
-                keyword = "bg",
-                pattern = [[.*<(KEYWORDS)\s*]],
-                max_line_len = 100,
-            },
-            -- your configuration comes here
-            -- or leave it empty to use the default settings
-            -- refer to the configuration section below
-            search = {
-                pattern = [[ \b(KEYWORDS)\b]],
-            },
-        },
     },
 
     -- Dynamic Tabstop
@@ -141,13 +105,13 @@ return require("lazy").setup({
     -- Completed: Tue 27 Feb, 2024
     { "stevearc/aerial.nvim" },
 
+    -- Search
+    { "MagicDuck/grug-far.nvim" },
+
+    --- Debugging
+    { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
+
     --- Useful macros ---
-    --
-    {
-        "ThePrimeagen/harpoon",
-        branch = "harpoon2",
-        dependencies = { "nvim-lua/plenary.nvim" },
-    },
     -- Show errors
     -- Completed: Tue 27 Feb, 2024
     {
@@ -159,13 +123,6 @@ return require("lazy").setup({
     { "kylechui/nvim-surround" },
 
     --- Visual ---
-    -- Updated UI
-    -- Completed: Tue 2 Apr, 2024
-    {
-        'stevearc/dressing.nvim',
-        opts = {},
-    },
-
     -- Headline Highlighting
     -- Completed: Mon 25 Mar, 2024
     {
@@ -186,9 +143,7 @@ return require("lazy").setup({
     },
     -- Zen Mode
     -- Completed: Wed 28 Feb, 2024
-    {
-        "folke/zen-mode.nvim",
-    },
+    { "folke/zen-mode.nvim" },
 
     -- Theme
     -- Completed: Tue 27 Feb, 2024
@@ -206,19 +161,13 @@ return require("lazy").setup({
         priority = 1000,
         opts = {},
     },
-
-    -- Notifications
-    -- Completed: Tue 27 Feb, 2024
-    { "rcarriga/nvim-notify" },
-
-    -- Indent lines
-    -- Completed: Tue 27 Feb, 2024
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl" },
+    -- TempleOS Theme
+    { "LunarVim/templeos.nvim" },
 
     --- Git ---
     -- Git Diff
     -- Completed: Wed 31 May, 2023
-    { "sindrets/diffview.nvim",              dependencies = "nvim-lua/plenary.nvim" },
+    { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
     -- Git change visualiser
     -- Completed: Mon 26 Feb, 2024
     {
@@ -259,31 +208,7 @@ return require("lazy").setup({
 
     --- Varia ---
     -- Better Quickfix
-    {
-        "kevinhwang91/nvim-bqf",
-    },
-
-    -- LLM
-    {
-        "David-Kunz/gen.nvim",
-        opts = {
-            model = "stable-code",  -- The default model to use.
-            display_mode = "float", -- The display mode. Can be "float" or "split".
-            show_prompt = false,    -- Shows the Prompt submitted to Ollama.
-            show_model = false,     -- Displays which model you are using at the beginning of your chat session.
-            no_auto_close = false,  -- Never closes the window automatically.
-            init = function(options)
-                pcall(io.popen, "ollama serve > /dev/null 2>&1 &")
-            end,
-            -- Function to initialize Ollama
-            command = "curl --silent --no-buffer -X POST http://localhost:11434/api/generate -d $body",
-            -- The command for the Ollama service. You can use placeholders $prompt, $model and $body (shellescaped).
-            -- This can also be a lua function returning a command string, with options as the input parameter.
-            -- The executed command must return a JSON object with { response, context }
-            -- (context property is optional).
-            debug = false, -- Prints errors and the command which is run.
-        },
-    },
+    { "kevinhwang91/nvim-bqf" },
 
     -- Templates
     {
@@ -295,10 +220,6 @@ return require("lazy").setup({
             })
         end,
     },
-
-    -- Show markdown
-    -- Completed: Mon 26 Feb, 2024
-    { "ellisonleao/glow.nvim" },
 
     -- Undotree
     -- Completed: Mon 26 Feb, 2024

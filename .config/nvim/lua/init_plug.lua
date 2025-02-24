@@ -7,24 +7,18 @@ require("snacks").setup({
     scratch = { enabled = true },
 })
 
-require("bigfile").setup()
+-- Simple setups
 --require("bufferline").setup()
-require("dressing").setup()
+require("bqf").setup()
+require("dapui").setup()
 require("gitsigns").setup()
+require("grug-far").setup()
 require("headlines").setup()
-require("luasnip").setup()
-require("luasnip.loaders.from_vscode").lazy_load()
 -- require("nvim-autopairs").setup()
 require("nvim-surround").setup()
 require("refactoring").setup()
 --require("scope").setup()
 require("trouble").setup()
-
--- vim-notify
-vim.notify = require("notify")
-vim.notify.setup({
-    background_colour = "#000000",
-})
 
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
@@ -45,18 +39,20 @@ require("zen-mode").setup({
         },
     },
 })
+--
 -- Testing
-require("neotest").setup({
-    adapters = {
-        require("neotest-plenary"),
-        require("neotest-python")({ args = { "--disable-warnings" } }),
-    },
-})
-require("neodev").setup({
-    library = { plugins = { "neotest" }, types = true },
-    setup_jsonls = false,
-    lspconfig = false,
-})
+-- THis breaks codecompanion
+--require("neotest").setup({
+--    adapters = {
+--        require("neotest-plenary"),
+--        require("neotest-python")({ args = { "--disable-warnings" } }),
+--    },
+--})
+--require("neodev").setup({
+--    library = { plugins = { "neotest" }, types = true },
+--    setup_jsonls = false,
+--    lspconfig = false,
+--})
 
 -- wilder
 local wilder = require("wilder")
@@ -74,14 +70,6 @@ wilder.set_option(
     }))
 )
 
--- LSP signature
-require("lsp_signature").setup({
-    bind = true, -- This is mandatory, otherwise border config won't get registered.
-    handler_opts = {
-        border = "rounded",
-    },
-})
-
 -- NVIM Tree
 require("nvim-tree").setup({
     modified = { enable = true },
@@ -89,9 +77,6 @@ require("nvim-tree").setup({
     hijack_netrw = true,
     filters = { git_ignored = false },
 })
-
--- Debugpy
-local default_config = { justMyCode = false }
 
 local on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -124,8 +109,6 @@ aerial.setup({
     },
 })
 
---Harpoon
-require("harpoon").setup()
 
 -- Mason/cmp
 require("mason").setup()
@@ -150,13 +133,6 @@ require("mason-lspconfig").setup({
 local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 local lspconfig = require("lspconfig")
 
-require("mason-lspconfig").setup_handlers({
-    function(server_name)
-        if server_name ~= "jedi_language_server" then
-            lspconfig[server_name].setup({
-                capabilities = lsp_capabilities,
-            })
-        end
     end,
 })
 require("lspconfig").pyright.setup({
@@ -168,14 +144,6 @@ require("lspconfig").pyright.setup({
         },
     },
 })
-
---autopairs
---local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-
--- glow
-require("glow").setup({
-    width = 200,
-    width_ratio = 0.9,
 })
 
 -- null_ls
@@ -215,9 +183,6 @@ null_ls.setup({
     },
     on_attach = on_attach,
 })
---require("none-ls.diagnostics.flake8").with({
---    extra_args = { "--max-line-length", "100" },
---})
 
 require("editorconfig").trim_trailing_whitespace = true
 
@@ -283,13 +248,9 @@ require("telescope").setup({
 require("telescope").load_extension("aerial")
 --require("telescope").load_extension("frecency")
 require("telescope").load_extension("fzf")
-require("telescope").load_extension("live_grep_args")
-require("telescope").load_extension("notify")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("ui-select")
 
--- IndentLine
-require("ibl").setup({ scope = { show_end = false } })
 
 -- Color Scheme
 local color_scheme = os.getenv("COLOR_SCHEME")
@@ -304,26 +265,3 @@ else
     vim.cmd("colorscheme everforest")
 end
 
--- Autocomplete
-local cmp = require("cmp")
-cmp.setup({
-    mapping = cmp.mapping.preset.insert({
-        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
-    snippet = {
-        expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-        end,
-    },
-    sources = cmp.config.sources({
-        { name = "nvim_lsp_signature_help" },
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-    }, {
-        { name = "buffer" },
-    }),
-})
