@@ -24,12 +24,13 @@ return require("lazy").setup({
 
     -- Configurations for LSP servers
     -- Completed: Mon 26 Feb, 2024
-    { "neovim/nvim-lspconfig" },
+    { "neovim/nvim-lspconfig", dependencies = { "sagnen/blink.cmp" } },
 
     {
-        "L3MON4D3/LuaSnip",
+        "saghen/blink.cmp",
+        version = "*",
         dependencies = { "rafamadriz/friendly-snippets" },
-        build = "make install_jsregexp",
+        lazy = false,
     },
 
     -- none-ls
@@ -41,20 +42,19 @@ return require("lazy").setup({
     { "nvimtools/none-ls-extras.nvim" },
 
     -- treesitter: Highlighting
-    -- Completed: Mon 26 Feb, 2024
+    -- Completed: 27/01/2025
     {
         "nvim-treesitter/nvim-treesitter",
-        --build = ":TSUpdate",
+        build = ":TSUpdate",
+        dependencies = { "nvim-treesitter/nvim-treesitter-textobjects" },
     },
     -- treesitter context: Highlighting which context/indent you are in
     -- if context is out of screen
-    -- Completed: Mon 26 Feb, 2024
+    -- Completed: 27/01/2025
     { "nvim-treesitter/nvim-treesitter-context" },
 
     -- Todo Highlighting
-    -- For some reason it doesn't work in `init_plug`, and I'm too lazy
-    -- to figure out why
-    -- Completed: Mon 26 Feb, 2024
+    -- Completed: 27/01/2025
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -78,17 +78,19 @@ return require("lazy").setup({
     },
     {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build =
-        "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
     },
+    { "nvim-telescope/telescope-ui-select.nvim" },
+
+    -- FZF
     {
-        "nvim-telescope/telescope-live-grep-args.nvim",
+        "ibhagwan/fzf-lua",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
     },
+
     {
-        "nvim-telescope/telescope-frecency.nvim",
-    },
-    {
-        "nvim-telescope/telescope-ui-select.nvim",
+        "folke/edgy.nvim",
+        event = "VeryLazy",
     },
 
     -- Find key used for action
@@ -178,6 +180,12 @@ return require("lazy").setup({
     -- Completed: Mon 26 Feb, 2024
     { "ruanyl/vim-gh-line" },
 
+    { "tpope/vim-fugitive" },
+    -- Fugitive Bitbucket Support
+    { "tommcdo/vim-fubitive" },
+    -- Fugitive Github Support
+    { "tpope/vim-rhubarb" },
+
     --- Tools ---
     -- Testing
     -- Completed: 2023-08-23
@@ -227,6 +235,13 @@ return require("lazy").setup({
 
     -- Snacks
     { "folke/snacks.nvim" },
+
+    --Marks
+    {
+        "chentoast/marks.nvim",
+        event = "VeryLazy",
+        opts = {},
+    },
 
     config = {
         package_root = vim.fn.stdpath("config") .. "/site/pack",

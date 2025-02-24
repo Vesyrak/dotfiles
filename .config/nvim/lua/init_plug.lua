@@ -109,41 +109,93 @@ aerial.setup({
     },
 })
 
+-- Marks
+require("marks").setup()
 
--- Mason/cmp
+-- Mason
 require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = {
+        "basedpyright",
         "bashls",
-        "dockerls",
         "docker_compose_language_service",
+        "dockerls",
         "jdtls",
-        --"jedi_language_server",
-        --"ruff_lsp",
-        --"pylyzer",
-        "marksman",
-        "pyright",
+        "jedi_language_server",
         "lua_ls",
+        "marksman",
+        "ruff",
         "rust_analyzer",
         "yamlls",
     },
     automatic_installation = true,
 })
 
-local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+-- Autocomplete
+require("blink.cmp").setup({
+    -- 'default' for mappings similar to built-in completion
+    -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
+    -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
+    -- See the full "keymap" documentation for information on defining your own keymap.
+    appearance = {
+        -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+        -- Adjusts spacing to ensure icons are aligned
+        nerd_font_variant = "mono",
+    },
+
+    --completion.menu.draw = {
+    --    treesitter = { 'lsp' }
+    --},
+
+    keymap = {
+        preset = "default",
+        ["<Up>"] = { "select_prev", "fallback" },
+        ["<Down>"] = { "select_next", "fallback" },
+        ["<C-space>"] = {
+            function(cmp)
+                cmp.show({ providers = { "snippets" } })
+            end,
+        },
+        ["<CR>"] = { "select_and_accept", "fallback" },
+    },
+
+    signature = { enabled = true },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+        cmdline = {},
+        default = { "lsp", "path", "snippets", "buffer" }, --, "codecompanion"
+        ---providers = {
+        ---    codecompanion = {
+        ---        name = "CodeCompanion",
+        ---        module = "codecompanion.providers.completion.blink",
+        ---    },
+        ---},
+    },
+})
+
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 local lspconfig = require("lspconfig")
 
+-- LSP
+
+lspconfig["basedpyright"].setup({
+    on_attach = function(client, bufnr)
+        client.server_capabilities.document_formatting = false
+        client.server_capabilities.semanticTokensProvider = nil
     end,
-})
-require("lspconfig").pyright.setup({
-    capabilities = lsp_capabilities,
-    on_attach = on_attach,
+    capabilities = capabilities,
     settings = {
-        python = {
-            venvPath = ".venv/lib",
+        basedpyright = {
+            analysis = {
+                typeCheckingMode = "standard",
+            },
         },
     },
 })
+lspconfig["ruff"].setup({
+    capabilities = capabilities,
 })
 
 -- null_ls
@@ -166,15 +218,12 @@ null_ls.setup({
         null_ls.builtins.diagnostics.terraform_validate,
         null_ls.builtins.diagnostics.tfsec,
         null_ls.builtins.diagnostics.yamllint,
-        --        null_ls.builtins.formatting.autoflake,
-        null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.google_java_format,
-        null_ls.builtins.formatting.isort,
         --        null_ls.builtins.formatting.fixjson,
         --       null_ls.builtins.formatting.rustfmt,
         null_ls.builtins.formatting.prettier.with({
-            filetypes = { "html", "css", "markdown" },
-            disabled_filetypes = { "yaml" },
+            filetypes = { "html", "css" },
+            disabled_filetypes = { "markdown", "yaml" },
         }),
         null_ls.builtins.formatting.ocdc,
         null_ls.builtins.formatting.stylua.with({ extra_args = { "--indent-type", "Spaces" } }),
@@ -196,6 +245,7 @@ require("nvim-treesitter.configs").setup({
         "gitattributes",
         "gitcommit",
         "gitignore",
+        "hcl",
         "html",
         "ini",
         "java",
@@ -209,6 +259,7 @@ require("nvim-treesitter.configs").setup({
         "python",
         "rst",
         "rust",
+        "terraform",
         "toml",
         "yaml",
     },
@@ -217,6 +268,73 @@ require("nvim-treesitter.configs").setup({
         enable = true,
     },
     highlight = { enable = true, additional_vim_regex_highlighting = { "markdown" } },
+    incremental_selection = {
+        enable = true,
+        keymaps = { --TODO Move to which-key?
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = false,
+            node_decremental = "<bs>",
+        },
+    },
+    textobjects = {
+        select = {
+            enable = true,
+
+            -- Automatically jump forward to textobj, similar to targets.vim
+            lookahead = true,
+            keymaps = {
+                -- You can use the capture groups defined in textobjects.scm
+                ["a="] = { query = "@assignment.outer", desc = "Select outer part of an assignment" },
+                ["i="] = { query = "@assignment.inner", desc = "Select inner part of an assignment" },
+                ["l="] = { query = "@assignment.lhs", desc = "Select left hand side of an assignment" },
+                ["r="] = { query = "@assignment.rhs", desc = "Select right hand side of an assignment" },
+
+                ["ai"] = { query = "@conditional.outer", desc = "Select outer part of a conditional" },
+                ["ii"] = { query = "@conditional.inner", desc = "Select inner part of a conditional" },
+
+                ["al"] = { query = "@loop.outer", desc = "Select outer part of a loop" },
+                ["il"] = { query = "@loop.inner", desc = "Select inner part of a loop" },
+
+                ["am"] = { query = "@function.outer", desc = "Select outer part of a method/function definition" },
+                ["im"] = { query = "@function.inner", desc = "Select inner part of a method/function definition" },
+
+                ["ac"] = { query = "@class.outer", desc = "Select outer part of a class" },
+                ["ic"] = { query = "@class.inner", desc = "Select inner part of a class" },
+            },
+        },
+        swap = {
+            enable = true,
+            swap_next = {
+                ["<leader>na"] = "@parameter.inner", -- swap parameters/argument with next
+                ["<leader>nm"] = "@function.outer", -- swap function with next
+            },
+            swap_previous = {
+                ["<leader>pa"] = "@parameter.inner", -- swap parameters/argument with prev
+                ["<leader>pm"] = "@function.outer", -- swap function with previous
+            },
+        },
+        move = {
+            enable = true,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+                ["]m"] = { query = "@function.outer", desc = "Next method/function def start" },
+                ["]c"] = { query = "@class.outer", desc = "Next class start" },
+            },
+            goto_next_end = {
+                ["]M"] = { query = "@function.outer", desc = "Next method/function def end" },
+                ["]C"] = { query = "@class.outer", desc = "Next class end" },
+            },
+            goto_previous_start = {
+                ["[m"] = { query = "@function.outer", desc = "Prev method/function def start" },
+                ["[c"] = { query = "@class.outer", desc = "Prev class start" },
+            },
+            goto_previous_end = {
+                ["[M"] = { query = "@function.outer", desc = "Prev method/function def end" },
+                ["[C"] = { query = "@class.outer", desc = "Prev class end" },
+            },
+        },
+    },
 })
 
 require("telescope.actions")
@@ -244,6 +362,27 @@ require("telescope").setup({
         },
         prompt_prefix = "  ",
     },
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown({
+                -- even more opts
+            }),
+
+            -- pseudo code / specification for writing custom displays, like the one
+            -- for "codeactions"
+            -- specific_opts = {
+            --   [kind] = {
+            --     make_indexed = function(items) -> indexed_items, width,
+            --     make_displayer = function(widths) -> displayer
+            --     make_display = function(displayer) -> function(e)
+            --     make_ordinal = function(e) -> string
+            --   },
+            --   -- for example to disable the custom builtin "codeactions" display
+            --      do the following
+            --   codeactions = false,
+            -- }
+        },
+    },
 })
 require("telescope").load_extension("aerial")
 --require("telescope").load_extension("frecency")
@@ -251,6 +390,23 @@ require("telescope").load_extension("fzf")
 require("telescope").load_extension("refactoring")
 require("telescope").load_extension("ui-select")
 
+require("todo-comments").setup({
+    highlight = {
+        keyword = "bg",
+        pattern = [[.*<(KEYWORDS)\s*]],
+        max_line_len = 100,
+    },
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+    search = {
+        pattern = [[ \b(KEYWORDS)\b]],
+    },
+})
+
+require("fzf-lua").setup({ fzf_opts = { ["--layout"] = "default", ["--cycle"] = true } })
+---- IndentLine
+--require("ibl").setup({ scope = { show_end = false } })
 
 -- Color Scheme
 local color_scheme = os.getenv("COLOR_SCHEME")
@@ -265,3 +421,22 @@ else
     vim.cmd("colorscheme everforest")
 end
 
+-- LLM
+local adapter = {
+    adapter = "ollama",
+    model = "codellama:7b",
+}
+
+---require("codecompanion").setup({
+---    display = {
+---        diff = {
+---            provider = "mini_diff",
+---        },
+---    },
+---    strategies = {
+---        chat = adapter,
+---        inline = adapter,
+---        agent = adapter,
+---    },
+---    log_level = "DEBUG",
+---})
