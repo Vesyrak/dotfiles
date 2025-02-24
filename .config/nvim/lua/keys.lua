@@ -2,285 +2,242 @@
 
 local wk = require("which-key")
 
-local harpoon = require("harpoon")
 local conf = require("telescope.config").values
-local function harpoon_telescope(harpoon_files)
-    local file_paths = {}
-    for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-    end
 
-    require("telescope.pickers")
-        .new({}, {
-            prompt_title = "Harpoon",
-            finder = require("telescope.finders").new_table({
-                results = file_paths,
-            }),
-            previewer = conf.file_previewer({}),
-            sorter = conf.generic_sorter({}),
-        })
-        :find()
-end
+vim.keymap.del("n", "<leader>gh")
+vim.keymap.del("n", "<leader>gb")
+vim.keymap.del("n", "<leader>go")
+vim.keymap.del("s", "<leader>go")
+vim.keymap.del("x", "<leader>go")
 
-wk.register({
-    -- Buffers
-    a = {
-        name = "AI",
-        c = { "<cmd>Model code<cr>", "Suggest code" },
-        g = { "<cmd>Model gitcommit<cr>", "Write a git commit" },
-        s = { "<cmd>Mcancel<cr>", "Stop generation" },
-        w = { "<cmd>Model write<cr>", "Write for me" },
+wk.add({
+    { "<leader>b", group = "Buffers" },
+    { "<leader>bc", "<cmd>%bd|e#|bd#<cr>", desc = "Delete All But Current Buffer" },
+    { "<leader>bd", "<cmd>bdelete<cr>", desc = "Delete Buffer" },
+    { "<leader>bn", "<cmd>bnext<cr>", desc = "Next Buffer" },
+    { "<leader>bp", "<cmd>bprevious<cr>", desc = "Previous Buffer" },
+    { "<leader>c", group = "Copy" },
+    { "<leader>cp", ':let @+ = expand("%:p")<cr>', desc = "Copy Current Buffer Path" },
+    { "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Actions" },
+    { "<leader>d", group = "Debug" },
+    { "<leader>dB", "<cmd>lua require('dap').set_breakpoint()<cr>)", desc = "Set Breakpoint" },
+    { "<leader>db", "<cmd>lua require('dap').toggle_breakpoint()<cr>)", desc = "Toggle Breakpoint" },
+    { "<leader>dc", "<cmd>lua require('dap').continue()<cr>)", desc = "Continue" },
+    {
+        "<leader>dd",
+        function()
+            require("dap").repl.open()
+        end,
+        desc = "Open Debug Console",
     },
+    { "<leader>di", "<cmd>lua require('dap').step_into()<cr>)", desc = "Step Into" },
+    {
+        "<leader>dl",
+        function()
+            require("dap").run_last()
+        end,
+        desc = "Run Last DAP Config",
+    },
+    { "<leader>dn", "<cmd>lua require('dap').step_over()<cr>)", desc = "Step Over" },
+    { "<leader>do", "<cmd>lua require('dapui').toggle()<cr>)", desc = "UI Toggle" },
+    { "<leader>dv", group = "View" },
+    {
+        "<leader>dvP",
+        function()
+            require("dap.ui.widgets").preview()
+        end,
+        desc = "Preview",
+    },
+    {
+        "<leader>dvf",
+        function()
+            local widgets = require("dap.ui.widgets")
+            widgets.centered_float(widgets.frames)
+        end,
+        desc = "Frames",
+    },
+    {
+        "<leader>dvh",
+        function()
+            require("dap.ui.widgets").hover()
+        end,
+        desc = "Hover",
+    },
+    {
+        "<leader>dvs",
+        function()
+            local widgets = require("dap.ui.widgets")
+            widgets.centered_float(widgets.scopes)
+        end,
+        desc = "Scopes",
+    },
+    { "<leader>f", group = "Fzf" },
+    { "<leader>fa", "<cmd>Telescope frecency workspace=CWD<cr>", desc = "Search Frecency" },
+    { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Search Open Buffers" },
+    { "<leader>ff", "<cmd>FzfLua live_grep<cr>", desc = "Search Files" },
+    { "<leader>fh", "<cmd>FzfLua helptags<cr>", desc = "Search Help Tags" },
+    {
+        "<leader>fi",
+        function()
+            require("fzf-lua").live_grep({
+                prompt = "Python Env Library Grep",
+                path_shorten = true,
+                cwd = "$VIRTUAL_ENV",
+                additional_args = { "--no-ignore-vcs" },
+                no_ignore = true,
+            })
+        end,
+        desc = "Search Python Env Library Files",
+    },
+    { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Show Keymaps" },
+    {
+        "<leader>fl",
+        function()
+            require("fzf-lua").find_files({
+                prompt = "Python Env Library Files",
+                path_shorten = true,
+                cwd = "$VIRTUAL_ENV",
+                no_ignore = true,
+            })
+        end,
+        desc = "Find Python Env Library Files",
+    },
+    { "<leader>fn", "<cmd>Telescope notifications<cr>", desc = "Show notifications" },
+    { "<leader>fr", "<cmd>FzfLua resume<cr>", desc = "Resume Previous Search" },
+    { "<leader>fs", "<cmd>FzfLua files<cr>", desc = "Find Files" },
+    { "<leader>fw", "<cmd>Telescope spell_suggest<cr>", desc = "Search Spell Suggestions" },
+    { "<leader>g", group = "Git" },
+    { "<leader>gb", group = "Blame" },
+    { "<leader>gbl", "<cmd>Gitsigns blame_line<cr>", desc = "Blame current line" },
+    { "<leader>gbt", "<cmd>Git blame<cr>", desc = "Open Blame" },
+    { "<leader>gd", group = "Diff" },
+    { "<leader>gdb", "<cmd>Gitsigns diffthis<cr>", desc = "Diff this file with source branch" },
+    { "<leader>gdd", "<cmd>Gitsigns diffthis origin/develop<cr>", desc = "Diff this file with origin/develop" },
+    { "<leader>gdm", "<cmd>Gitsigns diffthis origin/master<cr>", desc = "Diff this file with origin/master" },
+    { "<leader>gdn", "<cmd>Gitsigns diffthis origin/main<cr>", desc = "Diff this file with origin/main" },
+    { "<leader>gdv", "<cmd>DiffviewOpen<cr>", desc = "Open DiffView" },
+    { "<leader>gf", group = "Buffer" },
+    { "<leader>gfr", "<cmd>Gitsigns reset_buffer<cr>", desc = "Reset Buffer" },
+    { "<leader>gfs", "<cmd>Gitsigns stage_buffer<cr>", desc = "Stage Buffer" },
+    { "<leader>gh", group = "Hunk" },
+    { "<leader>ghp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview Hunk" },
+    { "<leader>ghr", "<cmd>Gitsigns reset_hunk<cr>", desc = "Reset Hunk" },
+    { "<leader>ghs", "<cmd>Gitsigns stage_hunk<cr>", desc = "Stage Hunk" },
+    { "<leader>ghu", "<cmd>Gitsigns undo_stage_hunk<cr>", desc = "Undo Stage Hunk" },
+    {
+        "<leader>gn",
+        function()
+            require("gitsigns").nav_hunk("next")
+        end,
+    },
+    { "<leader>go", group = "Open" },
+    {
+        "<leader>gol",
+        ":GBrowse<cr>",
+        desc = "Open Web Repository Line",
+        mode = { "n", "v" },
+    },
+    {
+        "<leader>gp",
+        function()
+            require("gitsigns").nav_hunk("prev")
+        end,
+    },
+    { "<leader>gq", "<cmd>Gitsigns setqflist<cr>", desc = "Show buffer gitsigns" },
+    { "<leader>gr", "<cmd>FzfLua lsp_references<cr>", desc = "Show LSP references" },
+    { "<leader>gs", group = "Status" },
+    { "<leader>gsb", "<cmd>FzfLua git_branches<cr>", desc = "Show Branches" },
+    { "<leader>gst", "<cmd>FzfLua git_status<cr>", desc = "Show Status" },
 
-    b = {
-        name = "Buffers",
-        c = { "<cmd>%bd|e#|bd#<cr>", "Delete All But Current Buffer" },
-        d = { "<cmd>bdelete<cr>", "Delete Buffer" },
-        n = { "<cmd>bnext<cr>", "Next Buffer" },
-        p = { "<cmd>bprevious<cr>", "Previous Buffer" },
+    { "<leader>l", group = "Tabs" },
+    { "<leader>lc", "<cmd>tabclose<cr>", desc = "Close Current Tab" },
+    { "<leader>lo", "<cmd>$tabnew<cr>", desc = "Create New Tab" },
+    { "<leader>q", group = "Quickfix / Trouble" },
+    { "<leader>qt", "<cmd>TodoTrouble", desc = "Show Todos" },
+    { "<leader>r", group = "Refactoring" },
+    { "<leader>rb", "<Esc><cmd>lua require('refactoring').refactor('Extract Block')<cr>", desc = "Extract Block" },
+    { "<leader>s", group = "Show" },
+    { "<leader>sa", group = "Aerial" },
+    {
+        "<leader>sae",
+        "<cmd>Telescope aerial<cr>",
+        desc = "Show Aerial in Telescope",
     },
-
-    --Copy
-    c = {
-        name = "Copy",
-        p = { ':let @+ = expand("%:p")<cr>', "Copy Current Buffer Path" },
+    { "<leader>saf", "<cmd>AerialToggle float<cr>", desc = "Show Aerial Float" },
+    {
+        "<leader>sat",
+        "<cmd>AerialToggle<cr>",
+        desc = "Show Aerial Sidebar",
     },
-
-    -- Debugging
-    d = {
-        name = "Debug",
-        b = { "<cmd>lua require('dap').toggle_breakpoint()<cr>)", "Toggle Breakpoint" },
-        B = { "<cmd>lua require('dap').set_breakpoint()<cr>)", "Set Breakpoint" },
-        c = { "<cmd>lua require('dap').continue()<cr>)", "Continue" },
-        d = {
-            function()
-                require("dap").repl.open()
-            end,
-            "Open Debug Console",
-        },
-        i = { "<cmd>lua require('dap').step_into()<cr>)", "Step Into" },
-        l = {
-            function()
-                require("dap").run_last()
-            end,
-            "Run Last DAP Config",
-        },
-        n = { "<cmd>lua require('dap').step_over()<cr>)", "Step Over" },
-        o = { "<cmd>lua require('dap').step_out()<cr>)", "Step Out" },
-        o = { "<cmd>lua require('dapui').toggle()<cr>)", "UI Toggle" },
-        v = {
-            name = "View",
-            f = {
-                function()
-                    local widgets = require("dap.ui.widgets")
-                    widgets.centered_float(widgets.frames)
-                end,
-                "Frames",
-            },
-            h = {
-                function()
-                    require("dap.ui.widgets").hover()
-                end,
-                "Hover",
-            },
-            P = {
-                function()
-                    require("dap.ui.widgets").preview()
-                end,
-                "Preview",
-            },
-            s = {
-                function()
-                    local widgets = require("dap.ui.widgets")
-                    widgets.centered_float(widgets.scopes)
-                end,
-                "Scopes",
-            },
-        },
+    { "<leader>sc", group = "Different Colorscheme" },
+    { "<leader>scd", "<cmd>set background=dark<cr>", desc = "Dark Colorscheme" },
+    { "<leader>scl", "<cmd>set background=light<cr>", desc = "Light Colorscheme" },
+    {
+        "<leader>sef",
+        "<cmd>Trouble document_diagnostics toggle<cr>",
+        desc = "Show Trouble for File",
     },
-
-    -- Telescope / Find
-    f = {
-        name = "Telescope",
-        a = { "<cmd>Telescope frecency workspace=CWD<cr>", "Search Frecency" },
-        b = { "<cmd>Telescope buffers<cr>", "Search Open Buffers" },
-        f = { "<cmd>Telescope find_files<cr>", "Find Files" },
-        g = { "<cmd>Telescope grep_string<cr>", "Grep String" },
-        h = { "<cmd>Telescope help_tags<cr>", "Search Help Tags" },
-        i = {
-            function()
-                require("telescope.builtin").live_grep({
-                    prompt_title = "Python Env Library Grep",
-                    path_display = { "smart" },
-                    search_dirs = { "$VIRTUAL_ENV" },
-                    additional_args = { "--no-ignore-vcs" },
-                    no_ignore = true,
-                })
-            end,
-            "Search Python Env Library Files",
-        },
-        k = { "<cmd>Telescope keymaps<cr>", "Show Keymaps" },
-        l = {
-            function()
-                require("telescope.builtin").find_files({
-                    prompt_title = "Python Env Library Files",
-                    path_display = { "smart" },
-                    search_dirs = { "$VIRTUAL_ENV" },
-                    no_ignore = true,
-                })
-            end,
-            "Find Python Env Library Files",
-        },
-        n = { "<cmd>Telescope notifications<cr>", "Show notifications" },
-        r = { "<cmd>Telescope resume<cr>", "Resume Previous Search" },
-        s = { "<cmd>Telescope live_grep_args<cr>", "Search Files" },
-        w = { "<cmd>Telescope spell_suggest<cr>", "Search Spell Suggestions" },
+    {
+        "<leader>sen",
+        ":Trouble diagnostics next focus=false jump=true open=false<cr>",
+        desc = "Go to next entry",
     },
-
-    -- Git
-    g = {
-        name = "Git",
-        b = {
-            name = "Blame",
-            l = { "<cmd>Gitsigns blame_line<cr>", "Blame current line" },
-            t = { "<cmd>Gitsigns toggle_current_line_blame<cr>", "Toggle Current Line Blame" },
-        },
-        d = {
-            name = "Diff",
-            b = { "<cmd>Gitsigns diffthis<cr>", "Diff this file with source branch" },
-            d = { "<cmd>Gitsigns diffthis origin/develop<cr>", "Diff this file with origin/develop" },
-            m = { "<cmd>Gitsigns diffthis origin/master<cr>", "Diff this file with origin/master" },
-            n = { "<cmd>Gitsigns diffthis origin/main<cr>", "Diff this file with origin/main" },
-            v = { "<cmd>DiffviewOpen<cr>", "Open DiffView" },
-        },
-        f = {
-            name = "Buffer",
-            r = { "<cmd>Gitsigns reset_buffer<cr>", "Reset Buffer" },
-            s = { "<cmd>Gitsigns stage_buffer<cr>", "Stage Buffer" },
-        },
-        h = {
-            name = "Hunk",
-            p = { "<cmd>Gitsigns preview_hunk<cr>", "Preview Hunk" },
-            r = { "<cmd>Gitsigns reset_hunk<cr>", "Reset Hunk" },
-            s = { "<cmd>Gitsigns stage_hunk<cr>", "Stage Hunk" },
-            u = { "<cmd>Gitsigns undo_stage_hunk<cr>", "Undo Stage Hunk" },
-        },
-        o = {
-            name = "Open",
-            b = { "<Plug>(gh-line-blame)", "Open Web Repository Line Blame" },
-            l = { "<Plug>(gh-line)", "Open Web Repository Line" },
-            r = { "<Plug>(gh-repo)", "Open Web Repository" },
-        },
-        q = { "<cmd>Gitsigns setqflist<cr>", "Show buffer gitsigns" },
-        s = {
-            name = "Status",
-            b = { "<cmd>Telescope git_branches<cr>", "Show Branches" },
-            t = { "<cmd>Telescope git_status<cr>", "Show Status" },
-        },
+    {
+        "<leader>sep",
+        ":Trouble diagnostics prev focus=false jump=true open=false<cr>",
+        desc = "Go to previous entry",
     },
-    h = {
-        name = "Harpoon",
-        a = {
-            function()
-                harpoon:list():add()
-            end,
-            "Add",
-        },
-        p = {
-            function()
-                harpoon_telescope(harpoon:list())
-            end,
-            "View files",
-        },
+    { "<leader>sf", "<cmd>NvimTreeFocus<cr>", desc = "Focus on Tree Sidebar" },
+    { "<leader>sm", "<cmd>Glow<cr>", desc = "Show Markdown" },
+    { "<leader>ss", "<cmd>NvimTreeFindFile<cr>", desc = "Find File in Tree" },
+    { "<leader>st", "<cmd>NvimTreeToggle<cr>", desc = "Show Tree Sidebar" },
+    { "<leader>su", "<cmd>UndotreeToggle<cr>", desc = "Show Undo Tree" },
+    { "<leader>sx", "<cmd>TodoFzfLua<cr>", desc = "Show Todos" },
+    { "<leader>sz", "<cmd>ZenMode<cr>", desc = "Toggle Zen Mode" },
+    { "<leader>t", group = "Test" },
+    { "<leader>ta", "<cmd>call VimuxRunCommand('make test-fast')<cr>", desc = "Run All Tests" },
+    { "<leader>td", '<cmd>lua require("neotest").run.run({strategey="dap"})<cr>', desc = "Debug Test" },
+    { "<leader>tf", '<cmd>lua require("neotest").run.run(vim.fn.expand("%"))<cr>', desc = "Run Test File" },
+    {
+        "<leader>th",
+        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<cr>",
+        desc = "Toggle inlay hints",
     },
-    -- Tab (Layers)
-    l = {
-        name = "Tabs",
-        c = { "<cmd>tabclose<cr>", "Close Current Tab" },
-        o = { "<cmd>$tabnew<cr>", "Create New Tab" },
-    },
-
-    -- Refactoring
-    r = {
-        name = "Refactoring",
-        b = {
-            "<Esc><cmd>lua require('refactoring').refactor('Extract Block')<cr>",
-            "Extract Block",
-        },
-        e = {
+    { "<leader>tn", '<cmd>lua require("neotest").run.run()<cr>', desc = "Run Nearest Test" },
+    { "<leader>to", '<cmd>lua require("neotest").output.open()<cr>', desc = "Float test panel" },
+    { "<leader>tp", '<cmd>lua require("neotest").output_panel.toggle()<cr>', desc = "Toggle Test Panel" },
+    { "<leader>ts", '<cmd>lua require("neotest").summary.toggle()<cr>', desc = "Toggle Test Summaries" },
+    {
+        mode = { "v" },
+        {
+            "<leader>re",
             "<Esc><cmd>lua require('refactoring').refactor('Extract Function')<cr>",
-            "Extract Function",
-            mode = "v",
+            desc = "Extract Function",
         },
-        f = {
+        {
+            "<leader>rf",
             "<Esc><cmd>lua require('refactoring').refactor('Extract Function To File')<cr>",
-            "Extract Function To File",
-            mode = "v",
+            desc = "Extract Function To File",
         },
-        i = {
+        {
+            "<leader>ri",
             "<Esc><cmd>lua require('refactoring').refactor('Inline Variable')<cr>",
-            "Inline Variable",
-            mode = "v",
+            desc = "Inline Variable",
         },
-
-        s = {
+        {
+            "<leader>rs",
             "<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<cr>",
-            "Select Refactor",
-            mode = "v",
+            desc = "Select Refactor",
         },
-        v = {
+        {
+            "<leader>rv",
             "<Esc><cmd>lua require('refactoring').refactor('Extract Variable')<cr>",
-            "Extract Variable",
-            mode = "v",
+            desc = "Extract Variable",
         },
     },
+    { "<leader>rn", "<cmd>lua vim.lsp.buf.rename<cr>", desc = "Rename" },
+})
 
-    -- Visual
-    s = {
-        name = "Show",
-        a = {
-            name = "Aerial",
-            f = { "<cmd>AerialToggle float<cr>", "Show Aerial Float" },
-            t = { "<cmd>AerialToggle<cr>", "Show Aerial Sidebar" },
-            e = { "<cmd>Telescope aerial<cr>", "Show Aerial in Telescope" },
-        },
-        c = {
-            name = "Different Colorscheme",
-            d = { "<cmd>set background=dark<cr>", "Dark Colorscheme" },
-            l = { "<cmd>set background=light<cr>", "Light Colorscheme" },
-        },
-        e = {
-            f = { "<cmd>TroubleToggle document_diagnostics<cr>", "Show Trouble for File" },
-            n = { '<cmd>lua require("trouble").next({skip_groups = true, jump = true})<cr>', "Go to next entry" },
-            p = {
-                '<cmd>lua require("trouble").previous({skip_groups = true, jump = true})<cr>',
-                "Go to previous entry",
-            },
-        },
-        f = { "<cmd>NvimTreeFocus<cr>", "Focus on Tree Sidebar" },
-        m = { "<cmd>Glow<cr>", "Show Markdown" },
-        s = { "<cmd>NvimTreeFindFile<cr>", "Find File in Tree" },
-        t = { "<cmd>NvimTreeToggle<cr>", "Show Tree Sidebar" },
-        u = { "<cmd>UndotreeToggle<cr>", "Show Undo Tree" },
-        x = { "<cmd>TodoTelescope<cr>", "Show Todos" },
-        z = { "<cmd>ZenMode<cr>", "Toggle Zen Mode" },
-    },
-
-    -- Test
-    t = {
-        name = "Test",
-        a = { "<cmd>call VimuxRunCommand('make test-fast')<cr>", "Run All Tests" },
-        d = { '<cmd>lua require("neotest").run.run({strategey="dap"})<cr>', "Debug Test" },
-        f = { '<cmd>lua require("neotest").run.run(vim.fn.expand("%"))<cr>', "Run Test File" },
-        n = { '<cmd>lua require("neotest").run.run()<cr>', "Run Nearest Test" },
-        o = { '<cmd>lua require("neotest").output.open()<cr>', "Float test panel" },
-        p = { '<cmd>lua require("neotest").output_panel.toggle()<cr>', "Toggle Test Panel" },
-        s = { '<cmd>lua require("neotest").summary.toggle()<cr>', "Toggle Test Summaries" },
-    },
-}, { prefix = "<leader>" })
-
--- Use LspAttach autocommand to only map the following keys
--- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
     desc = "LSP actions",
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
