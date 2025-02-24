@@ -19,15 +19,6 @@ g.blamer_delay = 300
 g.edge_style = "aura"
 g.edge_better_performance = 1
 
--- Put /site in package path
-local packer_path = vim.fn.stdpath("config") .. "/site"
-vim.o.packpath = vim.o.packpath .. "," .. packer_path
-
--- vim-test
---g["test#strategy"] = "neovim"
---g["test#python#pytest#options"] = "--disable-warnings"
-
---" For documentation files, enable text wrapping and spell checking"
 local md_augroup = ag("Markdown Settings", { clear = true })
 au({ "BufWritePre" }, {
     pattern = { "*.md", "*.rst" },
@@ -35,9 +26,7 @@ au({ "BufWritePre" }, {
     command = "setlocal textwidth=80 wrap",
 })
 
-local python_augroup = ag("Python Settings", { clear = true })
 ---Highlight yanked text
---
 au("TextYankPost", {
     group = ag("yank_highlight", {}),
     pattern = "*",
@@ -45,15 +34,25 @@ au("TextYankPost", {
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300 })
     end,
 })
+
 g.nonels_supress_issue58 = true
---vim.api.nvim_create_autocmd("BufNewFile,BufRead", {
---    pattern = { "*.py" },
---    group = python_augroup,
---    command = "setlocal foldmethod=indent",
---})
---local trouble_augroup = vim.api.nvim_create_augroup("Trouble Settings", { clear = true })
---vim.api.nvim_create_autocmd("BufWritePost", {
---    pattern = { "*.py" },
---    group = trouble_augroup,
---    command = "Trouble",
---})
+
+-- Format on write
+local fmt_augroup = vim.api.nvim_create_augroup("AutoFormatting", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+    group = fmt_augroup,
+    callback = function()
+        vim.lsp.buf.format({ async = true })
+    end,
+})
+
+-- Restore cursor
+vim.api.nvim_create_autocmd("BufReadPost", {
+    callback = function(args)
+        local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+        local line_count = vim.api.nvim_buf_line_count(args.buf)
+        if mark[1] > 0 and mark[1] <= line_count then
+            vim.cmd('normal! g`"zz')
+        end
+    end,
+})

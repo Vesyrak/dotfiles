@@ -2,10 +2,11 @@
 local opt = vim.opt
 
 opt.mouse = ""
+opt.diffopt = "filler,internal,closeoff,algorithm:histogram"
 -- [[ Context ]]
 opt.colorcolumn = "80" -- str:  Show col for max line length
 opt.number = true -- bool: Show line numbers
-opt.relativenumber = true -- bool: Show relative line numbers
+opt.relativenumber = false -- bool: Show relative line numbers
 opt.scrolloff = 4 -- int:  Min num lines of context
 opt.signcolumn = "yes:3" -- str:  Show the sign column
 
@@ -44,5 +45,9 @@ opt.foldlevel = 20
 opt.foldmethod = "expr"
 opt.foldexpr = "nvim_treesitter#foldexpr()"
 
--- coc
-vim.opt.updatetime = 300
+-- Edgy.nvim
+-- views can only be fully collapsed with the global statusline
+opt.laststatus = 3
+-- Default splitting will cause your main splits to jump when opening an edgebar.
+-- To prevent this, set `splitkeep` to either `screen` or `topline`.
+opt.splitkeep = "screen"
