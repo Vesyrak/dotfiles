@@ -1,4 +1,11 @@
---- Simple setups
+require("snacks").setup({
+    bigfile = { enabled = true },
+    debug = { enabled = true },
+    dim = { enabled = true },
+    indent = { enabled = true },
+    notifier = { enabled = true },
+    scratch = { enabled = true },
+})
 
 require("bigfile").setup()
 --require("bufferline").setup()

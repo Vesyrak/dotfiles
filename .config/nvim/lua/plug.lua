@@ -304,6 +304,9 @@ return require("lazy").setup({
     -- Completed: Mon 26 Feb, 2024
     { "mbbill/undotree" },
 
+    -- Snacks
+    { "folke/snacks.nvim" },
+
     config = {
         package_root = vim.fn.stdpath("config") .. "/site/pack",
     },
