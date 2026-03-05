@@ -1,0 +1,42 @@
+# Aliases
+alias python=python3
+
+alias vi="nvim"
+alias cp="cp -v"
+alias rm="rm -v"
+alias mv="mv -v"
+alias cd="deactivate >/dev/null 2&>/dev/null; cd"
+alias z="deactivate >/dev/null 2&>/dev/null; z"
+#alias ls="exa"
+#alias cat='bat --style=plain'
+alias bat='bat --style=plain'
+alias batcode='bat --style="numbers,changes"'
+alias batdiff='bat --diff'
+alias grep='rg'
+alias weather='curl wttr.in/Brasschaat'
+alias notes='cd ~/notes && vi'
+alias todo='cd ~/notes && vi TODO.md'
+alias scratch='cd ~/notes && vi scratchpad.md'
+
+alias docker_stop_all="docker stop $(docker ps -a -q)"
+alias docker_ez_clean="docker image prune && docker volume prune && docker builder prune"
+
+alias kanata_select="~/.dotfiles/scripts/kanata_select.sh"
+alias kanata_full="sudo kanata -c ~/.config/kanata/kanata_macos_full.kbd"
+alias pomo="python3 ~/.dotfiles/scripts/pomodoro.py"
+alias domo="python3 ~/.dotfiles/scripts/pomodoro.py break"
+alias doro="python3 ~/.dotfiles/scripts/pomodoro.py work"
+
+alias doing='~/.dotfiles/scripts/addnote.sh --header "## $(date +%a\ %Y-%m-%d)"'
+alias todoing='~/.dotfiles/scripts/addnote.sh --task --header "# TODO"'
+alias improvements='~/.dotfiles/scripts/addnote.sh --task --header "# Improvements"'
+
+alias git-log="git log --oneline --graph --all"
+
+alias gp="git pc"
+alias gpf="git pcf"
+#alias stick='function _stick() {
+#dir_name=$(printf "../%.0s" {1..$1})$2
+#git worktree add $dir_name -b $2
+#cd $dir_name
+#}; _stick'

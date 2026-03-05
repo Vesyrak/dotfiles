@@ -20,7 +20,13 @@ return require("lazy").setup({
     -- lspconfigs
     -- Completed: Mon 26 Feb, 2024
     { "williamboman/mason.nvim" },
-    { "williamboman/mason-lspconfig.nvim" },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "mason-org/mason.nvim",
+        },
+    },
 
     -- Configurations for LSP servers
     -- Completed: Mon 26 Feb, 2024
@@ -62,30 +68,13 @@ return require("lazy").setup({
 
     -- Dynamic Tabstop
     { "tpope/vim-sleuth" },
+
     --- Navigation ---
     -- Tree sidebar
     -- Completed: Tue 27 Feb, 2024
     {
         "nvim-tree/nvim-tree.lua",
         dependencies = "nvim-tree/nvim-web-devicons",
-    },
-
-    -- Telescope
-    -- Updated: 2023-10-30
-    {
-        "nvim-telescope/telescope.nvim",
-        dependencies = { { "nvim-lua/plenary.nvim" } },
-    },
-    {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-    },
-    { "nvim-telescope/telescope-ui-select.nvim" },
-
-    -- FZF
-    {
-        "ibhagwan/fzf-lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
     },
 
     {
@@ -125,11 +114,30 @@ return require("lazy").setup({
     { "kylechui/nvim-surround" },
 
     --- Visual ---
-    -- Headline Highlighting
-    -- Completed: Mon 25 Mar, 2024
+    -- Style changing
     {
-        "lukas-reineke/headlines.nvim",
-        after = "nvim-treesitter",
+        "folke/styler.nvim",
+    },
+    -- Themes
+    {
+        "paulfrische/reddish.nvim",
+    },
+    {
+        "rebelot/kanagawa.nvim",
+    },
+    -- Jump window
+    {
+        "yorickpeterse/nvim-window",
+        keys = {
+            { "<leader>wj", "<cmd>lua require('nvim-window').pick()<cr>", desc = "nvim-window: Jump to window" },
+        },
+        config = true,
+    },
+    -- Pretty Diagnostics
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy", -- Or `LspAttach`
+        priority = 1000, -- needs to be loaded in first
     },
     -- Illuminate same words
     -- Completed: Tue 27 Feb, 2024
@@ -147,12 +155,10 @@ return require("lazy").setup({
     -- Completed: Wed 28 Feb, 2024
     { "folke/zen-mode.nvim" },
 
-    -- Theme
+    --- Theme ---
+    -- Dark Theme
     -- Completed: Tue 27 Feb, 2024
     { "navarasu/onedark.nvim" },
-    -- Other Theme
-    -- Completed: Tue 27 Feb, 2024
-    { "sainnhe/edge" },
     -- Green Theme
     -- Completed: Tue 27 Feb, 2024
     { "sainnhe/everforest" },
@@ -163,10 +169,10 @@ return require("lazy").setup({
         priority = 1000,
         opts = {},
     },
-    -- TempleOS Theme
-    { "LunarVim/templeos.nvim" },
 
     --- Git ---
+    -- Git Inline diff
+    { "echasnovski/mini.diff", version = "*" },
     -- Git Diff
     -- Completed: Wed 31 May, 2023
     { "sindrets/diffview.nvim", dependencies = "nvim-lua/plenary.nvim" },
@@ -176,9 +182,6 @@ return require("lazy").setup({
         "lewis6991/gitsigns.nvim",
         tag = "release",
     },
-    -- Open in remote
-    -- Completed: Mon 26 Feb, 2024
-    { "ruanyl/vim-gh-line" },
 
     { "tpope/vim-fugitive" },
     -- Fugitive Bitbucket Support
@@ -215,6 +218,9 @@ return require("lazy").setup({
     },
 
     --- Varia ---
+    -- Calculate inline
+    { "sk1418/HowMuch" },
+
     -- Better Quickfix
     { "kevinhwang91/nvim-bqf" },
 
@@ -232,7 +238,15 @@ return require("lazy").setup({
     -- Undotree
     -- Completed: Mon 26 Feb, 2024
     { "mbbill/undotree" },
-
+    {
+        "stevearc/oil.nvim",
+        opts = {},
+        -- Optional dependencies
+        dependencies = { { "echasnovski/mini.icons", opts = {} } },
+        -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+        -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+        lazy = false,
+    },
     -- Snacks
     { "folke/snacks.nvim" },
 
@@ -243,7 +257,29 @@ return require("lazy").setup({
         opts = {},
     },
 
+    -- Markdown
+    {
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" }, -- if you use standalone mini plugins
+        ---@module 'render-markdown'
+        ---@type render.md.UserConfig
+        opts = {},
+    },
+
     config = {
         package_root = vim.fn.stdpath("config") .. "/site/pack",
     },
+    -- Avante AI assistant
+    --{
+    --    "yetone/avante.nvim",
+    --    event = "VeryLazy",
+    --    version = false, -- Never set this value to "*"! Never!
+    --    build = "make",
+    --    dependencies = {
+    --        "nvim-treesitter/nvim-treesitter",
+    --        "stevearc/dressing.nvim",
+    --        "nvim-lua/plenary.nvim",
+    --        "MunifTanjim/nui.nvim",
+    --    },
+    --},
 })

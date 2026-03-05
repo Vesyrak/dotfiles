@@ -5,54 +5,35 @@ require("snacks").setup({
     indent = { enabled = true },
     notifier = { enabled = true },
     scratch = { enabled = true },
+    picker = { enabled = true, layout = "telescope" },
 })
 
 -- Simple setups
---require("bufferline").setup()
 require("bqf").setup()
 require("dapui").setup()
 require("gitsigns").setup()
 require("grug-far").setup()
-require("headlines").setup()
 -- require("nvim-autopairs").setup()
+require("mini.diff").setup()
 require("nvim-surround").setup()
+require("oil").setup()
 require("refactoring").setup()
---require("scope").setup()
 require("trouble").setup()
 
 local u = require("null-ls.utils")
 local log = require("null-ls.logger")
 
--- Illuminate
-require("illuminate").configure({
-    delay = 50,
-})
-
-require("zen-mode").setup({
-    window = {
-        width = 100,
-    },
-    plugins = {
-        kitty = {
-            enabled = true,
-            font = "+4", -- font size increment
-        },
+require("neotest").setup({
+    adapters = {
+        require("neotest-plenary"),
+        require("neotest-python")({ args = { "--disable-warnings" } }),
     },
 })
---
--- Testing
--- THis breaks codecompanion
---require("neotest").setup({
---    adapters = {
---        require("neotest-plenary"),
---        require("neotest-python")({ args = { "--disable-warnings" } }),
---    },
---})
---require("neodev").setup({
---    library = { plugins = { "neotest" }, types = true },
---    setup_jsonls = false,
---    lspconfig = false,
---})
+require("neodev").setup({
+    library = { plugins = { "neotest" }, types = true },
+    setup_jsonls = false,
+    lspconfig = false,
+})
 
 -- wilder
 local wilder = require("wilder")
@@ -92,6 +73,7 @@ local on_attach = function(client, bufnr)
         })
     end
 end
+
 --Aerial
 local aerial = require("aerial")
 aerial.setup({
@@ -121,9 +103,8 @@ require("mason-lspconfig").setup({
         "docker_compose_language_service",
         "dockerls",
         "jdtls",
-        "jedi_language_server",
         "lua_ls",
-        "marksman",
+        --"marksman",
         "ruff",
         "rust_analyzer",
         "yamlls",
@@ -143,6 +124,15 @@ require("blink.cmp").setup({
         nerd_font_variant = "mono",
     },
 
+    completion = {
+        list = {
+            selection = {
+                preselect = false,
+                auto_insert = true,
+            },
+        },
+    },
+
     --completion.menu.draw = {
     --    treesitter = { 'lsp' }
     --},
@@ -156,16 +146,16 @@ require("blink.cmp").setup({
                 cmp.show({ providers = { "snippets" } })
             end,
         },
-        ["<CR>"] = { "select_and_accept", "fallback" },
+        ["<CR>"] = { "accept", "fallback" },
     },
 
     signature = { enabled = true },
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
-    sources = {
-        cmdline = {},
-        default = { "lsp", "path", "snippets", "buffer" }, --, "codecompanion"
+    cmdline = {
+        sources = {},
+        --default = { "lsp", "path", "snippets", "buffer" }, --, "codecompanion"
         ---providers = {
         ---    codecompanion = {
         ---        name = "CodeCompanion",
@@ -175,12 +165,11 @@ require("blink.cmp").setup({
     },
 })
 
+--- LSP ---
+
 local capabilities = require("blink.cmp").get_lsp_capabilities()
-local lspconfig = require("lspconfig")
 
--- LSP
-
-lspconfig["basedpyright"].setup({
+vim.lsp.config("basedpyright", {
     on_attach = function(client, bufnr)
         client.server_capabilities.document_formatting = false
         client.server_capabilities.semanticTokensProvider = nil
@@ -191,12 +180,20 @@ lspconfig["basedpyright"].setup({
             analysis = {
                 typeCheckingMode = "standard",
             },
+            -- Using Ruff's import organizer
+            disableOrganizeImports = true,
         },
     },
 })
-lspconfig["ruff"].setup({
+vim.lsp.config("ruff", {
     capabilities = capabilities,
 })
+
+-- Marksman LSP setup for Markdown files
+--vim.lsp.config("marksman", {
+--    capabilities = capabilities,
+--    on_attach = on_attach,
+--})
 
 -- null_ls
 local null_ls = require("null-ls")
@@ -231,6 +228,7 @@ null_ls.setup({
         --null_ls.builtins.formatting.trim_newlines,
     },
     on_attach = on_attach,
+    temp_dir = "/tmp",
 })
 
 require("editorconfig").trim_trailing_whitespace = true
@@ -254,8 +252,6 @@ require("nvim-treesitter.configs").setup({
         "latex",
         "lua",
         "make",
-        "markdown",
-        "markdown_inline",
         "python",
         "rst",
         "rust",
@@ -267,7 +263,6 @@ require("nvim-treesitter.configs").setup({
     indent = {
         enable = true,
     },
-    highlight = { enable = true, additional_vim_regex_highlighting = { "markdown" } },
     incremental_selection = {
         enable = true,
         keymaps = { --TODO Move to which-key?
@@ -337,59 +332,22 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
-require("telescope.actions")
-require("telescope").setup({
-    defaults = {
-        pickers = {
-            buffers = {
-                sort_lru = true,
-            },
-        },
-        file_ignore_patterns = { ".git/", ".cache", "build/", "%.class", "%.pdf", "%.mkv", "%.mp4", "%.zip" },
-
-        layout_config = {
-            horizontal = {
-                prompt_position = "bottom",
-                preview_width = 0.55,
-                results_width = 0.8,
-            },
-            vertical = {
-                mirror = false,
-            },
-            width = 0.85,
-            height = 0.92,
-            preview_cutoff = 120,
-        },
-        prompt_prefix = "  ",
+require("render-markdown").setup({
+    completions = { lsp = { enabled = true } },
+    checkbox = {
+        unchecked = { icon = "✘ ", highlight = "RenderMarkdownError" },
+        checked = { icon = "✔ " },
     },
-    extensions = {
-        ["ui-select"] = {
-            require("telescope.themes").get_dropdown({
-                -- even more opts
-            }),
-
-            -- pseudo code / specification for writing custom displays, like the one
-            -- for "codeactions"
-            -- specific_opts = {
-            --   [kind] = {
-            --     make_indexed = function(items) -> indexed_items, width,
-            --     make_displayer = function(widths) -> displayer
-            --     make_display = function(displayer) -> function(e)
-            --     make_ordinal = function(e) -> string
-            --   },
-            --   -- for example to disable the custom builtin "codeactions" display
-            --      do the following
-            --   codeactions = false,
-            -- }
-        },
+    heading = {
+        border = true,
+    },
+    bullet = {
+        icons = { "•", "‣" },
     },
 })
-require("telescope").load_extension("aerial")
---require("telescope").load_extension("frecency")
-require("telescope").load_extension("fzf")
-require("telescope").load_extension("refactoring")
-require("telescope").load_extension("ui-select")
 
+--- Visual ---
+-- Todo Highlighting
 require("todo-comments").setup({
     highlight = {
         keyword = "bg",
@@ -404,9 +362,35 @@ require("todo-comments").setup({
     },
 })
 
-require("fzf-lua").setup({ fzf_opts = { ["--layout"] = "default", ["--cycle"] = true } })
----- IndentLine
---require("ibl").setup({ scope = { show_end = false } })
+-- Diagnostic Formatting
+require("tiny-inline-diagnostic").setup({
+    preset = "ghost",
+    options = {
+        show_source = true,
+
+        add_messages = false,
+        multilines = {
+            enabled = true,
+        },
+    },
+})
+
+-- Illuminate
+require("illuminate").configure({
+    delay = 50,
+})
+
+require("zen-mode").setup({
+    window = {
+        width = 100,
+    },
+    plugins = {
+        kitty = {
+            enabled = true,
+            font = "+4", -- font size increment
+        },
+    },
+})
 
 -- Color Scheme
 local color_scheme = os.getenv("COLOR_SCHEME")
@@ -421,22 +405,24 @@ else
     vim.cmd("colorscheme everforest")
 end
 
--- LLM
-local adapter = {
-    adapter = "ollama",
-    model = "codellama:7b",
-}
-
----require("codecompanion").setup({
----    display = {
----        diff = {
----            provider = "mini_diff",
----        },
----    },
----    strategies = {
----        chat = adapter,
----        inline = adapter,
----        agent = adapter,
----    },
----    log_level = "DEBUG",
----})
+-- Markdown Color Scheme
+local md_color_scheme = os.getenv("MD_COLOR_SCHEME")
+if md_color_scheme == "red" then
+    require("styler").setup({
+        themes = {
+            markdown = { colorscheme = "reddish" },
+        },
+    })
+elseif md_color_scheme == "amber" then
+    require("styler").setup({
+        themes = {
+            markdown = { colorscheme = "kanagawa-lotus" },
+        },
+    })
+else
+    require("styler").setup({
+        themes = {
+            markdown = { colorscheme = "everforest" },
+        },
+    })
+end

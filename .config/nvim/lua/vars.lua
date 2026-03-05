@@ -15,10 +15,6 @@ g.background = "dark"
 -- Blamer
 g.blamer_delay = 300
 
--- Color-scheme
-g.edge_style = "aura"
-g.edge_better_performance = 1
-
 local md_augroup = ag("Markdown Settings", { clear = true })
 au({ "BufWritePre" }, {
     pattern = { "*.md", "*.rst" },
@@ -41,8 +37,9 @@ g.nonels_supress_issue58 = true
 local fmt_augroup = vim.api.nvim_create_augroup("AutoFormatting", {})
 vim.api.nvim_create_autocmd("BufWritePre", {
     group = fmt_augroup,
+    pattern = "*",
     callback = function()
-        vim.lsp.buf.format({ async = true })
+        vim.lsp.buf.format()
     end,
 })
 

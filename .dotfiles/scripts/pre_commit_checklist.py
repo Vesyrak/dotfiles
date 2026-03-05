@@ -9,6 +9,7 @@ def validate_typing():
 def validate_variable_names():
     click.confirm("Do your variable names make sense?", abort=True)
     click.confirm("Are your variable names consistent?", abort=True)
+    click.confirm("If you create(d) files, are the file names consistent?", abort=True)
 
 
 def validate_infra():
@@ -17,6 +18,10 @@ def validate_infra():
 
 
 def validate_feature_correctness():
+    click.confirm(
+        "Is everything that shouldn't be async, sync?",
+        abort=True,
+    )
     click.confirm(
         "Does it meet the Acceptance Criteria?",
         abort=True,
@@ -83,6 +88,10 @@ def validate_refactoring():
     )
     click.confirm("Did you remove redundant code?", abort=True)
 
+def validate_error_handling():
+    click.confirm("Are all calls that (might) raise exceptions properly caught?", abort=True)
+    click.confirm("Are all exceptions properly formatted?", abort=True)
+    click.confirm("Are all exceptions properly logged?", abort=True)
 
 def validate_new_issues_created():
     click.confirm(

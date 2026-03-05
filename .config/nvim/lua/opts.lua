@@ -7,7 +7,7 @@ opt.diffopt = "filler,internal,closeoff,algorithm:histogram"
 opt.colorcolumn = "80" -- str:  Show col for max line length
 opt.number = true -- bool: Show line numbers
 opt.relativenumber = false -- bool: Show relative line numbers
-opt.scrolloff = 4 -- int:  Min num lines of context
+opt.scrolloff = 7 -- int:  Min num lines of context
 opt.signcolumn = "yes:3" -- str:  Show the sign column
 
 -- [[ Filetypes ]]
@@ -51,3 +51,17 @@ opt.laststatus = 3
 -- Default splitting will cause your main splits to jump when opening an edgebar.
 -- To prevent this, set `splitkeep` to either `screen` or `topline`.
 opt.splitkeep = "screen"
+
+-- Window borders
+opt.fillchars = {
+    horiz = "━",
+    horizup = "┻",
+    horizdown = "┳",
+    vert = "┃",
+    vertleft = "┫",
+    vertright = "┣",
+    verthoriz = "╋",
+}
+
+-- Disable diagnostic virtual text for tiny inline diagnostics
+vim.diagnostic.config({ virtual_text = false })

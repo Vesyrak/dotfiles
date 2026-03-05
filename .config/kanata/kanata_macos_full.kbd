@@ -27,7 +27,7 @@
   @stab _ _ _ _ _ _ _ _ _ _ _ _ _
   @hyplayer _ _ _ _ _ _ _ _ _ _ _ _
   @medt _ _ _ _ _ _ _ _ _ _ _ _
-  lctl @fn lmet lalt _ @warpd _ XX XX XX XX
+  lctl @fn lmet lalt _ @meh _ XX XX XX XX
 )
 (deflayer qwerty
   _ brdn brup _ _ bldn blup prev pp next mute vold volu
@@ -35,7 +35,7 @@
   @stab _ _ _ _ _ _ _ _ _ _ _ _ _
   @hyplayer _ _ _ _ _ _ _ _ _ _ _ _
   @medt _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ _ _ _ @warpd _ _ _ _ _
+  _ _ _ _ _ _ @meh _ _ _ _
 )
 
 (deflayer plebeian
@@ -106,12 +106,20 @@
 (defalias fn (one-shot 2000 (layer-while-held function)))
 
 ;; @move-space-1 @move-space-2 @move-space-3 @move-space-4 @move-space-5 @move-space-6 @move-space-7 @move-space-8 @move-space-9 _ _ _ _
+;;(deflayer yabai
+;;  _ _ _ _ _ _ _ _ _ _ _ _ _
+;;  _ _ _ _ _ _ _ _ _ _ _ _ _
+;;  _ _ @window-float _ _ @todo-toggle @move-display-prev @move-space-prev @move-space-next @move-display-next _ _ _ _
+;;  _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east _ _ _
+;;  _ _ _ _ _ @visor _ @move-west @move-south @move-north @move-east _ _
+;;  _ _ _ _ _ _ _ _ _ _ _
+;;)
 (deflayer yabai
   _ _ _ _ _ _ _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _ _ _
-  _ _ @window-float _ _ _ @move-display-prev @move-space-prev @move-space-next @move-display-next _ _ _ _
-  _ _ _ _ @window-max @window-balance @focus-west @focus-south @focus-north @focus-east _ _ _
-  _ _ _ _ _ @visor _ @move-west @move-south @move-north @move-east _ _
+  _ _ _ _ _ @todo-toggle _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ @visor _ _ _ _ _ _ _
   _ _ _ _ _ _ _ _ _ _ _
 )
 ;; Visor
@@ -120,6 +128,8 @@
 )
 ;; Yabai
 (defalias
+  todo-toggle (cmd bash -c "su $SUDO_USER -c '/Users/reinout/.config/yabai/term-pos.sh'")
+
   display-prev (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus prev'")
   display-next (cmd bash -c "su $SUDO_USER -c 'yabai -m display --focus next'")
 
@@ -136,15 +146,15 @@
   move-display-next (cmd bash -c "su $SUDO_USER -c 'yabai -m window --display next; yabai -m display --focus next;'")
   move-space-prev (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space prev'")
   move-space-next (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space next'")
-  move-space-1 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 1'")
-  move-space-2 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 2'")
-  move-space-3 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 3'")
-  move-space-4 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 4'")
-  move-space-5 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 5'")
-  move-space-6 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 6'")
-  move-space-7 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 7'")
-  move-space-8 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 8'")
-  move-space-9 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 9'")
+  ;;move-space-1 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 1'")
+  ;;move-space-2 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 2'")
+  ;;move-space-3 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 3'")
+  ;;move-space-4 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 4'")
+  ;;move-space-5 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 5'")
+  ;;move-space-6 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 6'")
+  ;;move-space-7 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 7'")
+  ;;move-space-8 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 8'")
+  ;;move-space-9 (cmd bash -c "su $SUDO_USER -c 'yabai -m window --space 9'")
   focus-south (cmd bash -c "su $SUDO_USER -c 'yabai -m window --focus south'")
   focus-north (cmd bash -c "su $SUDO_USER -c 'yabai -m window --focus north'")
   focus-west (cmd bash -c "su $SUDO_USER -c 'yabai -m window --focus west'")

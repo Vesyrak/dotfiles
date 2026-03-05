@@ -15,7 +15,8 @@ export ZSH_CUSTOM="$ZSH/custom"
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=10000
 export SAVEHIST=$HISTSIZE
-HIST_STAMPS="dd/mm/yyyy"
+export HIST_STAMPS="%d/%m/%y %T"
+
 export BAT_THEME="Dracula"
 export COLOR_SCHEME="green"
 
@@ -32,11 +33,15 @@ export PYTHONBREAKPOINT="ipdb.set_trace"
 
 export CONDA_AUTO_ACTIVATE_BASE=false
 
+export POETRY_VIRTUALENVS_IN_PROJECT=true
+
+export PIPX_DEFAULT_PYTHON="/Users/reinout/.asdf/shims/python3"
+
+
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Oh my zsh
 plugins=(
-    ag
     alias-finder
     aws
     copybuffer
@@ -44,13 +49,11 @@ plugins=(
     docker
     docker-compose
     extract
-    fd
     git
     gitfast
     history-substring-search
     pip
     poetry
-    ripgrep
     rsync
     sudo
     tmux
@@ -71,6 +74,9 @@ zplug "romkatv/powerlevel10k", as:theme, depth:1
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "paulirish/git-open", as:plugin
+
+#TODO: Test to fix the missing cursor issue
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=cyan,bg=transparent,bold,block"
 
 
 # Install plugins if there are plugins that have not been installed
@@ -113,45 +119,20 @@ setopt SHARE_HISTORY
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-# Aliases
-alias vi="nvim"
-alias vit="nvim -u NONE"
-alias cp="cp -v"
-alias rm="rm -v"
-alias mv="mv -v"
-alias ls="exa"
-alias cat='bat --style=plain'
-alias catcode='bat --style="numbers,changes"'
-alias catdiff='bat --diff'
-alias grep='rg'
-alias weather='curl wttr.in/Brasschaat'
-alias notes='cd ~/notes && vi'
-alias todo='cd ~/notes && vi TODO.md'
-alias scratch='cd ~/notes && vi scratchpad.md'
-
-alias docker_stop_all="docker stop $(docker ps -a -q)"
-alias docker_ez_clean="docker image prune && docker volume prune && docker builder prune"
-alias kmonad="cd ~/.config/kmonad && sudo ./start_kmonad.sh"
-alias keeb="tmux new-session -s kmonad 'cd ~/.config/kmonad && sudo ./start_kmonad.sh'"
-
-alias kanata_select="~/.dotfiles/scripts/kanata_select.sh"
-alias pomo="python3 ~/.dotfiles/scripts/pomodoro.py"
-alias domo="python3 ~/.dotfiles/scripts/pomodoro.py break"
-alias doro="python3 ~/.dotfiles/scripts/pomodoro.py work"
-
-alias doing='~/.dotfiles/scripts/addnote.sh --header "## $(date +%a\ %Y-%m-%d)"'
-alias todoing='~/.dotfiles/scripts/addnote.sh --task --header "# TODO"'
-alias improvements='~/.dotfiles/scripts/addnote.sh --task --header "# Improvements"'
+source ~/.alias
 alias reflect='function _reflect() { week=$(date +%V-%Y); vi "$HOME/notes/weekly_notes/week-${week}.md"}; _reflect'
 alias refract='function _refract() { week=$(date +%V-%Y); cd "$HOME/notes/weekly_notes/"; vi "week-${week}.md"}; _refract'
 
-alias git-log="git log --oneline --graph --all"
 git config --global alias.l "log --oneline --graph --all"
 git config --global alias.pc '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push'
 git config --global alias.pcf '!python3 ~/.dotfiles/scripts/pre_commit_checklist.py && git push --force-with-lease'
 git config --global alias.pr '!bash ~/.dotfiles/scripts/create_pr.sh'
-alias gp="git pc"
-alias gpf="git pcf"
+
+alias stick='function _stick() { 
+dir_name=$(printf "../%.0s" {1..$1})$2
+git worktree add $dir_name -b $2
+cd $dir_name
+}; _stick'
 
 # Work
 source ~/.zshrc_work
@@ -206,5 +187,35 @@ PATH="$HOME/.local/bin:$PATH"
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+# export PATH="/opt/homebrew/anaconda3/bin:$PATH"  # commented out by conda initialize
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/reinout/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/reinout/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/reinout/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/reinout/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+conda deactivate
+# <<< conda initialize <<<
+#
+#TODO: generalize/mace OS independent
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+
+# ASDF
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+# AIder
+export OLLAMA_API_BASE=http://127.0.0.1:11434 # Mac/Linux
+
+
+source /Users/reinout/.config/broot/launcher/bash/br
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
